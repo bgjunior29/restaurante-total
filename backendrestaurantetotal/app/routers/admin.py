@@ -14,6 +14,7 @@ from ..auth import hash_password
 from ..coupons import count_uses, normalize_code
 from ..db import db
 from ..insights import build_insights
+from ..tables import new_qr_key
 from ..schemas import (
     CategoryIn,
     CouponIn,
@@ -323,7 +324,7 @@ async def table_data(body: TableIn, tenant_id: int, current_id: int | None = Non
 @router.post("/tables", status_code=201)
 async def create_table(body: TableIn, user=Depends(admin_user)):
     data = await table_data(body, user.tenantId)
-    return table_out(await db.table.create(data={**data, "tenantId": user.tenantId}))
+    return table_out(await db.table.create(data={**data, "tenantId": user.tenantId, "qrKey": new_qr_key()}))
 
 
 @router.put("/tables/{tid}")
@@ -331,6 +332,13 @@ async def update_table(tid: int, body: TableIn, user=Depends(admin_user)):
     await owned(db.table, tid, user.tenantId, "Mesa")
     data = await table_data(body, user.tenantId, tid)
     return table_out(await db.table.update(where={"id": tid}, data=data))
+
+
+@router.post("/tables/{tid}/new-qr")
+async def renew_table_qr(tid: int, user=Depends(admin_user)):
+    """Gera uma chave nova para o QR da mesa: o QR antigo (impresso ou fotografado) para de funcionar."""
+    await owned(db.table, tid, user.tenantId, "Mesa")
+    return table_out(await db.table.update(where={"id": tid}, data={"qrKey": new_qr_key()}))
 
 
 @router.delete("/tables/{tid}", status_code=204)

@@ -11,6 +11,7 @@ from ..insights import recent_pairs
 from ..realtime import hub
 from ..schemas import CallIn, CouponCheckIn, OrderIn, ReviewIn
 from ..serializers import option_group_out, order_out, tenant_public
+from ..tables import ensure_not_seated_elsewhere, table_from_qr
 from ..tenancy import active_tenant, get_tenant
 
 router = APIRouter(prefix="/api/t/{slug}", tags=["público"])
@@ -69,10 +70,12 @@ async def menu(tenant=Depends(active_tenant)):
     })
 
 
-@router.get("/tables")
-async def tables(tenant=Depends(active_tenant)):
-    rows = await db.table.find_many(where={"tenantId": tenant.id, "active": True}, order={"number": "asc"})
-    return [{"number": t.number, "label": t.label} for t in rows]
+@router.get("/table/{number}")
+async def table_info(number: int, k: str = "", session: str = "", tenant=Depends(active_tenant)):
+    """Confere o QR escaneado (número + chave) e diz se este celular pode pedir nesta mesa."""
+    table = await table_from_qr(tenant.id, number, k)
+    await ensure_not_seated_elsewhere(tenant.id, table, session or None)
+    return {"number": table.number, "label": table.label}
 
 
 async def build_items(tenant_id: int, body: OrderIn) -> tuple[list[dict], dict]:
@@ -172,9 +175,8 @@ async def create_order(body: OrderIn, tenant=Depends(active_tenant)):
     payment = None
 
     if body.type == "MESA":
-        table = await db.table.find_first(where={"tenantId": tenant.id, "number": body.tableNumber or 0})
-        if table is None or not table.active:
-            raise HTTPException(400, "Mesa inválida. Escaneie o QR code da mesa de novo.")
+        table = await table_from_qr(tenant.id, body.tableNumber, body.tableKey)
+        await ensure_not_seated_elsewhere(tenant.id, table, body.sessionToken)
     else:
         if body.type == "RETIRADA" and not tenant.pickupEnabled:
             raise HTTPException(409, "No momento não estamos fazendo pedidos para retirada.")
@@ -324,8 +326,6 @@ async def create_call(tenant, table, kind: str):
 
 @router.post("/calls", status_code=201)
 async def call_waiter(body: CallIn, tenant=Depends(active_tenant)):
-    table = await db.table.find_first(where={"tenantId": tenant.id, "number": body.tableNumber})
-    if table is None or not table.active:
-        raise HTTPException(400, "Mesa inválida.")
+    table = await table_from_qr(tenant.id, body.tableNumber, body.tableKey)
     call = await create_call(tenant, table, body.kind)
     return {"id": call.id, "kind": call.kind, "createdAt": call.createdAt.isoformat()}

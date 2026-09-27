@@ -113,7 +113,7 @@ def coupon_out(c, uses: int = 0) -> dict:
 
 
 def table_out(t) -> dict:
-    return {"id": t.id, "number": t.number, "label": t.label, "seats": t.seats, "active": t.active}
+    return {"id": t.id, "number": t.number, "label": t.label, "seats": t.seats, "active": t.active, "qrKey": t.qrKey}
 
 
 def call_out(c) -> dict:

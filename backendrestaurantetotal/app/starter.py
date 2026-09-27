@@ -1,6 +1,7 @@
 """Conteúdo inicial de um restaurante novo: cardápio de exemplo com estações, adicionais, pagamentos,
 um cupom de boas-vindas e mesas. O dono edita tudo depois na Gestão."""
 from .db import db
+from .tables import new_qr_key
 
 # categoria: (estação, [(nome, descrição, preço, [grupos de adicionais], estoque ou None)])
 MENU = {
@@ -88,4 +89,4 @@ async def create_starter_content(tenant_id: int, tables: int = 6) -> None:
     )
 
     for n in range(1, tables + 1):
-        await db.table.create(data={"tenantId": tenant_id, "number": n, "label": f"Mesa {n:02d}", "seats": 4})
+        await db.table.create(data={"tenantId": tenant_id, "number": n, "label": f"Mesa {n:02d}", "seats": 4, "qrKey": new_qr_key()})

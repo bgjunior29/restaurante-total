@@ -45,3 +45,16 @@ export function rememberBill(slug, token, table) {
 }
 
 export const forgetBill = (slug) => save(billKey(slug), null)
+
+// Mesa escaneada neste celular (número + chave do QR). Vale por 8h, como a conta.
+const tableKey = (slug) => `rt_table:${slug}`
+
+export function myTable(slug) {
+  const t = load(tableKey(slug), null)
+  return t && Date.now() - t.at < 8 * 3600 * 1000 ? t : null
+}
+
+export const rememberTable = (slug, table) => save(tableKey(slug), { ...table, at: Date.now() })
+
+/** Endereço da mesa com a chave do QR (para os links "Pedir mais" levarem de volta à mesma mesa). */
+export const tablePath = (table) => `/mesa/${table.number}?k=${encodeURIComponent(table.key)}`

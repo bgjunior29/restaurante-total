@@ -39,6 +39,7 @@ class CartItemIn(BaseModel):
 class OrderIn(BaseModel):
     type: OrderType = "MESA"
     tableNumber: int | None = None  # obrigatório para MESA
+    tableKey: str = Field(default="", max_length=64)  # chave do QR da mesa (obrigatória para MESA)
     sessionToken: str | None = Field(default=None, max_length=64)  # conta da mesa já aberta neste celular
     customerName: str = Field(default="", max_length=60)
     customerPhone: str = Field(default="", max_length=20)
@@ -58,6 +59,7 @@ class CouponCheckIn(BaseModel):
 
 class CallIn(BaseModel):
     tableNumber: int
+    tableKey: str = Field(default="", max_length=64)
     kind: CallKind = "GARCOM"
 
 

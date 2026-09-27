@@ -18,6 +18,7 @@ from . import cache  # noqa: E402
 from .db import db  # noqa: E402
 from .realtime import hub  # noqa: E402
 from .routers import admin, platform, public, staff  # noqa: E402
+from .tables import ensure_qr_keys  # noqa: E402
 from .timeutil import today  # noqa: E402
 
 
@@ -27,6 +28,7 @@ async def lifespan(_: FastAPI):
     # WAL melhora a concorrência de leitura/escrita no SQLite (no Postgres não se aplica).
     if os.getenv("DATABASE_URL", "").startswith("file:"):
         await db.query_raw("PRAGMA journal_mode=WAL;")
+    await ensure_qr_keys()  # mesas antigas (sem chave) ganham a sua na subida
     yield
     await db.disconnect()
 

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Spinner, Stepper, Topbar, useToast } from '../components/ui'
 import { money, STATUS, time } from '../lib/format'
-import { forgetBill } from '../lib/storage'
+import { forgetBill, myTable } from '../lib/storage'
 import { useTenant } from '../lib/tenant'
 import { useLive } from '../lib/useLive'
 
@@ -44,7 +44,7 @@ export default function Bill() {
 
   async function callWaiter() {
     try {
-      await tapi('/calls', { method: 'POST', body: { tableNumber: bill.table.number, kind: 'GARCOM' } })
+      await tapi('/calls', { method: 'POST', body: { tableNumber: bill.table.number, tableKey: myTable(slug)?.key ?? '', kind: 'GARCOM' } })
       showToast('Garçom chamado!')
     } catch (e) {
       showToast(e.message, 'error')

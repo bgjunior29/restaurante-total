@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import CheckoutDrawer from '../components/Checkout'
 import OptionsSheet from '../components/OptionsSheet'
 import { Footer, Spinner, Stepper, Topbar, useToast } from '../components/ui'
 import { money, pad2, waLink } from '../lib/format'
-import { load, myBill, myOrders, rememberOrder, save } from '../lib/storage'
+import { load, myBill, myOrders, myTable, rememberOrder, rememberTable, save, tablePath } from '../lib/storage'
 import { useTenant } from '../lib/tenant'
 
 function HeroArt() {
@@ -29,40 +29,24 @@ function HeroArt() {
   )
 }
 
-function TableSelect({ tables, table, onChange, className = '' }) {
-  return (
-    <select className={className} value={table ?? ''} onChange={(e) => onChange(Number(e.target.value))}>
-      {table == null && (
-        <option value="" disabled>
-          Escolha sua mesa…
-        </option>
-      )}
-      {tables.map((t) => (
-        <option key={t.number} value={t.number}>
-          {t.label}
-        </option>
-      ))}
-    </select>
-  )
-}
-
 /** Chave da linha do carrinho: mesmo produto com adicionais diferentes = linhas diferentes. */
 const lineKey = (productId, optionIds) => `${productId}:${[...optionIds].sort((a, b) => a - b).join(',')}`
 
 export default function Customer() {
   const { numero } = useParams()
+  const [search] = useSearchParams()
   const navigate = useNavigate()
   const { slug, tapi, to } = useTenant()
   const [toast, showToast] = useToast()
   const cartKey = `rt_cart:${slug}`
 
-  // Cardápio e mesas da última visita aparecem na hora; a versão do servidor chega por trás e substitui.
+  // Cardápio da última visita aparece na hora; a versão do servidor chega por trás e substitui.
   const menuKey = `rt_menu:${slug}`
   const [menu, setMenu] = useState(() => load(menuKey, {}).menu ?? null)
-  const [tables, setTables] = useState(() => load(menuKey, {}).tables ?? [])
   const [error, setError] = useState('')
   const [filter, setFilter] = useState('Todos')
-  const [picked, setPicked] = useState(() => Number(numero) || load(cartKey, {}).table || null)
+  // Mesa deste celular: só vem do QR (número + chave). { status: 'none' | 'checking' | 'ok' | 'blocked' | 'invalid' }
+  const [seat, setSeat] = useState({ status: 'none' })
   const [cart, setCart] = useState(() => load(cartKey, {}).lines || {}) // { key: {productId, optionIds, quantity} }
   const [drawer, setDrawer] = useState(null) // null | 'review' | 'checkout'
   const [choosing, setChoosing] = useState(null) // produto com adicionais sendo configurado
@@ -72,11 +56,10 @@ export default function Customer() {
 
   const loadMenu = useCallback(async () => {
     try {
-      const [m, t] = await Promise.all([tapi('/menu'), tapi('/tables')])
+      const m = await tapi('/menu')
       setMenu(m)
-      setTables(t)
       setError('')
-      save(menuKey, { menu: m, tables: t })
+      save(menuKey, { menu: m })
       document.title = `${m.name} — cardápio`
     } catch (e) {
       setError(e.message)
@@ -87,14 +70,37 @@ export default function Customer() {
     loadMenu()
   }, [loadMenu])
 
-  // Nunca "chuta" uma mesa: se a do QR/da última visita não existe mais, o cliente escolhe.
-  const isTable = (n) => tables.some((t) => t.number === n)
+  // Trava de mesa: a mesa só vem do QR escaneado (número + chave). Sem QR, o celular continua na mesa
+  // que escaneou antes (enquanto a conta estiver aberta); mesa diferente só depois de fechar a conta de lá.
   const urlTable = Number(numero) || null
-  const table = isTable(urlTable) ? urlTable : isTable(picked) ? picked : null
-  const badTable = menu && urlTable && !isTable(urlTable) ? urlTable : null
-  const atTable = Boolean(urlTable && table === urlTable)
+  const urlKey = search.get('k') || ''
+  useEffect(() => {
+    const saved = myTable(slug)
+    const target = urlTable
+      ? { number: urlTable, key: urlKey || (saved?.number === urlTable ? saved.key : '') }
+      : saved && myBill(slug)?.table === saved.number
+        ? saved
+        : null
+    if (!target) return setSeat({ status: 'none' })
+    setSeat({ status: 'checking' })
+    const session = myBill(slug)?.token || ''
+    tapi(`/table/${target.number}?k=${encodeURIComponent(target.key)}&session=${encodeURIComponent(session)}`)
+      .then((t) => {
+        const table = { number: t.number, label: t.label, key: target.key }
+        rememberTable(slug, table)
+        setSeat({ status: 'ok', table })
+      })
+      .catch((e) => {
+        if (e.status === 409) setSeat({ status: 'blocked', message: e.message, home: saved })
+        else if (e.status === 400 || e.status === 403) setSeat({ status: 'invalid', message: e.message })
+        else setSeat({ status: 'none', message: e.message })
+      })
+  }, [slug, urlTable, urlKey, tapi])
 
-  useEffect(() => save(cartKey, { lines: cart, table: table ?? picked }), [cartKey, cart, table, picked])
+  const table = seat.status === 'ok' ? seat.table.number : null
+  const atTable = table != null
+
+  useEffect(() => save(cartKey, { lines: cart }), [cartKey, cart])
 
   const products = useMemo(() => {
     const list = []
@@ -165,15 +171,10 @@ export default function Customer() {
     }
   }
 
-  const chooseTable = (n) => {
-    setPicked(n)
-    navigate(to(`/mesa/${n}`), { replace: true })
-  }
-
   async function callStaff(kind) {
     setCalling(false)
     try {
-      await tapi('/calls', { method: 'POST', body: { tableNumber: table, kind } })
+      await tapi('/calls', { method: 'POST', body: { tableNumber: table, tableKey: seat.table.key, kind } })
       showToast(kind === 'GARCOM' ? 'Garçom chamado! Já já alguém vem até você.' : 'Pedido de ajuda enviado à equipe.')
     } catch (e) {
       showToast(e.message, 'error')
@@ -191,6 +192,7 @@ export default function Customer() {
     )
   }
   if (!menu) return <Spinner label="Abrindo o cardápio…" />
+  if (seat.status === 'blocked') return <TableLocked seat={seat} to={to} bill={myBill(slug)} />
 
   const categories = ['Todos', ...menu.categories.filter((c) => c.products.length).map((c) => c.name)]
   const visible = filter === 'Todos' ? products : products.filter((p) => p.category === filter)
@@ -301,9 +303,9 @@ export default function Customer() {
                 No momento não estamos recebendo pedidos pelo cardápio. Chame um atendente. 🙂
               </div>
             )}
-            {badTable && (
+            {seat.status === 'invalid' && (
               <div role="alert" className="mb-6 rounded-2xl bg-[#f3d9c4] px-5 py-4 text-sm font-medium text-[#6b2f12]">
-                A mesa {pad2(badTable)} não está disponível. Escolha sua mesa abaixo ou chame um atendente.
+                {seat.message} Você ainda pode ver o cardápio{offers.length ? ` e pedir para ${offers.join(' ou ')}` : ''}.
               </div>
             )}
             <div className="mb-6 flex flex-wrap items-end justify-between gap-6 md:mb-8">
@@ -311,16 +313,15 @@ export default function Customer() {
                 <p className="eyebrow text-olive">Cardápio da casa</p>
                 <h2 className="mt-2 font-display text-[clamp(30px,3.4vw,44px)] font-bold tracking-[-0.04em]">O que vai ser hoje?</h2>
               </div>
-              {tables.length > 0 && (
-                <label className="rounded-2xl border border-[#d8d3bd] bg-card px-4 py-2.5">
-                  <span className="eyebrow block text-[9px] text-olive">{table ? 'Sua mesa' : 'Está no salão?'}</span>
-                  <TableSelect
-                    tables={tables}
-                    table={table}
-                    onChange={chooseTable}
-                    className="min-w-32 bg-transparent font-display text-lg font-semibold outline-none"
-                  />
-                </label>
+              {atTable ? (
+                <div className="rounded-2xl border border-[#d8d3bd] bg-card px-4 py-2.5">
+                  <span className="eyebrow block text-[9px] text-olive">Sua mesa</span>
+                  <span className="font-display text-lg font-semibold">{seat.table.label}</span>
+                </div>
+              ) : (
+                <p className="max-w-[220px] text-xs text-[#6b7266]">
+                  {seat.status === 'checking' ? 'Conferindo sua mesa…' : 'No salão? Escaneie o QR code da sua mesa para pedir nela.'}
+                </p>
               )}
             </div>
 
@@ -472,10 +473,7 @@ export default function Customer() {
           setStep={setDrawer}
           menu={menu}
           tapi={tapi}
-          table={table}
-          atTable={atTable}
-          tables={tables}
-          chooseTable={chooseTable}
+          table={atTable ? seat.table : null}
           lines={lines}
           setLineQty={setLineQty}
           subtotal={subtotal}
@@ -492,6 +490,29 @@ export default function Customer() {
         />
       )}
       {toast}
+    </div>
+  )
+}
+
+/** Celular com conta aberta em outra mesa: não pede nesta até a equipe fechar a conta de lá. */
+function TableLocked({ seat, to, bill }) {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 text-center">
+      <p className="eyebrow text-lime">Mesa já em uso neste celular</p>
+      <h1 className="max-w-md font-display text-3xl font-bold tracking-[-0.04em]">Sua conta ainda está aberta.</h1>
+      <p className="max-w-sm text-sm text-muted">{seat.message}</p>
+      <div className="mt-2 flex flex-wrap justify-center gap-3">
+        {seat.home && (
+          <Link to={to(tablePath(seat.home))} className="btn-lime">
+            Voltar para a {seat.home.label ?? `mesa ${pad2(seat.home.number)}`}
+          </Link>
+        )}
+        {bill && (
+          <Link to={to(`/conta/${bill.token}`)} className="btn-outline">
+            Ver minha conta
+          </Link>
+        )}
+      </div>
     </div>
   )
 }

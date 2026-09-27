@@ -204,6 +204,7 @@ model Table {
   number   Int
   label    String
   seats    Int            @default(4)
+  qrKey    String         @default("") // chave secreta impressa no QR: só quem escaneou a mesa pede nela
   active   Boolean        @default(true)
   orders   Order[]
   sessions TableSession[]

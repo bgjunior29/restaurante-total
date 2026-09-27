@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { money, ORDER_TYPES, pad2, parseMoney } from '../lib/format'
+import { money, ORDER_TYPES, parseMoney } from '../lib/format'
 import { load, save } from '../lib/storage'
 import { Stepper } from './ui'
 
@@ -28,10 +28,7 @@ export default function CheckoutDrawer({
   setStep,
   menu,
   tapi,
-  table,
-  atTable,
-  tables,
-  chooseTable,
+  table, // mesa do QR { number, label, key } ou null
   lines,
   setLineQty,
   subtotal,
@@ -44,10 +41,11 @@ export default function CheckoutDrawer({
 }) {
   const saved = load(CUSTOMER_KEY, {})
   const types = [
-    tables.length > 0 && 'MESA',
+    table && 'MESA', // pedido na mesa só com o QR escaneado
     menu.pickupEnabled && 'RETIRADA',
     menu.deliveryEnabled && 'DELIVERY',
   ].filter(Boolean)
+  const atTable = Boolean(table)
   const [type, setType] = useState(() => (atTable || !types.includes(saved.type) ? types[0] : saved.type) || 'MESA')
   const [name, setName] = useState(saved.name || '')
   const [phone, setPhone] = useState(saved.phone || '')
@@ -96,7 +94,7 @@ export default function CheckoutDrawer({
   const addressOk = street.trim().length > 2 && number.trim() && district.trim()
   const missing =
     type === 'MESA'
-      ? table == null && 'Escolha sua mesa para confirmar.'
+      ? !table && 'Escaneie o QR code da sua mesa para pedir nela.'
       : !name.trim() || !phoneOk
         ? 'Informe nome e telefone com DDD.'
         : type === 'DELIVERY' && !addressOk
@@ -160,7 +158,8 @@ export default function CheckoutDrawer({
         method: 'POST',
         body: {
           type,
-          tableNumber: type === 'MESA' ? table : null,
+          tableNumber: type === 'MESA' ? table.number : null,
+          tableKey: type === 'MESA' ? table.key : '',
           sessionToken: type === 'MESA' ? sessionToken : null,
           customerName: name,
           customerPhone: type === 'MESA' ? '' : phone,
@@ -183,7 +182,7 @@ export default function CheckoutDrawer({
     }
   }
 
-  const where = type === 'MESA' ? (table ? tables.find((t) => t.number === table)?.label ?? `Mesa ${pad2(table)}` : 'Mesa não escolhida') : ORDER_TYPES[type].label
+  const where = type === 'MESA' ? (table?.label ?? 'Mesa') : ORDER_TYPES[type].label
 
   return (
     <div className="fixed inset-0 z-40 flex justify-end">
@@ -290,21 +289,6 @@ export default function CheckoutDrawer({
               <button onClick={() => setType(type === 'MESA' ? types[1] : 'MESA')} className="mt-4 self-start text-[11px] text-olive underline">
                 {type === 'MESA' ? 'Quer levar para casa? Peça para retirada ou delivery' : '← Voltar para pedido na mesa'}
               </button>
-            )}
-
-            {type === 'MESA' && table == null && (
-              <Field label="Em qual mesa você está?" className="mt-5 rounded-2xl bg-[#f3d9c4] p-4 text-[#6b2f12]">
-                <select className="input-light mt-2" value="" onChange={(e) => chooseTable(Number(e.target.value))}>
-                  <option value="" disabled>
-                    Escolha sua mesa…
-                  </option>
-                  {tables.map((t) => (
-                    <option key={t.number} value={t.number}>
-                      {t.label}
-                    </option>
-                  ))}
-                </select>
-              </Field>
             )}
 
             <Field label={type === 'MESA' ? 'Seu nome (opcional)' : 'Seu nome'} className="mt-5">
