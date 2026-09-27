@@ -11,22 +11,22 @@ CEP, estoque, avaliações e camada de inteligência em Python).
 Primeira vez:
 
 ```bash
-cd backend
+cd backendrestaurantetotal
 python -m venv .venv
 .venv\Scripts\pip install -r requirements.txt
 copy .env.example .env
 set PYTHONUTF8=1
 .venv\Scripts\prisma db push      # cria o banco e gera o client Prisma
 .venv\Scripts\python seed.py      # login da plataforma + restaurante de exemplo (cantina-da-nonna)
-cd ../frontend
+cd ../frontrestaurantetotal
 npm install
 ```
 
 No VS Code: **Ctrl+Shift+B** → "Rodar Restaurante Total". Ou em dois terminais:
 
 ```bash
-cd backend && .venv\Scripts\python -m uvicorn app.main:app --reload --port 8000
-cd frontend && npm run dev
+cd backendrestaurantetotal && .venv\Scripts\python -m uvicorn app.main:app --reload --port 8000
+cd frontrestaurantetotal && npm run dev
 ```
 
 | Endereço | O quê |
@@ -94,14 +94,14 @@ com a mensagem pronta. Para enviar sozinho a cada mudança de status, defina no 
 
 ## Publicação
 
-Mesmo modelo do Bar Total: `render.yaml` (API no Render, `rootDir: backend`), banco PostgreSQL no Neon
-(`backend\neon-setup.ps1`) e frontend no Vercel (`frontend/vercel.json` e `.env.production` apontam para
+Mesmo modelo do Bar Total: `render.yaml` (API no Render, `rootDir: backendrestaurantetotal`), banco PostgreSQL no Neon
+(`backend\neon-setup.ps1`) e frontend no Vercel (`frontrestaurantetotal/vercel.json` e `.env.production` apontam para
 `restaurante-total-api.onrender.com` — ajuste para o nome real do serviço).
 
 ## Estrutura
 
 ```
-backend/
+backendrestaurantetotal/
   prisma/schema.prisma      Tenant, User, Category (estação), Product (foto, estoque), OptionGroup, Option,
                             PaymentMethod, Coupon, Table, TableSession (conta), ServiceCall (chamados),
                             Order (mesa/retirada/delivery), OrderItem, Review
@@ -110,7 +110,7 @@ backend/
   app/routers/admin.py      gestão (CRUDs, cupons, estoque, relatório, inteligência)       /api/t/<slug>/admin/...
   app/routers/platform.py   painel da plataforma                                           /api/platform/...
   app/coupons.py · stock.py · whatsapp.py · bill.py · insights.py
-frontend/src/
+frontrestaurantetotal/src/
   pages/Customer.jsx        cardápio + sugestões + chamar garçom
   components/Checkout.jsx   mesa / retirada / delivery, CEP, cupom, troco
   pages/Track.jsx           acompanhamento + avaliação

@@ -3,9 +3,9 @@
   "configurations": [
     {
       "name": "api",
-      "runtimeExecutable": "C:/Users/julio/restaurante-total/backend/.venv/Scripts/python.exe",
+      "runtimeExecutable": "C:/Users/julio/restaurante-total/backendrestaurantetotal/.venv/Scripts/python.exe",
       "runtimeArgs": ["-m", "uvicorn", "app.main:app", "--port", "8000"],
-      "cwd": "C:/Users/julio/restaurante-total/backend",
+      "cwd": "C:/Users/julio/restaurante-total/backendrestaurantetotal",
       "env": { "PYTHONUTF8": "1" },
       "port": 8000
     },
@@ -13,7 +13,7 @@
       "name": "web",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
-      "cwd": "C:/Users/julio/restaurante-total/frontend",
+      "cwd": "C:/Users/julio/restaurante-total/frontrestaurantetotal",
       "port": 5190
     }
   ]

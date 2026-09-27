@@ -1,5 +1,5 @@
 ﻿# Cria as tabelas do Restaurante Total no Neon (PostgreSQL) e popula o básico.
-# Uso (dentro de backend):  powershell -ExecutionPolicy Bypass -File .\neon-setup.ps1
+# Uso (dentro de backendrestaurantetotal):  powershell -ExecutionPolicy Bypass -File .\neon-setup.ps1
 # A URL e a senha são pedidas sem aparecer na tela e não ficam salvas em arquivo.
 
 $ErrorActionPreference = 'Stop'

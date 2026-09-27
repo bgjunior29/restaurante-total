@@ -83,8 +83,8 @@ async def websocket(ws: WebSocket, slug: str):
         hub.disconnect(tenant.id, ws)
 
 
-# Em produção, o FastAPI também serve o build do React (frontend/dist).
-DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+# Em produção, o FastAPI também serve o build do React (frontrestaurantetotal/dist).
+DIST = Path(__file__).resolve().parents[2] / "frontrestaurantetotal" / "dist"
 if DIST.exists():
     app.mount("/assets", StaticFiles(directory=DIST / "assets"), name="assets")
 
