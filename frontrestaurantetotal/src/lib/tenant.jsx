@@ -3,6 +3,7 @@ import { Outlet, useParams } from 'react-router-dom'
 import { Spinner } from '../components/ui'
 import { api } from './api'
 import { AuthProvider } from './auth'
+import { load, save } from './storage'
 import { applyTheme, resetTheme } from './themes'
 
 const TenantContext = createContext(null)
@@ -10,7 +11,9 @@ const TenantContext = createContext(null)
 /** Tudo dentro de /r/:slug. Carrega a identidade do restaurante e dá acesso à API dele. */
 export function TenantLayout() {
   const { slug } = useParams()
-  const [info, setInfo] = useState(null)
+  // Abre na hora com a identidade da última visita (guardada no aparelho) e confirma com o servidor por trás:
+  // o celular não fica numa tela de "Abrindo…" enquanto a API acorda.
+  const [info, setInfo] = useState(() => load(`rt_info:${slug}`, null))
   const [error, setError] = useState(null)
 
   const reloadInfo = useCallback(async () => {
@@ -18,17 +21,21 @@ export function TenantLayout() {
       const data = await api(`/t/${slug}/info`)
       setInfo(data)
       setError(null)
+      save(`rt_info:${slug}`, data)
       applyTheme(data.theme, data.accentColor)
     } catch (e) {
-      setError(e)
+      // Com a identidade guardada, uma falha passageira não derruba a tela (404 sim: o endereço não existe).
+      if (!load(`rt_info:${slug}`, null) || e.status === 404) setError(e)
     }
   }, [slug])
 
   useEffect(() => {
-    setInfo(null)
+    const cached = load(`rt_info:${slug}`, null)
+    setInfo(cached)
+    if (cached) applyTheme(cached.theme, cached.accentColor)
     reloadInfo()
     return resetTheme
-  }, [reloadInfo])
+  }, [slug, reloadInfo])
 
   const value = useMemo(
     () => ({

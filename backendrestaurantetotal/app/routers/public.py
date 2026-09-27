@@ -1,8 +1,9 @@
 """Rotas abertas do cliente (QR code da mesa, retirada e delivery): /api/t/{slug}/..."""
+import asyncio
 import secrets
 from fastapi import APIRouter, Depends, HTTPException
 
-from .. import stock
+from .. import cache, stock
 from ..bill import SESSION_INCLUDE, bill_out
 from ..coupons import discount_for, normalize_code, validate_coupon
 from ..db import db
@@ -26,7 +27,11 @@ async def info(tenant=Depends(get_tenant)):
 
 @router.get("/menu")
 async def menu(tenant=Depends(active_tenant)):
-    categories = await db.category.find_many(
+    cached = cache.get_menu(tenant.id)
+    if cached is not None:
+        return cached
+    # As três leituras não dependem uma da outra: vão ao banco ao mesmo tempo.
+    categories, payments, pairs = await asyncio.gather(db.category.find_many(
         where={"tenantId": tenant.id},
         order={"sortOrder": "asc"},
         include={
@@ -36,11 +41,9 @@ async def menu(tenant=Depends(active_tenant)):
                 "include": {"optionGroups": {"include": {"group": {"include": {"options": True}}}}},
             }
         },
-    )
-    payments = await db.paymentmethod.find_many(
+    ), db.paymentmethod.find_many(
         where={"tenantId": tenant.id, "active": True}, order={"sortOrder": "asc"}
-    )
-    pairs = await recent_pairs(tenant.id)
+    ), recent_pairs(tenant.id))
 
     def product(p) -> dict:
         groups = sorted((link.group for link in p.optionGroups or []), key=lambda g: (g.sortOrder, g.id))
@@ -56,14 +59,14 @@ async def menu(tenant=Depends(active_tenant)):
             "pairsWith": pairs.get(p.id, []),
         }
 
-    return {
+    return cache.put_menu(tenant.id, {
         **tenant_public(tenant),
         "pixKey": tenant.pixKey,
         "categories": [
             {"id": c.id, "name": c.name, "products": [product(p) for p in c.products or []]} for c in categories
         ],
         "paymentMethods": [{"id": m.id, "name": m.name, "kind": m.kind} for m in payments],
-    }
+    })
 
 
 @router.get("/tables")
@@ -236,6 +239,8 @@ async def create_order(body: OrderIn, tenant=Depends(active_tenant)):
             include=ORDER_INCLUDE,
         )
 
+    if any(products[i["productId"]].stockQty is not None for i in items):
+        cache.invalidate(tenant.id)  # estoque mudou: o cardápio precisa mostrar "últimas unidades"/esgotado
     where = table.label if table else ("Delivery" if body.type == "DELIVERY" else "Retirada")
     await hub.broadcast(tenant.id, "order_created", {"id": order.id, "code": order.code, "where": where, "type": body.type})
     if low:

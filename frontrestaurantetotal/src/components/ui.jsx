@@ -10,6 +10,25 @@ const initials = (name) =>
     .map((w) => w[0].toUpperCase())
     .join('') || name.slice(0, 2).toUpperCase()
 
+/** Marca do Restaurante Total: prato e talheres (a mesma do favicon), nas cores do tema. */
+export function LogoMark({ className = 'size-[46px]' }) {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className={`shrink-0 ${className}`}>
+      <circle cx="32" cy="32" r="30" fill="var(--color-dark)" stroke="var(--color-lime)" strokeWidth="2.5" />
+      <circle cx="32" cy="33" r="13" fill="none" stroke="var(--color-lime)" strokeWidth="3" />
+      <circle cx="32" cy="33" r="6.5" fill="var(--color-lime)" opacity=".45" />
+      <path
+        d="M13 18v9m3.5-9v9M20 18v9M13 27q3.5 3 7 0M16.5 29v17"
+        fill="none"
+        stroke="var(--color-lime)"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
+      <path d="M48 46V18q5 6 3 14h-3" fill="none" stroke="var(--color-lime)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 /** `compact`: no celular mostra só o selo (quando o topo precisa de espaço para botões). */
 export function Brand({ brand, to = '/', compact = false }) {
   const name = brand?.name ?? 'Restaurante Total'
@@ -25,10 +44,12 @@ export function Brand({ brand, to = '/', compact = false }) {
           onError={() => setLogoFailed(true)}
           className="size-[46px] shrink-0 rounded-full border border-lime object-cover"
         />
+      ) : !brand || brand.platform ? (
+        <LogoMark />
       ) : (
-        <span className="flex size-[46px] shrink-0 items-center justify-center rounded-full border border-lime font-display text-lg font-bold tracking-[-2px] text-lime">
-          {mark[0]}
-          <span className="text-ink">{mark.slice(1)}</span>
+        // Restaurante sem logo: selo preenchido com as iniciais, na cor de destaque dele.
+        <span className="flex size-[46px] shrink-0 items-center justify-center rounded-2xl bg-lime font-display text-lg font-extrabold tracking-[-1px] text-dark">
+          {mark}
         </span>
       )}
       <span

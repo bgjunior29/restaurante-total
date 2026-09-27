@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from .. import stock, whatsapp
+from .. import cache, stock, whatsapp
 from ..auth import create_token, verify_password
 from ..bill import SESSION_INCLUDE, bill_out
 from ..db import db
@@ -101,6 +101,7 @@ async def update_status(order_id: int, body: StatusIn, user=Depends(staff_user),
     order = await db.order.update(where={"id": order_id}, data=data, include=ORDER_INCLUDE)
     if body.status == "CANCELADO":
         await stock.release(db, current.items or [])
+        cache.invalidate(user.tenantId)
 
     await hub.broadcast(user.tenantId, "order_updated", {"id": order.id, "status": order.status})
     await whatsapp.notify_status(tenant, order, track_url(tenant, order))

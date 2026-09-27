@@ -24,7 +24,7 @@ function HeroArt() {
       {/* talheres */}
       <div className="absolute top-[18%] left-[22%] h-[250px] w-[9px] rounded-full bg-gradient-to-b from-[#d9d4c7] to-[#9f9a8d] shadow-lg" />
       <div className="absolute top-[18%] left-[74%] h-[250px] w-[11px] rounded-full bg-gradient-to-b from-[#d9d4c7] to-[#9f9a8d] shadow-lg" />
-      <span className="eyebrow absolute bottom-7 left-6 text-[10px] text-lime/80">Boa comida. Boas conversas.</span>
+      <span className="eyebrow absolute inset-x-0 bottom-4 text-center text-[10px] text-lime/80">Boa comida. Boas conversas.</span>
     </div>
   )
 }
@@ -56,8 +56,10 @@ export default function Customer() {
   const [toast, showToast] = useToast()
   const cartKey = `rt_cart:${slug}`
 
-  const [menu, setMenu] = useState(null)
-  const [tables, setTables] = useState([])
+  // Cardápio e mesas da última visita aparecem na hora; a versão do servidor chega por trás e substitui.
+  const menuKey = `rt_menu:${slug}`
+  const [menu, setMenu] = useState(() => load(menuKey, {}).menu ?? null)
+  const [tables, setTables] = useState(() => load(menuKey, {}).tables ?? [])
   const [error, setError] = useState('')
   const [filter, setFilter] = useState('Todos')
   const [picked, setPicked] = useState(() => Number(numero) || load(cartKey, {}).table || null)
@@ -74,11 +76,12 @@ export default function Customer() {
       setMenu(m)
       setTables(t)
       setError('')
+      save(menuKey, { menu: m, tables: t })
       document.title = `${m.name} — cardápio`
     } catch (e) {
       setError(e.message)
     }
-  }, [tapi])
+  }, [tapi, menuKey])
 
   useEffect(() => {
     loadMenu()

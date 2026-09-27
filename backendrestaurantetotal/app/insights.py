@@ -8,6 +8,7 @@ from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
 from itertools import combinations
 
+from . import cache
 from .db import db
 from .timeutil import APP_TZ
 
@@ -40,6 +41,9 @@ def product_pairs(orders, limit: int = 3) -> dict[int, list[int]]:
 
 
 async def recent_pairs(tenant_id: int) -> dict[int, list[int]]:
+    cached = cache.get_pairs(tenant_id)
+    if cached is not None:
+        return cached
     since = datetime.now(timezone.utc) - timedelta(days=60)
     orders = await db.order.find_many(
         where={"tenantId": tenant_id, "createdAt": {"gte": since}, "status": {"not": "CANCELADO"}},
@@ -47,7 +51,7 @@ async def recent_pairs(tenant_id: int) -> dict[int, list[int]]:
         order={"createdAt": "desc"},
         take=600,
     )
-    return product_pairs(orders)
+    return cache.put_pairs(tenant_id, product_pairs(orders))
 
 
 async def build_insights(tenant, days: int = 30) -> dict:

@@ -1,0 +1,21 @@
+# Mantém a API do Render acordada no horário de funcionamento.
+# No plano grátis o Render dorme após 15 min sem uso, e a primeira abertura depois disso leva ~1 min:
+# é o que fazia o cardápio "travar" no primeiro acesso do cliente.
+#
+# Horário: 10h às 23h59 de Brasília (13h às 02h59 UTC), a cada 10 min (~14 h por dia, ~430 h por mês).
+# Fica dentro das 750 h mensais grátis do Render; 24 h por dia não caberia se houver outro serviço grátis na conta.
+# Para mudar o horário, ajuste o cron abaixo (sempre em UTC). O GitHub pode atrasar alguns minutos.
+name: Manter API acordada
+
+on:
+  schedule:
+    - cron: "*/10 13-23,0-2 * * *"
+  workflow_dispatch: # permite rodar na mão em Actions → Manter API acordada → Run workflow
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Chamar /api/health
+        run: curl -fsS --max-time 120 --retry 2 https://restaurante-total-api.onrender.com/api/health

@@ -7,8 +7,9 @@ enxerga dados de outro.
 from collections import defaultdict
 from datetime import timedelta
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 
+from .. import cache
 from ..auth import hash_password
 from ..coupons import count_uses, normalize_code
 from ..db import db
@@ -38,7 +39,23 @@ from ..serializers import (
 from ..tenancy import admin_user
 from ..timeutil import local_date, local_day_bounds
 
-router = APIRouter(prefix="/api/t/{slug}/admin", tags=["gestão do restaurante"])
+async def fresh_cache(request: Request, slug: str):
+    """Toda alteração na gestão (cardápio, pagamentos, identidade, configurações...) limpa o cache do
+    restaurante, antes e depois de gravar, para o cliente ver a mudança na hora."""
+    if request.method == "GET":
+        yield
+        return
+    tenant = cache.get_tenant(slug)
+    if tenant:
+        cache.invalidate(tenant.id)
+    yield
+    if tenant:
+        cache.invalidate(tenant.id)
+    else:
+        cache.invalidate()
+
+
+router = APIRouter(prefix="/api/t/{slug}/admin", tags=["gestão do restaurante"], dependencies=[Depends(fresh_cache)])
 
 
 async def owned(model, record_id: int, tenant_id: int, label: str):

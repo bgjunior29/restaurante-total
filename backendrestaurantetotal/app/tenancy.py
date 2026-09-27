@@ -4,6 +4,7 @@ import re
 from fastapi import Depends, HTTPException, Path, status
 from fastapi.security import HTTPAuthorizationCredentials
 
+from . import cache
 from .auth import bearer, read_token
 from .db import db
 
@@ -21,7 +22,11 @@ def validate_slug(slug: str) -> str:
 
 
 async def get_tenant(slug: str = Path(..., description="Endereço do restaurante, ex.: cantina-da-nonna")):
-    tenant = await db.tenant.find_unique(where={"slug": slug})
+    tenant = cache.get_tenant(slug)
+    if tenant is None:
+        tenant = await db.tenant.find_unique(where={"slug": slug})
+        if tenant is not None:
+            cache.put_tenant(tenant)
     if tenant is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Restaurante não encontrado. Confira o endereço.")
     return tenant

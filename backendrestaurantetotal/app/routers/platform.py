@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
 
+from .. import cache
 from ..auth import create_token, hash_password, platform_user, verify_password
 from ..db import db
 from ..schemas import IdentityIn, LoginIn, TenantAdminResetIn, TenantCreateIn, TenantUpdateIn
@@ -130,6 +131,7 @@ async def update_tenant(tid: int, body: TenantUpdateIn, _=Depends(platform_user)
     data = body.model_dump()
     data["slug"] = slug
     t = await db.tenant.update(where={"id": tid}, data=data)
+    cache.invalidate()  # o endereço (slug) pode ter mudado
     return tenant_row(t, await usage_for(t.id))
 
 
@@ -151,6 +153,7 @@ async def read_tenant_identity(tid: int, _=Depends(platform_user)):
 async def write_tenant_identity(tid: int, body: IdentityIn, _=Depends(platform_user)):
     await tenant_or_404(tid)
     t = await db.tenant.update(where={"id": tid}, data=body.model_dump())
+    cache.invalidate(tid)
     return {k: getattr(t, k) for k in IDENTITY_FIELDS}
 
 

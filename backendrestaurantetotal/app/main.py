@@ -9,10 +9,12 @@ load_dotenv()
 
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+from fastapi.middleware.gzip import GZipMiddleware  # noqa: E402
 from fastapi.responses import FileResponse, JSONResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 from prisma.errors import PrismaError  # noqa: E402
 
+from . import cache  # noqa: E402
 from .db import db  # noqa: E402
 from .realtime import hub  # noqa: E402
 from .routers import admin, platform, public, staff  # noqa: E402
@@ -48,6 +50,8 @@ async def database_error(request: Request, exc: PrismaError):
         content={"detail": "O servidor está acordando ou instável. Tente de novo em alguns segundos."},
     )
 
+# Cardápio e listas de pedidos comprimidos: menos dados no 4G do cliente.
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[o.strip() for o in os.getenv("CORS_ORIGINS", "").split(",") if o.strip()],
@@ -69,7 +73,7 @@ async def health():
 
 @app.websocket("/ws/{slug}")
 async def websocket(ws: WebSocket, slug: str):
-    tenant = await db.tenant.find_unique(where={"slug": slug})
+    tenant = cache.get_tenant(slug) or await db.tenant.find_unique(where={"slug": slug})
     if tenant is None:
         await ws.close(code=4404)
         return
