@@ -1,0 +1,27 @@
+# Blueprint do Render: API (backend). O banco PostgreSQL fica no Neon (veja DATABASE_URL).
+# No painel do Render: New → Blueprint → escolha este repositório.
+services:
+  - type: web
+    name: restaurante-total-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: bash render-build.sh
+    startCommand: bash render-start.sh
+    healthCheckPath: /api/health
+    envVars:
+      # Banco PostgreSQL no Neon (neon.tech): cole a connection string DIRETA (sem "-pooler"),
+      # terminando em ?sslmode=require. O free do Render permite só 1 banco e expira em 30 dias.
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_PASSWORD
+        sync: false # senha do admin do restaurante de exemplo (só usada num banco vazio)
+      - key: PLATFORM_ADMIN_PASSWORD
+        sync: false # senha do login /plataforma (só usada num banco vazio; sem ela o login não é criado)
+      - key: CORS_ORIGINS
+        sync: false # ex.: https://seu-site.vercel.app
+      # Guarda os binários do Prisma dentro do projeto, para o start achar o que o build baixou.
+      - key: PRISMA_BINARY_CACHE_DIR
+        value: /opt/render/project/src/backend/.prisma-cache

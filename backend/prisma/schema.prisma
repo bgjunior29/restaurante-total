@@ -1,0 +1,315 @@
+generator client {
+  provider             = "prisma-client-py"
+  interface            = "asyncio"
+  recursive_type_depth = 5
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Plataforma (dono do sistema) ----------
+
+model PlatformUser {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  name         String
+  passwordHash String
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+}
+
+// Cada restaurante cliente é um tenant. Todos os dados abaixo pertencem a um tenant.
+model Tenant {
+  id             Int    @id @default(autoincrement())
+  slug           String @unique // usado no endereço: /r/<slug>
+  name           String
+  status         String @default("ACTIVE") // ACTIVE | SUSPENDED
+  plan           String @default("Padrão")
+  planPriceCents Int    @default(19900)
+  notes          String @default("") // anotações internas da plataforma
+
+  // Identidade (o que o cliente vê)
+  tagline       String @default("Restaurante · Cozinha · Encontros")
+  heroTitle     String @default("Sabor de verdade,")
+  heroHighlight String @default("direto na sua mesa.")
+  heroText      String @default("Peça pelo celular, acompanhe o preparo e feche a conta sem esperar. Também entregamos e preparamos para retirada.")
+  logoUrl       String @default("")
+  accentColor   String @default("#f6c35b")
+  theme         String @default("terra") // paleta: verde | grafite | vinho | oceano | roxo | terra
+  openingHours  String @default("")
+  phone         String @default("")
+  instagram     String @default("")
+  address       String @default("")
+  whatsapp      String @default("") // número do restaurante para o cliente falar no WhatsApp
+
+  // Operação do salão
+  ordersOpen    Boolean @default(true)
+  pixKey        String  @default("")
+  publicUrl     String  @default("") // base dos QR codes; vazio = endereço atual do navegador
+  orderPrefix   String  @default("RT")
+  orderSeq      Int     @default(1000) // último número de pedido usado
+  serviceFeePct Int     @default(10) // taxa de serviço sugerida na conta da mesa (0 = sem taxa)
+  lateAfterMin  Int     @default(20) // minutos até o pedido ser considerado atrasado
+
+  // Retirada e delivery
+  pickupEnabled          Boolean @default(true)
+  deliveryEnabled        Boolean @default(false)
+  deliveryFeeCents       Int     @default(800)
+  freeDeliveryAboveCents Int     @default(0) // 0 = nunca grátis
+  minDeliveryCents       Int     @default(0) // pedido mínimo para delivery
+  deliveryArea           String  @default("") // bairros/região atendida (texto livre)
+  prepTimeMin            Int     @default(25) // estimativa mostrada para retirada
+  deliveryTimeMin        Int     @default(50) // estimativa mostrada para delivery
+
+  // Integrações
+  notifyWhatsapp Boolean @default(false) // envia status por WhatsApp (API da Meta, se configurada no servidor)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users          User[]
+  categories     Category[]
+  products       Product[]
+  optionGroups   OptionGroup[]
+  paymentMethods PaymentMethod[]
+  tables         Table[]
+  sessions       TableSession[]
+  orders         Order[]
+  calls          ServiceCall[]
+  coupons        Coupon[]
+  reviews        Review[]
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  tenantId     Int
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  username     String
+  name         String
+  passwordHash String
+  role         String   @default("STAFF") // ADMIN | STAFF | KITCHEN
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  @@unique([tenantId, username])
+}
+
+// ---------- Cardápio ----------
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  tenantId  Int
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String
+  station   String    @default("COZINHA") // onde é preparado: COZINHA | BAR | CONFEITARIA | COPA
+  sortOrder Int       @default(0)
+  products  Product[]
+
+  @@unique([tenantId, name])
+}
+
+model Product {
+  id           Int                  @id @default(autoincrement())
+  tenantId     Int
+  tenant       Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name         String
+  description  String               @default("")
+  imageUrl     String               @default("")
+  priceCents   Int
+  available    Boolean              @default(true)
+  stockQty     Int? // null = sem controle de estoque
+  lowStockAt   Int                  @default(5) // avisa a equipe quando o estoque chega aqui
+  sortOrder    Int                  @default(0)
+  categoryId   Int
+  category     Category             @relation(fields: [categoryId], references: [id])
+  optionGroups ProductOptionGroup[]
+  orderItems   OrderItem[]
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  @@index([tenantId])
+}
+
+// Grupo de adicionais/variações (ex.: "Ponto da carne", "Acompanhamento").
+model OptionGroup {
+  id        Int                  @id @default(autoincrement())
+  tenantId  Int
+  tenant    Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String
+  minSelect Int                  @default(0) // 1 = escolha obrigatória
+  maxSelect Int                  @default(1) // quantas opções o cliente pode marcar
+  sortOrder Int                  @default(0)
+  options   Option[]
+  products  ProductOptionGroup[]
+
+  @@index([tenantId])
+}
+
+model Option {
+  id         Int         @id @default(autoincrement())
+  groupId    Int
+  group      OptionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  name       String
+  priceCents Int         @default(0) // valor somado ao produto
+  available  Boolean     @default(true)
+  sortOrder  Int         @default(0)
+}
+
+model ProductOptionGroup {
+  productId Int
+  product   Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  groupId   Int
+  group     OptionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@id([productId, groupId])
+}
+
+model PaymentMethod {
+  id        Int     @id @default(autoincrement())
+  tenantId  Int
+  tenant    Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String
+  kind      String  @default("OTHER") // PIX | CARD | CASH | OTHER (PIX mostra a chave Pix)
+  active    Boolean @default(true)
+  sortOrder Int     @default(0)
+
+  @@index([tenantId])
+}
+
+// Cupom de desconto (vale para qualquer tipo de pedido).
+model Coupon {
+  id            Int       @id @default(autoincrement())
+  tenantId      Int
+  tenant        Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  code          String // sempre em MAIÚSCULAS
+  kind          String    @default("PERCENT") // PERCENT | FIXED
+  value         Int // % (1–100) ou centavos
+  minOrderCents Int       @default(0)
+  maxUses       Int? // null = ilimitado; só contam pedidos não cancelados
+  validUntil    DateTime?
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+
+  @@unique([tenantId, code])
+}
+
+// ---------- Salão ----------
+
+model Table {
+  id       Int            @id @default(autoincrement())
+  tenantId Int
+  tenant   Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  number   Int
+  label    String
+  seats    Int            @default(4)
+  active   Boolean        @default(true)
+  orders   Order[]
+  sessions TableSession[]
+  calls    ServiceCall[]
+
+  @@unique([tenantId, number])
+}
+
+// Conta da mesa: abre no primeiro pedido e junta todas as rodadas até a equipe fechar.
+model TableSession {
+  id            Int       @id @default(autoincrement())
+  tenantId      Int
+  tenant        Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tableId       Int
+  table         Table     @relation(fields: [tableId], references: [id])
+  token         String    @unique // link secreto da conta, guardado no celular de quem pediu
+  status        String    @default("OPEN") // OPEN | BILL_REQUESTED | CLOSED
+  people        Int       @default(1) // para dividir a conta
+  serviceCents  Int       @default(0) // taxa de serviço cobrada no fechamento
+  paymentMethod String    @default("")
+  openedAt      DateTime  @default(now())
+  closedAt      DateTime?
+  orders        Order[]
+
+  @@index([tenantId, status])
+}
+
+// Chamado da mesa: garçom, conta ou ajuda.
+model ServiceCall {
+  id        Int       @id @default(autoincrement())
+  tenantId  Int
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tableId   Int
+  table     Table     @relation(fields: [tableId], references: [id])
+  kind      String    @default("GARCOM") // GARCOM | CONTA | AJUDA
+  status    String    @default("OPEN") // OPEN | DONE
+  createdAt DateTime  @default(now())
+  doneAt    DateTime?
+
+  @@index([tenantId, status])
+}
+
+// ---------- Pedidos ----------
+
+model Order {
+  id               Int           @id @default(autoincrement())
+  tenantId         Int
+  tenant           Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  code             String // ex.: RT-1042 (único dentro do restaurante)
+  token            String        @unique // link secreto de acompanhamento do cliente
+  type             String        @default("MESA") // MESA | RETIRADA | DELIVERY
+  tableId          Int?
+  table            Table?        @relation(fields: [tableId], references: [id])
+  sessionId        Int?
+  session          TableSession? @relation(fields: [sessionId], references: [id])
+  customerName     String        @default("")
+  customerPhone    String        @default("")
+  address          String        @default("") // delivery: rua, número, bairro, cidade
+  addressRef       String        @default("") // complemento / ponto de referência
+  notes            String        @default("")
+  status           String        @default("RECEBIDO") // RECEBIDO | EM_PREPARO | PRONTO | SAIU_ENTREGA | ENTREGUE | CANCELADO
+  paymentMethod    String        @default("") // nome da forma no momento do pedido; mesa = paga no fechamento da conta
+  changeForCents   Int           @default(0) // troco para (dinheiro na entrega)
+  paid             Boolean       @default(false)
+  paidAt           DateTime?
+  couponCode       String        @default("")
+  subtotalCents    Int
+  discountCents    Int           @default(0)
+  deliveryFeeCents Int           @default(0)
+  totalCents       Int
+  startedAt        DateTime? // entrou em preparo
+  readyAt          DateTime? // ficou pronto
+  finishedAt       DateTime? // entregue / retirado
+  items            OrderItem[]
+  review           Review?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@unique([tenantId, code])
+  @@index([tenantId, status])
+  @@index([tenantId, createdAt])
+}
+
+model OrderItem {
+  id             Int      @id @default(autoincrement())
+  orderId        Int
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId      Int?
+  product        Product? @relation(fields: [productId], references: [id])
+  name           String // cópia do nome na hora da venda
+  details        String   @default("") // adicionais escolhidos, ex.: "Bacon, Ao ponto"
+  station        String   @default("COZINHA") // cópia da estação da categoria (tela da cozinha)
+  unitPriceCents Int // preço unitário já com adicionais
+  quantity       Int
+}
+
+// Avaliação do cliente depois de receber o pedido.
+model Review {
+  id        Int      @id @default(autoincrement())
+  tenantId  Int
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  orderId   Int      @unique
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  rating    Int // 1 a 5
+  comment   String   @default("")
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, createdAt])
+}
