@@ -251,9 +251,18 @@ export default function Panel() {
             </div>
           ))}
           <div className="rounded-2xl border border-line bg-dark p-4 sm:p-5">
-            <p className="text-xs text-muted">Recebido · a receber</p>
-            <p className="mt-2 font-display text-lg font-bold tabular-nums sm:mt-3">{stats ? money(stats.revenuePaidCents) : '–'}</p>
-            <p className="font-display text-sm font-semibold text-[#f4d9a6] tabular-nums">{stats ? `+ ${money(stats.revenuePendingCents)}` : ''}</p>
+            {/* Pedido de mesa só é "recebido" ao fechar a conta: o destaque é o valor que já entrou em pedidos. */}
+            <p className="text-xs text-muted">Movimento do dia</p>
+            <p className="mt-2 font-display text-2xl font-bold tabular-nums sm:mt-3">
+              {stats ? money(stats.revenuePaidCents + stats.revenuePendingCents) : '–'}
+            </p>
+            {stats && (
+              <p className="mt-1 text-[11px] leading-tight tabular-nums">
+                <span className="text-lime">Recebido {money(stats.revenuePaidCents)}</span>
+                <span className="text-muted"> · </span>
+                <span className="text-[#f4d9a6]">A receber {money(stats.revenuePendingCents)}</span>
+              </p>
+            )}
           </div>
         </div>
 
