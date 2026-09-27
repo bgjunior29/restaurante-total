@@ -6,6 +6,7 @@ Uso:  python seed.py
 Variáveis opcionais:
   PLATFORM_ADMIN_USER / PLATFORM_ADMIN_PASSWORD   login do painel /plataforma (padrão: admin / admin123)
   ADMIN_PASSWORD                                  senha do admin do restaurante de exemplo (padrão: admin123)
+  PUBLIC_URL                                      endereço do cardápio publicado (QR codes e links do WhatsApp)
   DEFAULT_TENANT_SLUG / DEFAULT_TENANT_NAME       restaurante de exemplo (padrão: cantina-da-nonna / Cantina da Nonna)
 """
 import asyncio
@@ -51,7 +52,7 @@ async def main() -> None:
 
     if await db.tenant.count() == 0 and password_from("ADMIN_PASSWORD"):
         slug = os.getenv("DEFAULT_TENANT_SLUG", "cantina-da-nonna")
-        tenant = await db.tenant.create(data={"slug": slug, "name": os.getenv("DEFAULT_TENANT_NAME", "Cantina da Nonna"), "deliveryEnabled": True})
+        tenant = await db.tenant.create(data={"slug": slug, "name": os.getenv("DEFAULT_TENANT_NAME", "Cantina da Nonna"), "deliveryEnabled": True, "publicUrl": os.getenv("PUBLIC_URL", "").rstrip("/")})
         await create_starter_content(tenant.id)
         password = password_from("ADMIN_PASSWORD")
         await db.user.create(

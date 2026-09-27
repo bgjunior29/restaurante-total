@@ -2,10 +2,13 @@ import { QRCodeSVG } from 'qrcode.react'
 import { useCallback, useEffect, useState } from 'react'
 import { useTenant } from '../../lib/tenant'
 
+// Endereço publicado do cardápio (Vercel): os QR impressos abrem direto no celular, mesmo gerados no PC local.
+const DEFAULT_PUBLIC_URL = import.meta.env.VITE_PUBLIC_URL || location.origin
+
 export default function Tables({ toast }) {
   const { tapi, slug } = useTenant()
   const [tables, setTables] = useState([])
-  const [baseUrl, setBaseUrl] = useState(location.origin)
+  const [baseUrl, setBaseUrl] = useState(DEFAULT_PUBLIC_URL)
   const [number, setNumber] = useState('')
 
   const refresh = useCallback(async () => {

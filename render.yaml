@@ -21,7 +21,9 @@ services:
       - key: PLATFORM_ADMIN_PASSWORD
         sync: false # senha do login /plataforma (só usada num banco vazio; sem ela o login não é criado)
       - key: CORS_ORIGINS
-        sync: false # ex.: https://seu-site.vercel.app
+        value: https://frontrestaurantetotal.vercel.app
+      - key: PUBLIC_URL
+        value: https://frontrestaurantetotal.vercel.app # base dos QR codes e dos links do WhatsApp
       # Guarda os binários do Prisma dentro do projeto, para o start achar o que o build baixou.
       - key: PRISMA_BINARY_CACHE_DIR
         value: /opt/render/project/src/backendrestaurantetotal/.prisma-cache

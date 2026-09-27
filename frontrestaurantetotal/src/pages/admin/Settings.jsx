@@ -93,8 +93,8 @@ export default function Settings({ toast }) {
         </div>
         <div>
           <label className="label">Endereço público do cardápio (usado nos QR codes e nos links do WhatsApp)</label>
-          <input className="input" maxLength={200} placeholder="Ex.: https://seu-restaurante.vercel.app" value={form.publicUrl} onChange={set('publicUrl')} />
-          <p className="mt-1.5 text-[11px] text-muted">Só o domínio, sem /r/…. Vazio = usa o endereço atual do navegador.</p>
+          <input className="input" maxLength={200} placeholder="Ex.: https://frontrestaurantetotal.vercel.app" value={form.publicUrl} onChange={set('publicUrl')} />
+          <p className="mt-1.5 text-[11px] text-muted">Só o domínio, sem /r/…. Vazio = usa o endereço publicado na Vercel.</p>
         </div>
       </Section>
 

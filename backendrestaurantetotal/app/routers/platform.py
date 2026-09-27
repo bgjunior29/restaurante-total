@@ -1,4 +1,5 @@
 """Painel da plataforma (dono do sistema): cria, edita, suspende restaurantes e acompanha o uso. /api/platform/..."""
+import os
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -101,6 +102,7 @@ async def create_tenant(body: TenantCreateIn, _=Depends(platform_user)):
             "tagline": body.tagline,
             "accentColor": body.accentColor,
             "theme": body.theme,
+            "publicUrl": os.getenv("PUBLIC_URL", "").rstrip("/"),  # QR codes já apontam para o site publicado
         }
     )
     await db.user.create(
