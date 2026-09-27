@@ -324,8 +324,9 @@ export default function Customer() {
               )}
             </div>
 
-            <div className="grid items-start gap-7 lg:grid-cols-[1fr_380px]">
-              <div>
+            <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-7 lg:grid-cols-[minmax(0,1fr)_380px]">
+              {/* min-w-0: a barra de categorias rola sozinha sem alargar a coluna (e a página) no celular. */}
+              <div className="min-w-0">
                 <div
                   role="tablist"
                   aria-label="Categorias"

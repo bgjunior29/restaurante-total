@@ -329,7 +329,7 @@ export default function CheckoutDrawer({
             {type === 'DELIVERY' && (
               <div className="mt-4 grid grid-cols-3 gap-3">
                 <Field label={cepBusy ? 'CEP (buscando…)' : 'CEP'}>
-                  <input className="input-light mt-2" inputMode="numeric" autoComplete="postal-code" placeholder="00000-000" maxLength={9} value={cep} onChange={(e) => onCep(e.target.value)} />
+                  <input className="input-light mt-2 px-3" inputMode="numeric" autoComplete="postal-code" placeholder="00000-000" maxLength={9} value={cep} onChange={(e) => onCep(e.target.value)} />
                 </Field>
                 <Field label="Rua" className="col-span-2">
                   <input className="input-light mt-2" autoComplete="address-line1" maxLength={100} value={street} onChange={(e) => setStreet(e.target.value)} />

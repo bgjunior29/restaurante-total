@@ -35,40 +35,44 @@ export function useNow(ms = 30000) {
 }
 
 const navClass = ({ isActive }) =>
-  `rounded-full border px-3 py-2 text-xs font-bold transition sm:px-4 sm:py-2.5 ${
+  `rounded-full border px-3 py-2 text-center text-xs font-bold whitespace-nowrap transition lg:px-4 lg:py-2.5 ${
     isActive ? 'border-lime text-lime' : 'border-line text-ink hover:border-lime hover:text-lime'
   }`
 
+/**
+ * Topo das telas da equipe. No celular a navegação desce para uma faixa própria, com os botões de
+ * largura igual (no topo não cabem marca + 4 botões + Sair); a partir do tablet fica tudo numa linha.
+ */
 export function StaffTopbar() {
   const { user, logout } = useAuth()
   const { info, to } = useTenant()
   const floor = user?.role !== 'KITCHEN'
+  const links = [
+    floor && ['/equipe', 'Pedidos', true],
+    floor && ['/equipe/salao', 'Salão'],
+    ['/equipe/cozinha', 'Cozinha'],
+    user?.role === 'ADMIN' && ['/equipe/admin', 'Gestão'],
+  ].filter(Boolean)
+  const nav = links.map(([path, label, end]) => (
+    <NavLink key={path} to={to(path)} end={end} className={navClass}>
+      {label}
+    </NavLink>
+  ))
   return (
-    <Topbar brand={info} to={to()} compact>
-      <nav className="flex items-center gap-1.5 sm:gap-2">
-        {floor && (
-          <NavLink to={to('/equipe')} end className={navClass}>
-            Pedidos
-          </NavLink>
-        )}
-        {floor && (
-          <NavLink to={to('/equipe/salao')} className={navClass}>
-            Salão
-          </NavLink>
-        )}
-        <NavLink to={to('/equipe/cozinha')} className={navClass}>
-          Cozinha
-        </NavLink>
-        {user?.role === 'ADMIN' && (
-          <NavLink to={to('/equipe/admin')} className={navClass}>
-            Gestão
-          </NavLink>
-        )}
+    <>
+      <Topbar brand={info} to={to()}>
+        <nav className="hidden items-center gap-2 md:flex">{nav}</nav>
         <button onClick={logout} className="act" title={`Sair (${user?.name})`}>
           Sair
         </button>
+      </Topbar>
+      <nav
+        className="grid gap-2 border-b border-line/70 bg-green px-[clamp(16px,5.7vw,96px)] py-2.5 md:hidden"
+        style={{ gridTemplateColumns: `repeat(${links.length}, minmax(0, 1fr))` }}
+      >
+        {nav}
       </nav>
-    </Topbar>
+    </>
   )
 }
 
@@ -257,10 +261,9 @@ export default function Panel() {
               {stats ? money(stats.revenuePaidCents + stats.revenuePendingCents) : '–'}
             </p>
             {stats && (
-              <p className="mt-1 text-[11px] leading-tight tabular-nums">
-                <span className="text-lime">Recebido {money(stats.revenuePaidCents)}</span>
-                <span className="text-muted"> · </span>
-                <span className="text-[#f4d9a6]">A receber {money(stats.revenuePendingCents)}</span>
+              <p className="mt-1 text-[11px] leading-snug tabular-nums">
+                <span className="block text-lime">Recebido {money(stats.revenuePaidCents)}</span>
+                <span className="block text-[#f4d9a6]">A receber {money(stats.revenuePendingCents)}</span>
               </p>
             )}
           </div>
@@ -435,25 +438,26 @@ function OrderCard({ order: o, act, methods, fresh, lateAfter, restaurant }) {
           </div>
         </div>
       ) : (
-        <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-5">
-          <strong className="font-display text-xl tabular-nums">{money(o.totalCents)}</strong>
-          <div className="flex flex-wrap gap-2">
+        // Total em cima; secundários dividem a largura; a ação principal ocupa a linha toda (alinhado em qualquer tela).
+        <div className="mt-auto pt-5">
+          <strong className="block font-display text-xl tabular-nums">{money(o.totalCents)}</strong>
+          <div className="mt-3 flex flex-wrap gap-2">
             {whats && (
-              <a href={whats} target="_blank" rel="noreferrer" className="rounded-xl border border-line px-3 py-2 text-xs font-semibold hover:border-lime" title="Abre o WhatsApp com a mensagem pronta">
+              <a href={whats} target="_blank" rel="noreferrer" className="flex-1 rounded-xl border border-line px-3 py-2.5 text-center text-xs font-semibold hover:border-lime" title="Abre o WhatsApp com a mensagem pronta">
                 WhatsApp
               </a>
             )}
             {o.type !== 'MESA' && o.status !== 'CANCELADO' && (
               <button
                 disabled={busy}
-                className="rounded-xl border border-line px-3 py-2 text-xs font-semibold hover:border-lime"
+                className="flex-1 rounded-xl border border-line px-3 py-2.5 text-xs font-semibold hover:border-lime"
                 onClick={() => (o.paid ? run('payment', { paid: false }) : methods.length > 1 ? setPaying(true) : run('payment', { paid: true }))}
               >
                 {o.paid ? 'Desfazer pago' : 'Marcar pago'}
               </button>
             )}
             {next && (
-              <button disabled={busy} className="btn-lime py-2 text-sm" onClick={() => run('status', { status: next.status })}>
+              <button disabled={busy} className="btn-lime w-full py-2.5 text-sm" onClick={() => run('status', { status: next.status })}>
                 {next.action} →
               </button>
             )}
