@@ -32,7 +32,7 @@ export function LoginForm({ brand, brandTo, eyebrow, title, onSuccess, footer })
       <form onSubmit={submit} className="w-full max-w-sm rounded-[24px] border border-line bg-dark p-7">
         <Brand brand={brand} to={brandTo} />
         <p className="eyebrow mt-8 text-lime">{eyebrow}</p>
-        <h1 className="mt-2 font-display text-3xl font-bold tracking-[-0.05em]">{title}</h1>
+        <h1 className="mt-2 font-serif text-3xl">{title}</h1>
         <label className="label mt-6" htmlFor="u">
           Usuário
         </label>

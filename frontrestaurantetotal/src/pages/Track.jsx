@@ -93,7 +93,7 @@ export default function Track() {
         <p className="eyebrow text-lime">
           Pedido {order.code} · {order.table ? order.table.label : ORDER_TYPES[order.type].label} · {time(order.createdAt)}
         </p>
-        <h1 className="mt-3 font-display text-4xl font-bold tracking-[-0.05em]">
+        <h1 className="mt-3 font-serif text-4xl">
           {cancelled ? 'Pedido cancelado.' : `${steps[current]?.[1] ?? STATUS[order.status].label}.`}
         </h1>
         <p className="mt-3 text-ink/75">
@@ -123,7 +123,7 @@ export default function Track() {
           </ol>
         )}
 
-        <section className="mt-8 rounded-[20px] border border-line bg-dark p-5">
+        <section className="mt-8 rounded-2xl border border-line bg-dark p-5">
           <ul className="divide-y divide-line text-sm">
             {order.items.map((i) => (
               <li key={i.id} className="flex justify-between gap-3 py-2.5">
@@ -170,8 +170,8 @@ export default function Track() {
                   Pagamento: {order.paymentMethod}
                   {order.changeForCents > 0 && ` · troco para ${money(order.changeForCents)}`}
                 </span>
-                <span className={`rounded-lg px-3 py-1.5 ${order.paid ? 'bg-lime text-dark' : 'bg-[#4a3a1f] text-[#f4d9a6]'}`}>
-                  {order.paid ? 'Pago ✓' : 'Pagamento pendente'}
+                <span className={`rounded-lg px-3 py-1.5 ${order.paid ? 'bg-emerald-300/[0.08] text-emerald-200 ring-1 ring-inset ring-emerald-300/25' : 'bg-amber-200/[0.06] text-amber-100 ring-1 ring-inset ring-amber-200/25'}`}>
+                  {order.paid ? 'Pago' : 'Pagamento pendente'}
                 </span>
               </>
             )}
@@ -226,8 +226,8 @@ function ReviewBox({ order, token, tapi, onDone }) {
   }
 
   return (
-    <section className="mt-6 rounded-[20px] border border-lime/40 bg-dark p-5">
-      <h2 className="font-display text-lg font-semibold">Como foi?</h2>
+    <section className="mt-6 rounded-2xl border border-lime/40 bg-dark p-5">
+      <h2 className="font-serif text-lg">Como foi?</h2>
       <div className="mt-3 flex gap-1" role="radiogroup" aria-label="Nota de 1 a 5">
         {[1, 2, 3, 4, 5].map((n) => (
           <button

@@ -51,7 +51,7 @@ export default function OptionsSheet({ product, onClose, onAdd }) {
       >
         <div className="flex items-start justify-between gap-3 p-6 pb-3">
           <div>
-            <h2 className="font-display text-2xl font-bold tracking-[-0.04em]">{product.name}</h2>
+            <h2 className="font-serif text-2xl">{product.name}</h2>
             {product.description && <p className="mt-1 text-xs text-[#6b7266]">{product.description}</p>}
           </div>
           <button

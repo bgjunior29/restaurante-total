@@ -62,8 +62,11 @@ export default function Savings() {
         </Link>
       </Topbar>
       <main className="mx-auto w-full max-w-5xl flex-1 px-[clamp(16px,5.7vw,96px)] py-12">
-        <p className="eyebrow text-lime">✳ &nbsp; Calculadora de economia</p>
-        <h1 className="mt-4 font-display text-[clamp(32px,5vw,60px)] leading-[1] font-bold tracking-[-0.05em]">
+        <p className="eyebrow flex items-center gap-3 text-lime">
+          <span className="h-px w-8 bg-lime/60" />
+          Calculadora de economia
+        </p>
+        <h1 className="mt-4 font-serif text-[clamp(32px,5vw,60px)] leading-[1]">
           Quanto a comissão do aplicativo
           <br />
           <em className="text-lime not-italic">custa para você?</em>

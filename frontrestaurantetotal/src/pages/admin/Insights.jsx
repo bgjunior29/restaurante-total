@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Spinner } from '../../components/ui'
+import Icon from '../../components/Icon'
 import { money, ORDER_TYPES } from '../../lib/format'
 import { useTenant } from '../../lib/tenant'
 
 function Card({ title, children, className = '' }) {
   return (
     <section className={`rounded-2xl border border-line bg-dark p-5 ${className}`}>
-      <h3 className="font-display text-lg font-semibold">{title}</h3>
+      <h3 className="font-serif text-lg">{title}</h3>
       <div className="mt-4">{children}</div>
     </section>
   )
@@ -73,7 +74,7 @@ export default function Insights({ toast }) {
     <div>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="font-display text-2xl font-semibold">Inteligência</h2>
+          <h2 className="font-serif text-2xl">Inteligência</h2>
           <p className="mt-1 max-w-xl text-sm text-muted">Calculado a partir dos seus pedidos reais. Quanto mais pedidos, mais precisas as previsões.</p>
         </div>
         <div className="flex gap-2">
@@ -86,7 +87,7 @@ export default function Insights({ toast }) {
       </div>
 
       <section className="mt-6 rounded-2xl border border-lime/50 bg-lime/10 p-5">
-        <p className="eyebrow text-lime">✳ Recomendações</p>
+        <p className="eyebrow text-lime">Recomendações</p>
         <ul className="mt-3 space-y-2 text-sm">
           {data.tips.map((t) => (
             <li key={t} className="flex gap-2">
@@ -158,7 +159,7 @@ export default function Insights({ toast }) {
 
         <Card title="Estoque baixo">
           {data.lowStock.length === 0 ? (
-            <p className="text-sm text-muted">Nada em alerta. 👌</p>
+            <p className="text-sm text-muted">Nada em alerta.</p>
           ) : (
             <ul className="divide-y divide-line text-sm">
               {data.lowStock.map((p) => (
@@ -173,7 +174,7 @@ export default function Insights({ toast }) {
 
         <Card title="Sem vendas no período">
           {data.slowProducts.length === 0 ? (
-            <p className="text-sm text-muted">Todos os produtos venderam. 🎉</p>
+            <p className="text-sm text-muted">Todos os produtos venderam.</p>
           ) : (
             <div className="flex flex-wrap gap-2 text-xs">
               {data.slowProducts.map((n) => (
@@ -192,7 +193,8 @@ export default function Insights({ toast }) {
               return (
                 <li key={k} className="grid grid-cols-[110px_1fr_40px] items-center gap-3">
                   <span>
-                    {t.icon} {t.short}
+                    <Icon name={t.icon} className="mr-1.5 text-muted" />
+                    {t.short}
                   </span>
                   <div className="h-3 rounded bg-panel">
                     <div className="h-3 rounded bg-lime" style={{ width: `${data.orders ? (n / data.orders) * 100 : 0}%` }} />

@@ -10,21 +10,17 @@ const initials = (name) =>
     .map((w) => w[0].toUpperCase())
     .join('') || name.slice(0, 2).toUpperCase()
 
-/** Marca do Restaurante Total: prato e talheres (a mesma do favicon), nas cores do tema. */
-export function LogoMark({ className = 'size-[46px]' }) {
+/** Marca do Restaurante Total: cloche (tampa de prato) em traço fino, nas cores do tema (a mesma do favicon). */
+export function LogoMark({ className = 'size-10' }) {
   return (
-    <svg viewBox="0 0 64 64" aria-hidden className={`shrink-0 ${className}`}>
-      <circle cx="32" cy="32" r="30" fill="var(--color-dark)" stroke="var(--color-lime)" strokeWidth="2.5" />
-      <circle cx="32" cy="33" r="13" fill="none" stroke="var(--color-lime)" strokeWidth="3" />
-      <circle cx="32" cy="33" r="6.5" fill="var(--color-lime)" opacity=".45" />
-      <path
-        d="M13 18v9m3.5-9v9M20 18v9M13 27q3.5 3 7 0M16.5 29v17"
-        fill="none"
-        stroke="var(--color-lime)"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-      />
-      <path d="M48 46V18q5 6 3 14h-3" fill="none" stroke="var(--color-lime)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+    <svg viewBox="0 0 48 48" aria-hidden className={`shrink-0 ${className}`}>
+      <circle cx="24" cy="24" r="23" fill="var(--color-dark)" stroke="color-mix(in srgb, var(--color-lime) 45%, transparent)" strokeWidth="1" />
+      <g fill="none" stroke="var(--color-lime)" strokeWidth="1.5" strokeLinecap="round">
+        <path d="M12.5 30.5a11.5 11.5 0 0 1 23 0" />
+        <path d="M10 30.5h28M14 34h20" />
+        <path d="M24 19v-2.2" />
+      </g>
+      <circle cx="24" cy="15.4" r="1.6" fill="var(--color-lime)" />
     </svg>
   )
 }
@@ -42,24 +38,24 @@ export function Brand({ brand, to = '/', compact = false }) {
           src={brand.logoUrl}
           alt=""
           onError={() => setLogoFailed(true)}
-          className="size-[46px] shrink-0 rounded-full border border-lime object-cover"
+          className="size-10 shrink-0 rounded-full object-cover ring-1 ring-lime/40 ring-offset-2 ring-offset-green"
         />
       ) : !brand || brand.platform ? (
         <LogoMark />
       ) : (
-        // Restaurante sem logo: selo preenchido com as iniciais, na cor de destaque dele.
-        <span className="flex size-[46px] shrink-0 items-center justify-center rounded-2xl bg-lime font-display text-lg font-extrabold tracking-[-1px] text-dark">
+        // Restaurante sem logo: monograma com as iniciais em serifa, num anel fino da cor de destaque.
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-lime/50 bg-dark font-serif text-[19px] leading-none text-lime">
           {mark}
         </span>
       )}
       <span
-        className={`min-w-0 font-display text-base leading-none font-extrabold tracking-[0.06em] uppercase sm:text-lg sm:tracking-[0.11em] ${
+        className={`min-w-0 font-serif text-[21px] leading-none sm:text-[23px] ${
           compact ? 'hidden sm:block' : ''
         }`}
       >
         <span className="block truncate">{name}</span>
         {tagline && (
-          <small className="mt-[7px] block truncate font-sans text-[8px] font-semibold tracking-[0.19em] text-muted">
+          <small className="mt-1.5 block truncate font-sans text-[9px] font-medium tracking-[0.22em] text-muted uppercase">
             {tagline}
           </small>
         )}
@@ -70,7 +66,7 @@ export function Brand({ brand, to = '/', compact = false }) {
 
 export function Topbar({ brand, to, compact = false, children }) {
   return (
-    <header className="relative z-10 flex h-[72px] items-center justify-between gap-3 border-b border-line/70 bg-green px-[clamp(16px,5.7vw,96px)] sm:h-[86px]">
+    <header className="sticky top-0 z-20 flex h-[68px] items-center justify-between gap-3 border-b border-line/60 bg-green/80 px-[clamp(16px,5.7vw,96px)] backdrop-blur-xl sm:h-[76px]">
       <Brand brand={brand} to={to} compact={compact} />
       <div className="flex shrink-0 items-center gap-3 sm:gap-5">{children}</div>
     </header>
@@ -79,9 +75,11 @@ export function Topbar({ brand, to, compact = false, children }) {
 
 export function Footer({ name = 'Restaurante Total' }) {
   return (
-    <footer className="flex flex-wrap justify-between gap-2 bg-green px-[clamp(16px,5.7vw,96px)] py-7 text-[11px] tracking-[0.08em] text-muted">
-      <span className="uppercase">
-        {name} <span className="mx-2 text-lime">✳</span> Feito para boas refeições
+    <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-line/60 bg-green px-[clamp(16px,5.7vw,96px)] py-8 text-[11px] text-muted">
+      <span>
+        <span className="font-serif text-[15px] text-ink/80">{name}</span>
+        <span className="mx-3 text-line">|</span>
+        <span className="tracking-[0.18em] uppercase">Hospitalidade, do salão à entrega</span>
       </span>
       <span className="flex gap-4">
         <Link to="/termos" className="hover:text-ink">Termos</Link>
@@ -106,8 +104,8 @@ export function useToast() {
     <div
       key={msg.id}
       role={msg.tone === 'error' ? 'alert' : 'status'}
-      className={`fixed bottom-[max(24px,env(safe-area-inset-bottom))] left-1/2 z-50 w-max max-w-[calc(100vw-32px)] rounded-2xl px-5 py-3 text-center text-sm font-semibold shadow-xl animate-[pop-in_.2s_ease-out] ${
-        msg.tone === 'error' ? 'bg-red-200 text-red-950' : 'bg-lime text-dark'
+      className={`fixed bottom-[max(24px,env(safe-area-inset-bottom))] left-1/2 z-50 w-max max-w-[calc(100vw-32px)] rounded-xl border px-5 py-3 text-center text-sm font-medium shadow-[0_20px_50px_-12px_rgba(0,0,0,.6)] backdrop-blur animate-[pop-in_.2s_ease-out] ${
+        msg.tone === 'error' ? 'border-red-400/30 bg-[#2a1416]/95 text-red-100' : 'border-lime/30 bg-dark/95 text-ink'
       }`}
       style={{ transform: 'translateX(-50%)' }}
     >
@@ -119,8 +117,8 @@ export function useToast() {
 
 export function Stepper({ value, onChange, min = 0, max = 50, light = false, label = '' }) {
   const base = light
-    ? 'border-[#c9ccb6] bg-card text-dark hover:border-olive'
-    : 'border-line bg-green2 text-ink hover:border-lime'
+    ? 'border-[#ddd6c8] bg-card text-dark hover:border-olive'
+    : 'border-line bg-white/[0.03] text-ink hover:border-ink/30'
   const suffix = label ? ` ${label}` : ''
   return (
     <div className="flex items-center gap-2" role="group" aria-label={label ? `Quantidade de ${label}` : 'Quantidade'}>
@@ -152,7 +150,7 @@ export function Stepper({ value, onChange, min = 0, max = 50, light = false, lab
 export function Spinner({ label = 'Carregando…' }) {
   return (
     <div role="status" className="flex items-center justify-center gap-3 py-20 text-sm text-muted">
-      <span className="size-4 animate-spin rounded-full border-2 border-lime border-t-transparent" />
+      <span className="size-4 animate-spin rounded-full border-[1.5px] border-lime/80 border-t-transparent" />
       {label}
     </div>
   )

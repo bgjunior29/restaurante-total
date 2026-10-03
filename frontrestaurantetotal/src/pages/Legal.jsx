@@ -13,7 +13,7 @@ const UPDATED = '03/10/2026'
 function Section({ title, children }) {
   return (
     <section className="mt-8">
-      <h2 className="font-display text-xl font-semibold text-lime">{title}</h2>
+      <h2 className="font-serif text-2xl text-lime">{title}</h2>
       <div className="mt-2 space-y-3 text-sm leading-relaxed text-ink/80">{children}</div>
     </section>
   )
@@ -25,7 +25,7 @@ function Page({ title, children }) {
       <Topbar />
       <main className="mx-auto w-full max-w-3xl flex-1 px-[clamp(16px,5.7vw,96px)] py-12">
         <p className="eyebrow text-lime">Atualizado em {UPDATED}</p>
-        <h1 className="mt-3 font-display text-4xl font-bold tracking-tight">{title}</h1>
+        <h1 className="mt-3 font-serif text-4xl">{title}</h1>
         {children}
         <p className="mt-10 text-xs text-muted">
           Veja também: <Link className="underline" to="/termos">Termos de uso</Link> ·{' '}

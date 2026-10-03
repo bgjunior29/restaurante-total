@@ -20,7 +20,7 @@ function Toggle({ checked, onChange, title, hint }) {
 function Section({ title, children }) {
   return (
     <section className="rounded-2xl border border-line bg-dark p-6">
-      <h3 className="font-display text-lg font-semibold">{title}</h3>
+      <h3 className="font-serif text-lg">{title}</h3>
       <div className="mt-4 space-y-4">{children}</div>
     </section>
   )

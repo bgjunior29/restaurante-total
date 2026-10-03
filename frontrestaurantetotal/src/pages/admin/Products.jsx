@@ -149,7 +149,7 @@ export default function Products({ toast }) {
     <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
       <section className="min-w-0">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-2xl font-semibold">Produtos</h2>
+          <h2 className="font-serif text-2xl">Produtos</h2>
           <button className="btn-lime py-2 text-sm" onClick={() => setForm({ ...EMPTY, categoryId: categories[0]?.id ?? '' })} disabled={!categories.length}>
             + Novo produto
           </button>
@@ -315,7 +315,7 @@ export default function Products({ toast }) {
                     </div>
                     <div className="flex flex-wrap items-center gap-2 text-xs">
                       <strong className="font-display text-base">{money(p.priceCents)}</strong>
-                      <button onClick={() => toggle(p)} className={`rounded-full px-3 py-1 font-semibold ${p.available ? 'bg-lime text-dark' : 'bg-panel text-muted'}`}>
+                      <button onClick={() => toggle(p)} className={`rounded-md px-2.5 py-1 font-medium ${p.available ? 'bg-emerald-300/[0.08] text-emerald-200 ring-1 ring-inset ring-emerald-300/25' : 'bg-white/[0.03] text-muted ring-1 ring-inset ring-line'}`}>
                         {p.available ? 'Disponível' : 'Esgotado'}
                       </button>
                       <button className="act" onClick={() => setForm(toForm(p))}>
@@ -334,7 +334,7 @@ export default function Products({ toast }) {
       </section>
 
       <aside>
-        <h2 className="font-display text-2xl font-semibold">Categorias</h2>
+        <h2 className="font-serif text-2xl">Categorias</h2>
         <ul className="mt-4 divide-y divide-line rounded-2xl border border-line bg-dark">
           {categories.map((c) => (
             <li key={c.id} className="flex items-center justify-between gap-2 px-4 py-3 text-sm">
@@ -359,7 +359,7 @@ export default function Products({ toast }) {
         </ul>
         <form onSubmit={addCategory} className="mt-3 grid grid-cols-[1fr_auto] gap-2">
           <input className="input py-2" placeholder="Nova categoria" required maxLength={40} value={newCat} onChange={(e) => setNewCat(e.target.value)} />
-          <button className="btn-lime row-span-2 py-2 text-sm">+</button>
+          <button className="btn-outline row-span-2 px-4 text-sm">Adicionar</button>
           <select aria-label="Estação da nova categoria" className="input py-2 text-sm" value={newStation} onChange={(e) => setNewStation(e.target.value)}>
             {Object.entries(STATIONS).map(([k, l]) => (
               <option key={k} value={k}>

@@ -3,28 +3,39 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import CheckoutDrawer from '../components/Checkout'
 import OptionsSheet from '../components/OptionsSheet'
 import { Footer, Spinner, Stepper, Topbar, useToast } from '../components/ui'
+import Icon from '../components/Icon'
 import { money, pad2, waLink } from '../lib/format'
 import { load, myBill, myOrders, myTable, rememberOrder, rememberTable, save, tablePath } from '../lib/storage'
 import { useTenant } from '../lib/tenant'
 
-function HeroArt() {
+/** Capa: um "cardápio impresso" com pratos reais da casa (no lugar de uma ilustração genérica). */
+function HeroMenuCard({ menu, products }) {
+  const featured = products.slice(0, 4)
+  const photo = products.find((p) => p.imageUrl)
+  if (!featured.length) return null
   return (
-    <div
-      aria-hidden
-      className="relative hidden h-[345px] overflow-hidden rounded-[160px_160px_28px_28px] border border-line md:block"
-      style={{ background: 'radial-gradient(circle at 52% 42%, color-mix(in srgb, var(--color-olive) 55%, var(--color-panel)) 0%, var(--color-panel) 55%, var(--color-dark) 100%)' }}
-    >
-      <span className="eyebrow absolute top-12 left-16 text-ink/90">Mesa posta</span>
-      <div className="absolute top-[-12%] left-[16%] size-[520px] rounded-full border border-lime/20" />
-      {/* prato */}
-      <div className="absolute top-[22%] left-[30%] size-[230px] rounded-full bg-[#f3ece0] shadow-[0_22px_48px_rgba(0,0,0,.4)]" />
-      <div className="absolute top-[29%] left-[35.5%] size-[160px] rounded-full border-[3px] border-[#e2d8c6] bg-[#faf6ee]" />
-      <div className="absolute top-[36%] left-[41%] size-[92px] rounded-full bg-[radial-gradient(circle_at_40%_35%,#e9a15b,#b8612c_60%,#7d3b17)] shadow-inner" />
-      <div className="absolute top-[40%] left-[48%] size-[26px] rounded-full bg-[radial-gradient(circle_at_40%_35%,#9bc46b,#4f7a33)]" />
-      {/* talheres */}
-      <div className="absolute top-[18%] left-[22%] h-[250px] w-[9px] rounded-full bg-gradient-to-b from-[#d9d4c7] to-[#9f9a8d] shadow-lg" />
-      <div className="absolute top-[18%] left-[74%] h-[250px] w-[11px] rounded-full bg-gradient-to-b from-[#d9d4c7] to-[#9f9a8d] shadow-lg" />
-      <span className="eyebrow absolute inset-x-0 bottom-4 text-center text-[10px] text-lime/80">Boa comida. Boas conversas.</span>
+    <div aria-hidden className="relative hidden md:block">
+      <div className="absolute -inset-8 rounded-[40px] bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--color-lime)_14%,transparent),transparent)]" />
+      <div className="relative rotate-[1.2deg] rounded-[6px] bg-cream p-2 text-dark shadow-[0_40px_80px_-30px_rgba(0,0,0,.8)]">
+        <div className="rounded-[3px] border border-olive/30 px-9 pt-9 pb-8">
+          {photo && <img src={photo.imageUrl} alt="" className="mb-7 h-40 w-full rounded-[2px] object-cover" />}
+          <p className="eyebrow text-center text-[9px] text-olive">{menu.name}</p>
+          <p className="mt-2 text-center font-serif text-[40px] leading-none italic">Menu</p>
+          <div className="mx-auto mt-4 mb-6 h-px w-16 bg-olive/40" />
+          <ul className="space-y-4">
+            {featured.map((p) => (
+              <li key={p.id}>
+                <div className="flex items-baseline gap-2">
+                  <span className="font-serif text-[19px] leading-tight">{p.name}</span>
+                  <span className="mb-1 flex-1 border-b border-dotted border-olive/40" />
+                  <span className="text-sm font-medium tabular-nums">{money(p.priceCents)}</span>
+                </div>
+                {p.description && <p className="mt-0.5 line-clamp-1 text-[11px] text-[#7a7266]">{p.description}</p>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   )
 }
@@ -206,8 +217,8 @@ export default function Customer() {
   return (
     <div className="flex min-h-screen flex-col">
       <Topbar brand={menu} to={to()} compact>
-        <span className="eyebrow hidden items-center gap-2 text-[10px] text-lime lg:flex">
-          <i className={`size-[7px] rounded-full ${menu.ordersOpen ? 'bg-lime' : 'bg-red-400'}`} />
+        <span className="hidden items-center gap-2 text-xs text-muted lg:flex">
+          <i className={`size-1.5 rounded-full ${menu.ordersOpen ? 'bg-emerald-400 shadow-[0_0_0_3px_rgba(52,211,153,.15)]' : 'bg-red-400'}`} />
           {menu.ordersOpen ? 'Aberto para pedidos' : 'Pedidos pausados'}
         </span>
         {billHere && (
@@ -217,25 +228,25 @@ export default function Customer() {
         )}
         {!billHere && recent.length > 0 && (
           <Link to={to(`/pedido/${recent[0].token}`)} className="btn-outline">
-            Meu pedido <span className="ml-1">↗</span>
+            Meu pedido
           </Link>
         )}
         {atTable && (
           <div className="relative">
-            <button className="btn-outline border-lime text-lime" onClick={() => setCalling((v) => !v)} aria-expanded={calling}>
-              🙋 <span className="hidden sm:inline">Chamar</span>
+            <button className="btn-outline inline-flex items-center gap-2 border-lime/40 text-lime" onClick={() => setCalling((v) => !v)} aria-expanded={calling}>
+              <Icon name="bell" /> <span className="hidden sm:inline">Chamar</span>
             </button>
             {calling && (
-              <div className="absolute right-0 z-30 mt-2 w-52 overflow-hidden rounded-2xl border border-line bg-dark text-sm shadow-xl">
-                <button className="block w-full px-4 py-3 text-left hover:bg-panel" onClick={() => callStaff('GARCOM')}>
-                  🙋 Chamar o garçom
+              <div className="absolute right-0 z-30 mt-2 w-56 overflow-hidden rounded-xl border border-line bg-dark/95 p-1 text-sm shadow-[0_24px_48px_-12px_rgba(0,0,0,.7)] backdrop-blur">
+                <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-white/[0.05]" onClick={() => callStaff('GARCOM')}>
+                  <Icon name="hand" className="text-lime" /> Chamar o garçom
                 </button>
-                <button className="block w-full px-4 py-3 text-left hover:bg-panel" onClick={() => callStaff('AJUDA')}>
-                  ❓ Preciso de ajuda
+                <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-white/[0.05]" onClick={() => callStaff('AJUDA')}>
+                  <Icon name="help" className="text-lime" /> Preciso de ajuda
                 </button>
                 {billHere && (
-                  <Link className="block px-4 py-3 hover:bg-panel" to={to(`/conta/${billHere.token}`)}>
-                    🧾 Ver e pedir a conta
+                  <Link className="flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-white/[0.05]" to={to(`/conta/${billHere.token}`)}>
+                    <Icon name="receipt" className="text-lime" /> Ver e pedir a conta
                   </Link>
                 )}
               </div>
@@ -247,48 +258,52 @@ export default function Customer() {
       <main className="flex-1">
         {/* HERO */}
         <section className="mx-auto max-w-[1500px] px-[clamp(16px,5.7vw,96px)]">
-          <div className="grid items-center gap-[4vw] py-8 md:min-h-[450px] md:grid-cols-[1.05fr_.95fr] md:py-12">
+          <div className="grid items-center gap-[6vw] py-10 md:min-h-[520px] md:grid-cols-[1.15fr_.85fr] md:py-16">
             <div>
-              <p className="eyebrow text-lime">
-                ✳ &nbsp; {atTable ? `Boas-vindas à mesa ${pad2(table)}` : offers.length ? `Salão, ${offers.join(' e ')}` : 'Boas-vindas'}
+              <p className="eyebrow flex items-center gap-3 text-lime">
+                <span className="h-px w-8 bg-lime/60" />
+                {atTable ? `Boas-vindas à mesa ${pad2(table)}` : offers.length ? `Salão, ${offers.join(' e ')}` : 'Boas-vindas'}
               </p>
-              <h1 className="my-5 font-display text-[clamp(40px,6.5vw,102px)] leading-[.94] font-bold tracking-[-0.068em] md:my-6">
+              <h1 className="my-6 font-serif text-[clamp(44px,6.6vw,104px)] leading-[.95] md:my-7">
                 {menu.heroTitle}
                 {menu.heroHighlight && (
                   <>
                     <br />
-                    <em className="text-lime not-italic">{menu.heroHighlight}</em>
+                    <em className="text-lime italic">{menu.heroHighlight}</em>
                   </>
                 )}
               </h1>
-              {menu.heroText && <p className="max-w-[440px] leading-[1.65] text-ink/75">{menu.heroText}</p>}
+              {menu.heroText && <p className="max-w-[460px] text-[15px] leading-[1.7] text-ink/65">{menu.heroText}</p>}
               {contacts.length > 0 && (
-                <p className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
-                  {contacts.map((c) => (
-                    <span key={c}>{c}</span>
+                <p className="mt-6 flex flex-wrap gap-x-5 gap-y-1.5 text-xs text-muted">
+                  {contacts.map((c, i) => (
+                    <span key={c} className="flex items-center gap-5">
+                      {i > 0 && <span className="h-3 w-px bg-line" />}
+                      {c}
+                    </span>
                   ))}
                 </p>
               )}
-              <div className="mt-6 flex flex-wrap gap-3">
-                <a href="#cardapio" className="btn-lime inline-block md:hidden">
-                  Ver cardápio ↓
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a href="#cardapio" className="btn-lime inline-flex items-center gap-2">
+                  Ver cardápio <Icon name="arrow" className="size-4 rotate-90" />
                 </a>
                 {whats && (
-                  <a href={whats} target="_blank" rel="noreferrer" className="btn-outline">
-                    WhatsApp do restaurante
+                  <a href={whats} target="_blank" rel="noreferrer" className="btn-outline inline-flex items-center gap-2 py-3">
+                    <Icon name="chat" className="size-4" /> WhatsApp
                   </a>
                 )}
               </div>
             </div>
-            <HeroArt />
+            <HeroMenuCard menu={menu} products={products} />
           </div>
           <ol className="hidden gap-4 pb-12 sm:grid sm:grid-cols-3">
             {(atTable
               ? ['Monte seu pedido', 'Acompanhe o preparo', 'Peça a conta pelo celular']
               : ['Monte seu pedido', 'Escolha mesa, retirada ou delivery', 'Acompanhe até chegar']
             ).map((t, i) => (
-              <li key={t} className="flex items-baseline gap-4 border-t border-line pt-4 text-sm text-ink/80">
-                <span className="font-display text-2xl font-bold text-lime">{pad2(i + 1)}</span>
+              <li key={t} className="flex items-baseline gap-4 border-t border-line pt-5 text-sm text-ink/70">
+                <span className="font-serif text-3xl text-lime italic">{pad2(i + 1)}</span>
                 {t}
               </li>
             ))}
@@ -297,10 +312,10 @@ export default function Customer() {
 
         {/* CARDÁPIO */}
         <section id="cardapio" className="scroll-mt-2 bg-cream text-dark">
-          <div className="mx-auto max-w-[1500px] px-[clamp(16px,5.7vw,96px)] py-10 md:py-14">
+          <div className="mx-auto max-w-[1500px] px-[clamp(16px,5.7vw,96px)] py-12 md:py-20">
             {!menu.ordersOpen && (
               <div className="mb-8 rounded-2xl bg-[#f3d9c4] px-5 py-4 text-sm font-medium text-[#6b2f12]">
-                No momento não estamos recebendo pedidos pelo cardápio. Chame um atendente. 🙂
+                No momento não estamos recebendo pedidos pelo cardápio. Chame um atendente.
               </div>
             )}
             {seat.status === 'invalid' && (
@@ -310,13 +325,18 @@ export default function Customer() {
             )}
             <div className="mb-6 flex flex-wrap items-end justify-between gap-6 md:mb-8">
               <div>
-                <p className="eyebrow text-olive">Cardápio da casa</p>
-                <h2 className="mt-2 font-display text-[clamp(30px,3.4vw,44px)] font-bold tracking-[-0.04em]">O que vai ser hoje?</h2>
+                <p className="eyebrow flex items-center gap-3 text-olive">
+                  <span className="h-px w-8 bg-olive/50" />
+                  Cardápio da casa
+                </p>
+                <h2 className="mt-3 font-serif text-[clamp(36px,4vw,56px)] leading-none">
+                  O que vai ser <em className="text-olive">hoje?</em>
+                </h2>
               </div>
               {atTable ? (
-                <div className="rounded-2xl border border-[#d8d3bd] bg-card px-4 py-2.5">
+                <div className="rounded-xl border border-[#e2dccf] bg-card px-4 py-2.5">
                   <span className="eyebrow block text-[9px] text-olive">Sua mesa</span>
-                  <span className="font-display text-lg font-semibold">{seat.table.label}</span>
+                  <span className="font-serif text-2xl">{seat.table.label}</span>
                 </div>
               ) : (
                 <p className="max-w-[220px] text-xs text-[#6b7266]">
@@ -331,7 +351,7 @@ export default function Customer() {
                 <div
                   role="tablist"
                   aria-label="Categorias"
-                  className="no-scrollbar sticky top-0 z-20 -mx-[clamp(16px,5.7vw,96px)] mb-5 flex gap-2 overflow-x-auto bg-cream/95 px-[clamp(16px,5.7vw,96px)] py-3 backdrop-blur lg:static lg:mx-0 lg:flex-wrap lg:bg-transparent lg:px-0 lg:py-0 lg:backdrop-blur-none"
+                  className="no-scrollbar sticky top-[68px] z-10 sm:top-[76px] -mx-[clamp(16px,5.7vw,96px)] mb-5 flex gap-2 overflow-x-auto bg-cream/95 px-[clamp(16px,5.7vw,96px)] py-3 backdrop-blur lg:static lg:mx-0 lg:flex-wrap lg:bg-transparent lg:px-0 lg:py-0 lg:backdrop-blur-none"
                 >
                   {categories.map((c) => (
                     <button
@@ -339,8 +359,8 @@ export default function Customer() {
                       role="tab"
                       aria-selected={filter === c}
                       onClick={() => setFilter(c)}
-                      className={`shrink-0 rounded-full border px-4 py-2 text-xs font-semibold transition ${
-                        filter === c ? 'border-dark bg-dark text-ink' : 'border-[#cdc9b5] bg-transparent text-[#4a5347] hover:border-dark'
+                      className={`shrink-0 rounded-full border px-4 py-2 text-[13px] font-medium transition ${
+                        filter === c ? 'border-dark bg-dark text-cream' : 'border-[#ddd6c8] bg-card/60 text-[#5b554b] hover:border-[#b9b1a2] hover:text-dark'
                       }`}
                     >
                       {c}
@@ -368,9 +388,9 @@ export default function Customer() {
                         <Link
                           key={o.token}
                           to={to(`/pedido/${o.token}`)}
-                          className="rounded-full border border-[#cdc9b5] px-4 py-2 text-xs font-semibold hover:border-dark"
+                          className="rounded-lg border border-[#ddd6c8] bg-card px-4 py-2 text-xs font-medium hover:border-dark"
                         >
-                          {o.code} →
+                          {o.code}
                         </Link>
                       ))}
                     </div>
@@ -378,15 +398,19 @@ export default function Customer() {
                 )}
               </div>
 
-              <aside className="flex flex-col gap-4 lg:sticky lg:top-6">
+              <aside className="flex flex-col gap-4 lg:sticky lg:top-24">
                 {(menu.pickupEnabled || menu.deliveryEnabled) && (
-                  <div className="rounded-[20px] bg-sage p-5 text-sm">
-                    <h3 className="font-display text-xl font-semibold">Também para levar</h3>
-                    <ul className="mt-2 space-y-1.5 text-xs text-[#5d6558]">
-                      {menu.pickupEnabled && <li>🛍️ Retirada no balcão · pronto em ~{menu.prepTimeMin} min</li>}
+                  <div className="rounded-2xl border border-[#e2dccf] bg-card p-6 text-sm">
+                    <h3 className="font-serif text-2xl">Também para levar</h3>
+                    <ul className="mt-3 space-y-2 text-xs text-[#6b6458]">
+                      {menu.pickupEnabled && (
+                        <li className="flex gap-2.5">
+                          <Icon name="bag" className="size-4 text-olive" /> Retirada no balcão · pronto em ~{menu.prepTimeMin} min
+                        </li>
+                      )}
                       {menu.deliveryEnabled && (
-                        <li>
-                          🛵 Delivery · ~{menu.deliveryTimeMin} min · taxa {money(menu.deliveryFeeCents)}
+                        <li className="flex gap-2.5">
+                          <Icon name="scooter" className="size-4 text-olive" /> Delivery · ~{menu.deliveryTimeMin} min · taxa {money(menu.deliveryFeeCents)}
                           {menu.freeDeliveryAboveCents > 0 && ` (grátis acima de ${money(menu.freeDeliveryAboveCents)})`}
                         </li>
                       )}
@@ -395,8 +419,8 @@ export default function Customer() {
                   </div>
                 )}
 
-                <div className="hidden rounded-[20px] bg-dark p-5 text-ink lg:block">
-                  <h3 className="font-display text-xl font-semibold">Seu pedido</h3>
+                <div className="hidden rounded-2xl bg-dark p-6 text-ink shadow-[0_30px_60px_-30px_rgba(0,0,0,.5)] lg:block">
+                  <h3 className="font-serif text-2xl">Seu pedido</h3>
                   {count === 0 ? (
                     <p className="mt-3 text-xs leading-relaxed text-muted">Tudo começa com uma boa escolha. Adicione itens ao pedido.</p>
                   ) : (
@@ -417,11 +441,11 @@ export default function Customer() {
                     <span>{money(subtotal)}</span>
                   </div>
                   <button
-                    className="btn-lime mt-4 w-full disabled:bg-olive disabled:opacity-100"
+                    className="btn-lime mt-5 w-full disabled:bg-panel disabled:text-muted disabled:opacity-100 disabled:shadow-none"
                     disabled={count === 0}
                     onClick={() => setDrawer('review')}
                   >
-                    Ver pedido · {units} {units === 1 ? 'item' : 'itens'} →
+                    Ver pedido · {units} {units === 1 ? 'item' : 'itens'}
                   </button>
                 </div>
               </aside>
@@ -442,15 +466,15 @@ export default function Customer() {
         <div className="fixed inset-x-0 bottom-0 z-30 animate-[rise_.25s_ease-out] p-3 pb-[max(12px,env(safe-area-inset-bottom))] lg:hidden">
           <button
             onClick={() => setDrawer('review')}
-            className="flex w-full items-center justify-between gap-3 rounded-2xl bg-lime px-5 py-4 font-display font-semibold text-dark shadow-[0_12px_32px_rgba(0,0,0,.35)] transition active:scale-[.99]"
+            className="flex w-full items-center justify-between gap-3 rounded-xl bg-dark px-5 py-4 font-semibold text-ink shadow-[0_20px_40px_-12px_rgba(0,0,0,.55)] ring-1 ring-lime/30 transition active:scale-[.99]"
           >
             <span className="flex items-center gap-3">
-              <span key={units} className="flex size-7 animate-[bump_.3s_ease-out] items-center justify-center rounded-full bg-dark text-xs text-lime">
+              <span key={units} className="flex size-7 animate-[bump_.3s_ease-out] items-center justify-center rounded-full bg-lime text-xs text-dark">
                 {units}
               </span>
               Ver pedido
             </span>
-            <span>{money(subtotal)} →</span>
+            <span className="tabular-nums">{money(subtotal)}</span>
           </button>
         </div>
       )}
@@ -499,7 +523,7 @@ function TableLocked({ seat, to, bill }) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 text-center">
       <p className="eyebrow text-lime">Mesa já em uso neste celular</p>
-      <h1 className="max-w-md font-display text-3xl font-bold tracking-[-0.04em]">Sua conta ainda está aberta.</h1>
+      <h1 className="max-w-md font-serif text-3xl">Sua conta ainda está aberta.</h1>
       <p className="max-w-sm text-sm text-muted">{seat.message}</p>
       <div className="mt-2 flex flex-wrap justify-center gap-3">
         {seat.home && (
@@ -521,41 +545,41 @@ function ProductCard({ product: p, qty, onAdd, onQty }) {
   const simple = !p.optionGroups.length
   return (
     <article
-      className={`flex min-h-[126px] overflow-hidden rounded-[20px] border bg-card shadow-[0_1px_0_rgba(0,0,0,.02)] transition-colors ${
-        qty > 0 ? 'border-olive' : 'border-[#e3dfcd]'
+      className={`group flex min-h-[140px] overflow-hidden rounded-2xl border bg-card transition duration-300 hover:shadow-[0_18px_40px_-20px_rgba(40,30,15,.35)] ${
+        qty > 0 ? 'border-olive/60' : 'border-[#e8e2d6] hover:border-[#d7cfbf]'
       }`}
     >
       {p.imageUrl && (
-        <img src={p.imageUrl} alt="" loading="lazy" className="w-28 shrink-0 object-cover sm:w-32" onError={(e) => e.currentTarget.remove()} />
+        <img src={p.imageUrl} alt="" loading="lazy" className="w-28 shrink-0 object-cover transition duration-500 group-hover:scale-[1.03] sm:w-36" onError={(e) => e.currentTarget.remove()} />
       )}
-      <div className="flex min-w-0 flex-1 flex-col p-4">
-        <span className="eyebrow flex items-center gap-2 text-[8px] text-[#6b7266]">
+      <div className="flex min-w-0 flex-1 flex-col p-5">
+        <span className="eyebrow flex items-center gap-2 text-[9px] text-[#8a8274]">
           {p.category}
-          {p.lastUnits && <span className="rounded-full bg-[#f3d9c4] px-2 py-0.5 text-[8px] text-[#6b2f12]">Últimas unidades</span>}
+          {p.lastUnits && <span className="rounded-sm bg-[#f4e6dc] px-1.5 py-0.5 text-[8px] text-[#8a3f1d]">Últimas unidades</span>}
         </span>
-        <h3 className="mt-2 font-display text-[17px] font-semibold">{p.name}</h3>
-        {p.description && <p className="mt-1 max-w-[260px] text-xs leading-snug text-[#6b7266]">{p.description}</p>}
+        <h3 className="mt-2 font-serif text-[22px] leading-tight">{p.name}</h3>
+        {p.description && <p className="mt-1 max-w-[280px] text-xs leading-relaxed text-[#7a7266]">{p.description}</p>}
         {!simple && (
-          <p className="mt-1 text-[11px] font-semibold text-olive">
+          <p className="mt-1.5 text-[11px] font-medium text-olive">
             {p.optionGroups.some((g) => g.minSelect > 0) ? 'Escolha as opções' : 'Com adicionais'}
           </p>
         )}
         <div className="mt-auto flex items-end justify-between pt-3">
-          <strong className="font-display text-lg">
-            {!simple && <span className="mr-1 text-xs font-medium text-[#6b7266]">a partir de</span>}
+          <strong className="font-display text-base font-semibold">
+            {!simple && <span className="mr-1 text-[11px] font-normal text-[#8a8274]">a partir de</span>}
             {money(p.priceCents)}
           </strong>
           {simple && qty > 0 ? (
             <Stepper light label={p.name} value={qty} onChange={onQty} />
           ) : (
             <div className="flex items-center gap-2">
-              {qty > 0 && <span className="rounded-full bg-sage px-2 py-0.5 text-[11px] font-bold">{qty}×</span>}
+              {qty > 0 && <span className="rounded-md bg-sage px-2 py-0.5 text-[11px] font-semibold">{qty}×</span>}
               <button
                 aria-label={`Adicionar ${p.name}`}
                 onClick={onAdd}
-                className="flex size-9 items-center justify-center rounded-full bg-lime text-xl leading-none font-semibold text-dark transition hover:scale-105 active:scale-95"
+                className="flex size-9 items-center justify-center rounded-full bg-dark text-cream transition hover:bg-olive active:scale-95"
               >
-                +
+                <Icon name="plus" className="size-4" strokeWidth={1.8} />
               </button>
             </div>
           )}

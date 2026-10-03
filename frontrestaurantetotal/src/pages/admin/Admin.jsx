@@ -37,17 +37,20 @@ export default function Admin() {
     <div className="min-h-screen">
       <StaffTopbar />
       <main className="mx-auto max-w-[1200px] px-[clamp(16px,5.7vw,96px)] py-8 sm:py-12">
-        <p className="eyebrow text-lime">✳ &nbsp; Gestão · {info.name}</p>
-        <h1 className="mt-3 font-display text-[clamp(28px,4vw,48px)] font-bold tracking-[-0.05em]">Tudo no seu controle.</h1>
+        <p className="eyebrow flex items-center gap-3 text-lime">
+          <span className="h-px w-8 bg-lime/60" />
+          Gestão · {info.name}
+        </p>
+        <h1 className="mt-3 font-serif text-[clamp(28px,4vw,48px)]">Tudo no seu controle.</h1>
         {/* Celular: grade de 3 colunas (todas as abas à vista); telas maiores: uma linha que quebra. */}
-        <nav className="mt-6 grid grid-cols-3 gap-2 border-b border-line pb-4 sm:mt-8 sm:flex sm:flex-wrap">
+        <nav className="mt-6 grid grid-cols-3 gap-1 border-b border-line pb-4 sm:mt-8 sm:flex sm:flex-wrap">
           {TABS.map(([path, label]) => (
             <NavLink
               key={path}
               to={to(`/equipe/admin/${path}`)}
               className={({ isActive }) =>
-                `truncate rounded-full border px-2 py-2 text-center text-xs font-semibold transition sm:px-4 ${
-                  isActive ? 'border-lime bg-lime text-dark' : 'border-line hover:border-lime'
+                `truncate rounded-lg px-2 py-2 text-center text-[13px] font-medium transition sm:px-3.5 ${
+                  isActive ? 'bg-white/[0.08] text-ink' : 'text-muted hover:bg-white/[0.04] hover:text-ink'
                 }`
               }
             >

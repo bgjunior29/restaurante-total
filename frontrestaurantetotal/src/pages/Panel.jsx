@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import Icon from '../components/Icon'
 import { Spinner, Topbar, useToast } from '../components/ui'
 import { useAuth } from '../lib/auth'
 import { CALL_KINDS, minutesSince, money, nextStep, ORDER_TYPES, STATUS, time, todayISO, waLink } from '../lib/format'
@@ -17,7 +18,7 @@ const FILTERS = [
   ['CANCELADO', 'Cancelado'],
   ['TODOS', 'Todos do dia'],
 ]
-const TYPE_FILTERS = [['', 'Todos'], ...Object.entries(ORDER_TYPES).map(([k, t]) => [k, `${t.icon} ${t.short}`])]
+const TYPE_FILTERS = [['', 'Todos'], ...Object.entries(ORDER_TYPES).map(([k, t]) => [k, t.short])]
 
 // Em aberto: o que precisa de ação primeiro, e dentro de cada status o pedido mais antigo no topo.
 const PRIORITY = { RECEBIDO: 0, EM_PREPARO: 1, PRONTO: 2, SAIU_ENTREGA: 3, ENTREGUE: 4, CANCELADO: 5 }
@@ -35,8 +36,8 @@ export function useNow(ms = 30000) {
 }
 
 const navClass = ({ isActive }) =>
-  `rounded-full border px-3 py-2 text-center text-xs font-bold whitespace-nowrap transition lg:px-4 lg:py-2.5 ${
-    isActive ? 'border-lime text-lime' : 'border-line text-ink hover:border-lime hover:text-lime'
+  `rounded-lg px-3 py-2 text-center text-[13px] font-medium whitespace-nowrap transition lg:px-4 ${
+    isActive ? 'bg-white/[0.07] text-ink' : 'text-muted hover:bg-white/[0.04] hover:text-ink'
   }`
 
 /**
@@ -61,7 +62,7 @@ export function StaffTopbar() {
   return (
     <>
       <Topbar brand={info} to={to()}>
-        <nav className="hidden items-center gap-2 md:flex">{nav}</nav>
+        <nav className="hidden items-center gap-1 rounded-xl border border-line/70 bg-dark/60 p-1 md:flex">{nav}</nav>
         <button onClick={logout} className="act" title={`Sair (${user?.name})`}>
           Sair
         </button>
@@ -153,7 +154,7 @@ export default function Panel() {
     }
     if (event === 'call_created') {
       if (soundRef.current) beep()
-      showToast(`${CALL_KINDS[data.kind].icon} ${data.table}: ${CALL_KINDS[data.kind].label.toLowerCase()}`)
+      showToast(`${data.table}: ${CALL_KINDS[data.kind].label.toLowerCase()}`)
     }
     if (event === 'stock_low') showToast(`Estoque baixo: ${data.products.join(', ')}`, 'error')
     refresh()
@@ -197,10 +198,10 @@ export default function Panel() {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <p className="eyebrow flex items-center gap-2 text-lime">
-              <i className={`size-[7px] rounded-full ${online ? 'animate-pulse bg-lime' : 'bg-amber-400'}`} title={online ? 'Conectado' : 'Sem conexão'} />
+              <i className={`size-1.5 rounded-full ${online ? 'bg-emerald-400 shadow-[0_0_0_3px_rgba(52,211,153,.15)]' : 'bg-amber-400'}`} title={online ? 'Conectado' : 'Sem conexão'} />
               {online ? 'Central de operações · ao vivo' : 'Sem conexão · tentando de novo'}
             </p>
-            <h1 className="mt-3 font-display text-[clamp(32px,4vw,48px)] font-bold tracking-[-0.05em]">Pedidos em movimento.</h1>
+            <h1 className="mt-3 font-serif text-[clamp(32px,4vw,48px)]">Pedidos em movimento.</h1>
             <p className="mt-2 max-w-md text-sm text-ink/75">
               Mesa, retirada e delivery chegam aqui em tempo real. Avance cada etapa e avise o cliente.
             </p>
@@ -212,9 +213,10 @@ export default function Panel() {
                 setSound((s) => !s)
               }}
               aria-pressed={sound}
-              className={`rounded-full border px-3 py-2 text-xs font-semibold transition ${sound ? 'border-lime text-lime' : 'border-line text-muted'}`}
+              className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition ${sound ? 'border-lime/40 text-lime' : 'border-line text-muted'}`}
             >
-              {sound ? '🔔 Som ligado' : '🔕 Som desligado'}
+              <Icon name={sound ? 'bell' : 'bell-off'} />
+              {sound ? 'Som ligado' : 'Som desligado'}
             </button>
             <input
               type="date"
@@ -230,12 +232,12 @@ export default function Panel() {
         {calls.length > 0 && (
           <section aria-label="Chamados das mesas" className="mt-6 flex flex-wrap gap-2">
             {calls.map((c) => (
-              <div key={c.id} className="flex items-center gap-3 rounded-2xl border border-lime bg-lime/10 py-2 pr-2 pl-4 text-sm">
-                <span>
-                  {CALL_KINDS[c.kind].icon} <strong>{c.table?.label}</strong> · {CALL_KINDS[c.kind].label.toLowerCase()}
+              <div key={c.id} className="flex items-center gap-3 rounded-xl border border-lime/40 bg-lime/[0.06] py-2 pr-2 pl-4 text-sm">
+                <span className="flex items-center gap-2">
+                  <Icon name={CALL_KINDS[c.kind].icon} className="size-4 text-lime" /> <strong className="font-semibold">{c.table?.label}</strong> · {CALL_KINDS[c.kind].label.toLowerCase()}
                   <span className="ml-2 text-xs text-muted">{time(c.createdAt)}</span>
                 </span>
-                <button className="rounded-xl bg-lime px-3 py-1.5 text-xs font-bold text-dark" onClick={() => doneCall(c)}>
+                <button className="rounded-lg bg-lime px-3 py-1.5 text-xs font-semibold text-dark" onClick={() => doneCall(c)}>
                   Atendido
                 </button>
               </div>
@@ -249,21 +251,21 @@ export default function Panel() {
             ['Em andamento', stats?.active ?? '–'],
             ['Mesas abertas · para levar', stats ? `${stats.openTables} · ${stats.delivery}` : '–'],
           ].map(([label, value]) => (
-            <div key={label} className="rounded-2xl border border-line bg-dark p-4 sm:p-5">
+            <div key={label} className="rounded-2xl border border-line/80 bg-gradient-to-b from-white/[0.03] to-transparent p-4 sm:p-5">
               <p className="text-xs text-muted">{label}</p>
-              <p className="mt-2 font-display text-3xl font-bold tabular-nums sm:mt-3">{value}</p>
+              <p className="mt-2 font-display text-3xl font-semibold tracking-tight tabular-nums sm:mt-3">{value}</p>
             </div>
           ))}
-          <div className="rounded-2xl border border-line bg-dark p-4 sm:p-5">
+          <div className="rounded-2xl border border-lime/25 bg-gradient-to-b from-lime/[0.06] to-transparent p-4 sm:p-5">
             {/* Pedido de mesa só é "recebido" ao fechar a conta: o destaque é o valor que já entrou em pedidos. */}
             <p className="text-xs text-muted">Movimento do dia</p>
-            <p className="mt-2 font-display text-2xl font-bold tabular-nums sm:mt-3">
+            <p className="mt-2 font-display text-2xl font-semibold tracking-tight tabular-nums sm:mt-3">
               {stats ? money(stats.revenuePaidCents + stats.revenuePendingCents) : '–'}
             </p>
             {stats && (
               <p className="mt-1 text-[11px] leading-snug tabular-nums">
-                <span className="block text-lime">Recebido {money(stats.revenuePaidCents)}</span>
-                <span className="block text-[#f4d9a6]">A receber {money(stats.revenuePendingCents)}</span>
+                <span className="block text-emerald-300/90">Recebido {money(stats.revenuePaidCents)}</span>
+                <span className="block text-muted">A receber {money(stats.revenuePendingCents)}</span>
               </p>
             )}
           </div>
@@ -275,13 +277,13 @@ export default function Panel() {
               key={k}
               onClick={() => setFilter(k)}
               aria-pressed={filter === k}
-              className={`shrink-0 rounded-full border px-4 py-2 text-xs font-semibold transition ${
-                filter === k ? 'border-lime bg-lime text-dark' : 'border-line text-ink hover:border-lime'
+              className={`shrink-0 rounded-lg border px-3.5 py-2 text-xs font-medium transition ${
+                filter === k ? 'border-ink/80 bg-ink text-green' : 'border-line text-ink/75 hover:border-ink/30 hover:text-ink'
               }`}
             >
               {label}
               {k === 'ABERTOS' && openCount > 0 && filter === 'ABERTOS' && (
-                <span className="ml-2 rounded-full bg-dark px-1.5 py-0.5 text-[10px] text-lime">{openCount}</span>
+                <span className="ml-2 rounded bg-green/90 px-1.5 py-0.5 text-[10px] text-ink">{openCount}</span>
               )}
             </button>
           ))}
@@ -292,7 +294,7 @@ export default function Panel() {
               key={k || 'all'}
               onClick={() => setType(k)}
               aria-pressed={type === k}
-              className={`rounded-full px-3 py-1.5 text-[11px] font-semibold transition ${type === k ? 'bg-panel text-lime' : 'text-muted hover:text-ink'}`}
+              className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${type === k ? 'bg-white/[0.07] text-ink' : 'text-muted hover:text-ink'}`}
             >
               {label}
             </button>
@@ -305,7 +307,7 @@ export default function Panel() {
           <div className="mt-10 rounded-2xl border border-dashed border-line p-10 text-center text-sm text-muted">
             {filter === 'ABERTOS' ? (
               <>
-                <p className="font-display text-lg text-ink">Tudo em dia. 🍽️</p>
+                <p className="font-serif text-2xl text-ink">Tudo em dia.</p>
                 <p className="mt-1">Nenhum pedido esperando. Os novos aparecem aqui sozinhos.</p>
               </>
             ) : (
@@ -351,7 +353,7 @@ function OrderCard({ order: o, act, methods, fresh, lateAfter, restaurant }) {
 
   return (
     <article
-      className={`flex flex-col rounded-[20px] border bg-dark p-5 transition ${late ? 'border-amber-500/70' : 'border-line'} ${
+      className={`flex flex-col rounded-2xl border bg-dark/80 p-5 shadow-[0_24px_48px_-28px_rgba(0,0,0,.7)] transition ${late ? 'border-amber-300/40' : 'border-line'} ${
         closed && (o.paid || o.type === 'MESA') ? 'opacity-70' : ''
       } ${fresh ? 'animate-[flash_1.2s_ease-out_3]' : ''}`}
     >
@@ -360,8 +362,9 @@ function OrderCard({ order: o, act, methods, fresh, lateAfter, restaurant }) {
           <p className="eyebrow text-[10px] text-muted">
             {o.code} · {time(o.createdAt)}
           </p>
-          <h3 className="mt-1 font-display text-2xl font-bold">
-            {t.icon} {o.table ? o.table.label : t.short}
+          <h3 className="mt-1 font-serif text-2xl">
+            <Icon name={t.icon} className="mr-2 size-[0.8em] text-muted" />
+            {o.table ? o.table.label : t.short}
           </h3>
           <p className="truncate text-xs text-muted">
             {o.customerName || 'Sem nome'}
@@ -369,7 +372,7 @@ function OrderCard({ order: o, act, methods, fresh, lateAfter, restaurant }) {
           </p>
         </div>
         <div className="flex shrink-0 flex-col items-end gap-1.5">
-          <span className={`rounded-full px-3 py-1 text-[11px] font-semibold ${st.badge}`}>{st.label}</span>
+          <span className={`rounded-md px-2.5 py-1 text-[11px] font-medium ${st.badge}`}>{st.label}</span>
           {!closed && (
             <span className={`text-[11px] font-semibold tabular-nums ${late ? 'text-amber-300' : 'text-muted'}`}>
               {minutes < 1 ? 'agora' : `há ${minutes} min`}
@@ -380,7 +383,8 @@ function OrderCard({ order: o, act, methods, fresh, lateAfter, restaurant }) {
 
       {o.address && (
         <p className="mt-3 rounded-lg bg-panel px-3 py-2 text-xs">
-          📍 {o.address}
+          <Icon name="pin" className="mr-1.5 text-muted" />
+          {o.address}
           {o.addressRef && <span className="block text-muted">{o.addressRef}</span>}
         </p>
       )}
@@ -389,14 +393,14 @@ function OrderCard({ order: o, act, methods, fresh, lateAfter, restaurant }) {
         {o.items.map((i) => (
           <li key={i.id} className="flex justify-between gap-3 py-2">
             <span className="min-w-0">
-              <strong className="text-lime">{i.quantity}×</strong> {i.name}
-              {i.details && <span className="block text-xs text-[#f4e3a6]">↳ {i.details}</span>}
+              <strong className="font-semibold text-lime">{i.quantity}×</strong> {i.name}
+              {i.details && <span className="block text-xs text-lime/80">↳ {i.details}</span>}
             </span>
             <span className="shrink-0 tabular-nums">{money(i.unitPriceCents * i.quantity)}</span>
           </li>
         ))}
       </ul>
-      {o.notes && <p className="mt-3 rounded-lg bg-[#3a3520] px-3 py-2 text-xs text-[#f4e3a6]">Obs.: {o.notes}</p>}
+      {o.notes && <p className="mt-3 rounded-lg border border-amber-200/15 bg-amber-200/[0.05] px-3 py-2 text-xs text-amber-100">Obs.: {o.notes}</p>}
 
       <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
         {o.type === 'MESA' ? (
@@ -407,13 +411,17 @@ function OrderCard({ order: o, act, methods, fresh, lateAfter, restaurant }) {
               {o.paymentMethod}
               {o.changeForCents > 0 && ` · troco p/ ${money(o.changeForCents)}`}
             </span>
-            <span className={`rounded-lg px-2.5 py-1.5 font-semibold ${o.paid ? 'bg-lime text-dark' : 'bg-[#4a3a1f] text-[#f4d9a6]'}`}>
+            <span className={`rounded-lg px-2.5 py-1.5 font-semibold ${o.paid ? 'bg-emerald-300/[0.08] text-emerald-200 ring-1 ring-inset ring-emerald-300/25' : 'bg-amber-200/[0.06] text-amber-100 ring-1 ring-inset ring-amber-200/25'}`}>
               {o.paid ? 'Pago' : 'A receber'}
             </span>
           </>
         )}
         {o.couponCode && <span className="rounded-lg bg-panel px-2.5 py-1.5">Cupom {o.couponCode}</span>}
-        {o.review && <span className="rounded-lg bg-panel px-2.5 py-1.5 text-lime">{'★'.repeat(o.review.rating)}</span>}
+        {o.review && (
+          <span className="inline-flex items-center gap-1 rounded-lg bg-panel px-2.5 py-1.5 text-lime">
+            <Icon name="star" filled className="size-3" /> {o.review.rating}
+          </span>
+        )}
       </div>
 
       {paying ? (

@@ -36,7 +36,7 @@ model Tenant {
   heroHighlight String @default("direto na sua mesa.")
   heroText      String @default("Peça pelo celular, acompanhe o preparo e feche a conta sem esperar. Também entregamos e preparamos para retirada.")
   logoUrl       String @default("")
-  accentColor   String @default("#f6c35b")
+  accentColor   String @default("#d4b483")
   theme         String @default("terra") // paleta: verde | grafite | vinho | oceano | roxo | terra
   openingHours  String @default("")
   phone         String @default("")

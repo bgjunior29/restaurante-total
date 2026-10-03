@@ -4,7 +4,7 @@ const MAX_SIDE = 1000 // px: nítido no celular e leve no 4G
 const QUALITY = 0.82
 
 /** Reduz a foto no próprio navegador e devolve um data URL JPEG (~100 KB em vez de vários MB da câmera). */
-export async function shrinkImage(file, maxSide = MAX_SIDE) {
+async function shrinkImage(file, maxSide = MAX_SIDE) {
   if (!file.type.startsWith('image/')) throw new Error('Escolha um arquivo de imagem.')
   const bitmap = await createImageBitmap(file).catch(() => {
     throw new Error('Não foi possível abrir essa imagem. Tente uma foto JPG ou PNG.')
@@ -54,8 +54,8 @@ export default function ImageField({ label, value, onChange, upload, maxSide, hi
         {value ? (
           <img src={value} alt="" className="size-14 shrink-0 rounded-xl border border-line object-cover" />
         ) : (
-          <span className="flex size-14 shrink-0 items-center justify-center rounded-xl border border-dashed border-line text-xl text-muted" aria-hidden>
-            📷
+          <span className="flex size-14 shrink-0 items-center justify-center rounded-xl border border-dashed border-line text-[11px] text-muted" aria-hidden>
+            Foto
           </span>
         )}
         {upload && (

@@ -9,7 +9,7 @@ PaymentKind = Literal["PIX", "CARD", "CASH", "OTHER"]
 Station = Literal["COZINHA", "BAR", "CONFEITARIA", "COPA"]
 CallKind = Literal["GARCOM", "CONTA", "AJUDA"]
 Theme = Literal["verde", "grafite", "vinho", "oceano", "roxo", "terra"]
-HexColor = Field(default="#f6c35b", pattern=r"^#[0-9a-fA-F]{6}$")
+HexColor = Field(default="#d4b483", pattern=r"^#[0-9a-fA-F]{6}$")
 Role = Literal["ADMIN", "STAFF", "KITCHEN"]
 Money = Field(ge=0, le=10_000_00)  # até R$ 10.000,00
 OptionalMoney = Field(default=0, ge=0, le=10_000_00)

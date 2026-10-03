@@ -98,7 +98,7 @@ export default function OptionGroups({ toast }) {
     <div>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="font-display text-2xl font-semibold">Adicionais e variações</h2>
+          <h2 className="font-serif text-2xl">Adicionais e variações</h2>
           <p className="mt-1 max-w-xl text-sm text-muted">
             Crie grupos como "Ponto da carne" (obrigatório) ou "Extras" (opcional, com preço). Depois ligue o grupo aos produtos em
             Cardápio → Editar.
@@ -232,7 +232,7 @@ export default function OptionGroups({ toast }) {
             <article key={g.id} className="rounded-2xl border border-line bg-dark p-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h3 className="font-display text-lg font-semibold">{g.name}</h3>
+                  <h3 className="font-serif text-lg">{g.name}</h3>
                   <p className="text-xs text-muted">
                     {ruleText(g)} · em {g.productCount} produto{g.productCount === 1 ? '' : 's'}
                   </p>

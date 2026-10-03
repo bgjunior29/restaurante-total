@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Spinner, Stepper, useToast } from '../components/ui'
+import Icon from '../components/Icon'
 import { CALL_KINDS, minutesSince, money, STATUS, time } from '../lib/format'
 import { useTenant } from '../lib/tenant'
 import { beep, unlockAudio, useLive } from '../lib/useLive'
@@ -54,7 +55,7 @@ export default function Floor() {
       <StaffTopbar />
       <main className="mx-auto max-w-[1500px] px-[clamp(16px,5.7vw,96px)] py-8 md:py-12">
         <p className="eyebrow text-lime">Salão · ao vivo</p>
-        <h1 className="mt-3 font-display text-[clamp(32px,4vw,48px)] font-bold tracking-[-0.05em]">
+        <h1 className="mt-3 font-serif text-[clamp(32px,4vw,48px)]">
           {busy.length} de {tables.length} mesas ocupadas.
         </h1>
         <p className="mt-2 text-sm text-ink/75">
@@ -81,7 +82,7 @@ export default function Floor() {
               <Tag
                 key={t.id}
                 {...(t.bill ? { onClick: () => setOpen(t.id), 'aria-label': `${t.label}: abrir conta` } : {})}
-                className={`relative flex min-h-[132px] flex-col rounded-[20px] border-2 p-4 text-left transition ${
+                className={`relative flex min-h-[132px] flex-col rounded-2xl border-2 p-4 text-left transition ${
                   alert
                     ? 'border-red-400 bg-red-400/10'
                     : t.bill
@@ -102,8 +103,10 @@ export default function Floor() {
                   <span className="mt-auto text-xs text-muted">Livre</span>
                 )}
                 {(t.calls.length > 0 || t.bill?.status === 'BILL_REQUESTED') && (
-                  <span className="absolute top-3 right-3 text-lg" title={t.calls.map((k) => CALL_KINDS[k].label).join(', ')}>
-                    {[...new Set([...(t.bill?.status === 'BILL_REQUESTED' ? ['CONTA'] : []), ...t.calls])].map((k) => CALL_KINDS[k].icon).join('')}
+                  <span className="absolute top-3 right-3 flex gap-1 text-lime" title={t.calls.map((k) => CALL_KINDS[k].label).join(', ')}>
+                    {[...new Set([...(t.bill?.status === 'BILL_REQUESTED' ? ['CONTA'] : []), ...t.calls])].map((k) => (
+                      <Icon key={k} name={CALL_KINDS[k].icon} className="size-4" />
+                    ))}
                   </span>
                 )}
               </Tag>
@@ -175,7 +178,7 @@ function CloseDrawer({ table, methods, tapi, onClose, onDone, showToast }) {
         <div className="flex items-start justify-between">
           <div>
             <p className="eyebrow text-lime">Conta · aberta às {time(bill.openedAt)}</p>
-            <h2 className="mt-1 font-display text-3xl font-bold">{table.label}</h2>
+            <h2 className="mt-1 font-serif text-3xl">{table.label}</h2>
           </div>
           <button aria-label="Fechar" onClick={onClose} className="flex size-9 items-center justify-center rounded-full border border-line">
             ✕
@@ -235,7 +238,7 @@ function CloseDrawer({ table, methods, tapi, onClose, onDone, showToast }) {
               key={m.id}
               aria-pressed={methodId === m.id}
               onClick={() => setMethodId(m.id)}
-              className={`rounded-xl border px-3 py-3 text-xs font-semibold ${methodId === m.id ? 'border-lime text-lime' : 'border-line hover:border-lime'}`}
+              className={`rounded-xl border px-3 py-3 text-xs font-semibold ${methodId === m.id ? 'border-lime text-lime' : 'border-line text-ink/75 hover:border-ink/30 hover:text-ink'}`}
             >
               {m.name}
             </button>

@@ -24,18 +24,18 @@ export const pad2 = (n) => String(n).padStart(2, '0')
 export const minutesSince = (iso, now = Date.now()) => Math.max(0, Math.floor((now - new Date(iso).getTime()) / 60000))
 
 export const STATUS = {
-  RECEBIDO: { label: 'Recebido', badge: 'bg-sky-900/60 text-sky-200' },
-  EM_PREPARO: { label: 'Em preparo', badge: 'bg-[#2f4a55] text-[#bfe0ea]' },
-  PRONTO: { label: 'Pronto', badge: 'bg-[#4d5a26] text-lime' },
-  SAIU_ENTREGA: { label: 'Saiu para entrega', badge: 'bg-violet-900/60 text-violet-200' },
-  ENTREGUE: { label: 'Entregue', badge: 'bg-panel text-muted' },
-  CANCELADO: { label: 'Cancelado', badge: 'bg-red-950 text-red-300' },
+  RECEBIDO: { label: 'Recebido', badge: 'ring-1 ring-inset ring-sky-300/25 bg-sky-300/[0.06] text-sky-200' },
+  EM_PREPARO: { label: 'Em preparo', badge: 'ring-1 ring-inset ring-amber-200/25 bg-amber-200/[0.06] text-amber-100' },
+  PRONTO: { label: 'Pronto', badge: 'ring-1 ring-inset ring-emerald-300/30 bg-emerald-300/[0.07] text-emerald-200' },
+  SAIU_ENTREGA: { label: 'Saiu para entrega', badge: 'ring-1 ring-inset ring-violet-300/25 bg-violet-300/[0.06] text-violet-200' },
+  ENTREGUE: { label: 'Entregue', badge: 'ring-1 ring-inset ring-line text-muted' },
+  CANCELADO: { label: 'Cancelado', badge: 'ring-1 ring-inset ring-red-400/25 bg-red-400/[0.06] text-red-300' },
 }
 
 export const ORDER_TYPES = {
-  MESA: { label: 'Na mesa', icon: '🍽️', short: 'Mesa' },
-  RETIRADA: { label: 'Retirada no balcão', icon: '🛍️', short: 'Retirada' },
-  DELIVERY: { label: 'Delivery', icon: '🛵', short: 'Delivery' },
+  MESA: { label: 'Na mesa', icon: 'utensils', short: 'Mesa' },
+  RETIRADA: { label: 'Retirada no balcão', icon: 'bag', short: 'Retirada' },
+  DELIVERY: { label: 'Delivery', icon: 'scooter', short: 'Delivery' },
 }
 
 /** Caminho do pedido em cada tipo: [status, rótulo do passo, texto do botão que leva até ele]. */
@@ -77,9 +77,9 @@ export const STATIONS = {
 }
 
 export const CALL_KINDS = {
-  GARCOM: { label: 'Chamou o garçom', icon: '🙋' },
-  CONTA: { label: 'Pediu a conta', icon: '🧾' },
-  AJUDA: { label: 'Precisa de ajuda', icon: '❓' },
+  GARCOM: { label: 'Chamou o garçom', icon: 'hand' },
+  CONTA: { label: 'Pediu a conta', icon: 'receipt' },
+  AJUDA: { label: 'Precisa de ajuda', icon: 'help' },
 }
 
 export const PAYMENT_KINDS = {

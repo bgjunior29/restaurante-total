@@ -4,7 +4,7 @@ import ImageField from './ImageField'
 import { Brand } from './ui'
 
 // Cores claras: o texto dos botões é escuro, então a cor de destaque precisa ser clara para ter contraste.
-const PRESETS = ['#d5f16a', '#ffb347', '#7ee0c3', '#8ec5ff', '#ff9aa2', '#f6e27a', '#c9a7ff', '#f4f1e8']
+const PRESETS = ['#d4b483', '#d9a47a', '#e2b6a6', '#cbc196', '#b4c8d6', '#cfbad8', '#e3cfa6', '#ece6da']
 
 /** Contraste aproximado do texto escuro dos botões sobre a cor escolhida (WCAG). */
 function contrastWithDark(hex) {
@@ -29,7 +29,7 @@ export function ThemePicker({ value, onChange }) {
           aria-pressed={value === key}
           onClick={() => onChange(key, t.accent)}
           className={`flex items-center gap-3 rounded-xl border p-2 text-left text-xs font-semibold transition ${
-            value === key ? 'border-lime ring-2 ring-lime/40' : 'border-line hover:border-lime'
+            value === key ? 'border-lime ring-2 ring-lime/40' : 'border-line text-ink/75 hover:border-ink/30 hover:text-ink'
           }`}
         >
           <span className="flex h-9 w-12 shrink-0 overflow-hidden rounded-lg border border-white/10" aria-hidden>
@@ -86,8 +86,8 @@ export function IdentityPreview({ form }) {
         <Brand brand={form} to="#" />
       </div>
       <div className="p-4">
-        <p className="eyebrow text-[10px] text-lime">✳ Boas vindas à sua mesa 01</p>
-        <p className="mt-3 font-display text-3xl leading-[.95] font-bold tracking-[-0.05em]">
+        <p className="eyebrow flex items-center gap-2 text-[10px] text-lime"><span className="h-px w-5 bg-lime/60" />Boas-vindas à sua mesa 01</p>
+        <p className="mt-3 font-serif text-[34px] leading-[1]">
           {form.heroTitle}
           <br />
           <span className="text-lime">{form.heroHighlight}</span>
@@ -100,7 +100,7 @@ export function IdentityPreview({ form }) {
           <p className="font-display font-semibold">Burger da Casa</p>
           <div className="mt-2 flex items-center justify-between">
             <strong className="font-display">R$ 38,90</strong>
-            <span className="flex size-8 items-center justify-center rounded-full bg-lime text-lg font-semibold text-dark">+</span>
+            <span className="flex size-8 items-center justify-center rounded-full bg-dark text-lg text-cream">+</span>
           </div>
         </div>
         <div className="mt-3 rounded-xl bg-dark p-3 text-ink">
@@ -140,7 +140,7 @@ export default function IdentityForm({ initial, onSave, onUpload, submitLabel = 
     <form onSubmit={submit} className="grid gap-8 lg:grid-cols-[1fr_360px]">
       <div className="min-w-0 space-y-6">
         <section className="rounded-2xl border border-line bg-dark p-5">
-          <h2 className="font-display text-xl font-semibold">Tema e cor</h2>
+          <h2 className="font-serif text-2xl">Tema e cor</h2>
           <p className="mt-1 text-xs text-muted">O tema muda as cores de fundo do cardápio, do painel e da gestão. A cor de destaque vai nos botões e títulos.</p>
           <p className="label mt-4">Tema</p>
           <ThemePicker value={form.theme} onChange={(theme, accent) => setForm({ ...form, theme, accentColor: accent })} />
@@ -149,7 +149,7 @@ export default function IdentityForm({ initial, onSave, onUpload, submitLabel = 
         </section>
 
         <section className="rounded-2xl border border-line bg-dark p-5">
-          <h2 className="font-display text-xl font-semibold">Marca</h2>
+          <h2 className="font-serif text-2xl">Marca</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div>
               <label className="label">Nome do restaurante</label>
@@ -174,7 +174,7 @@ export default function IdentityForm({ initial, onSave, onUpload, submitLabel = 
         </section>
 
         <section className="rounded-2xl border border-line bg-dark p-5">
-          <h2 className="font-display text-xl font-semibold">Capa do cardápio</h2>
+          <h2 className="font-serif text-2xl">Capa do cardápio</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div>
               <label className="label">Título</label>
@@ -192,7 +192,7 @@ export default function IdentityForm({ initial, onSave, onUpload, submitLabel = 
         </section>
 
         <section className="rounded-2xl border border-line bg-dark p-5">
-          <h2 className="font-display text-xl font-semibold">Informações</h2>
+          <h2 className="font-serif text-2xl">Informações</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div className="sm:col-span-2">
               <label className="label">Horário de funcionamento</label>

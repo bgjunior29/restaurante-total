@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Spinner, Stepper, Topbar, useToast } from '../components/ui'
+import Icon from '../components/Icon'
 import { money, STATUS, time } from '../lib/format'
 import { forgetBill, myTable } from '../lib/storage'
 import { useTenant } from '../lib/tenant'
@@ -82,12 +83,12 @@ export default function Bill() {
         <p className="eyebrow text-lime">
           Conta · {bill.table.label} · aberta às {time(bill.openedAt)}
         </p>
-        <h1 className="mt-3 font-display text-4xl font-bold tracking-[-0.05em]">
+        <h1 className="mt-3 font-serif text-4xl">
           {closed ? 'Conta fechada. Obrigado!' : bill.status === 'BILL_REQUESTED' ? 'Conta pedida.' : 'Sua conta.'}
         </h1>
         <p className="mt-3 text-ink/75">
           {closed
-            ? `Pago com ${bill.paymentMethod}. Volte sempre! 🙂`
+            ? `Pago com ${bill.paymentMethod}. Volte sempre.`
             : bill.status === 'BILL_REQUESTED'
               ? 'O garçom já foi avisado e vem até a sua mesa com a maquininha.'
               : 'Todas as rodadas da mesa ficam aqui. Quando terminar, peça a conta por esta tela.'}
@@ -95,7 +96,7 @@ export default function Bill() {
 
         <section className="mt-8 space-y-3">
           {bill.orders.map((o) => (
-            <div key={o.id} className={`rounded-[20px] border border-line bg-dark p-4 ${o.status === 'CANCELADO' ? 'opacity-50' : ''}`}>
+            <div key={o.id} className={`rounded-2xl border border-line bg-dark p-4 ${o.status === 'CANCELADO' ? 'opacity-50' : ''}`}>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-muted">
                   {o.code} · {time(o.createdAt)}
@@ -124,7 +125,7 @@ export default function Bill() {
           ))}
         </section>
 
-        <section className="mt-6 rounded-[20px] bg-cream p-5 text-dark">
+        <section className="mt-6 rounded-2xl bg-cream p-5 text-dark">
           <div className="flex justify-between text-sm">
             <span>Consumo</span>
             <strong>{money(bill.subtotalCents)}</strong>
@@ -154,11 +155,11 @@ export default function Bill() {
 
         {!closed && (
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            <button className="btn-outline py-3" onClick={callWaiter}>
-              🙋 Chamar garçom
+            <button className="btn-outline inline-flex items-center justify-center gap-2 py-3" onClick={callWaiter}>
+              <Icon name="hand" /> Chamar garçom
             </button>
             <button className="btn-lime" disabled={busy || bill.status === 'BILL_REQUESTED'} onClick={requestBill}>
-              {bill.status === 'BILL_REQUESTED' ? 'Conta já pedida ✓' : '🧾 Pedir a conta'}
+              {bill.status === 'BILL_REQUESTED' ? 'Conta já pedida' : 'Pedir a conta'}
             </button>
           </div>
         )}

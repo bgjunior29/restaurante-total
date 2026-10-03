@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { money, ORDER_TYPES, parseMoney } from '../lib/format'
 import { load, save } from '../lib/storage'
 import { Stepper } from './ui'
+import Icon from './Icon'
 
 const CUSTOMER_KEY = 'rt_customer' // nome, telefone e endereço lembrados neste aparelho
 
@@ -200,7 +201,7 @@ export default function CheckoutDrawer({
             <p className="eyebrow text-[10px] text-olive">
               {step === 'review' ? 'Etapa 1 de 2' : 'Etapa 2 de 2'} · {where}
             </p>
-            <h2 className="mt-1 font-display text-3xl font-bold tracking-[-0.05em]">{step === 'review' ? 'Seu pedido.' : 'Quase lá.'}</h2>
+            <h2 className="mt-1 font-serif text-3xl">{step === 'review' ? 'Seu pedido.' : 'Quase lá.'}</h2>
           </div>
           <button
             aria-label="Fechar"
@@ -239,7 +240,7 @@ export default function CheckoutDrawer({
                       <span className="min-w-0 truncate">
                         {p.name} <span className="text-xs text-[#6b7266]">· {money(p.priceCents)}</span>
                       </span>
-                      <button onClick={() => onSuggest(p)} className="shrink-0 rounded-full bg-lime px-3 py-1 text-xs font-bold">
+                      <button onClick={() => onSuggest(p)} className="shrink-0 rounded-full bg-dark px-3 py-1 text-xs font-medium text-cream">
                         + Adicionar
                       </button>
                     </li>
@@ -274,11 +275,11 @@ export default function CheckoutDrawer({
                       key={t}
                       aria-pressed={type === t}
                       onClick={() => setType(t)}
-                      className={`rounded-xl border px-2 py-3 text-xs font-semibold transition ${
-                        type === t ? 'border-olive bg-sage' : 'border-[#d7d5c4] bg-card hover:border-olive'
+                      className={`rounded-xl border px-2 py-3 text-xs font-medium transition ${
+                        type === t ? 'border-dark bg-dark text-cream [&_svg]:text-cream' : 'border-[#e2dccf] bg-card hover:border-[#b9b1a2]'
                       }`}
                     >
-                      <span className="block text-lg">{ORDER_TYPES[t].icon}</span>
+                      <Icon name={ORDER_TYPES[t].icon} className="mx-auto mb-1.5 block size-5 text-olive" />
                       {ORDER_TYPES[t].short}
                     </button>
                   ))}
@@ -347,7 +348,8 @@ export default function CheckoutDrawer({
 
             {type === 'MESA' ? (
               <p className="mt-4 rounded-xl border border-[#d7d5c4] bg-card px-4 py-3 text-xs leading-relaxed text-[#5d6558]">
-                🧾 Este pedido entra na <strong>conta da mesa</strong>. Você paga tudo no final
+                <Icon name="receipt" className="mr-1.5 text-olive" />
+                Este pedido entra na <strong>conta da mesa</strong>. Você paga tudo no final
                 {menu.serviceFeePct > 0 && <> (taxa de serviço de {menu.serviceFeePct}%)</>} e pode pedir a conta pelo celular.
               </p>
             ) : (

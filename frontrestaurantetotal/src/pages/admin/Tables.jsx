@@ -76,7 +76,7 @@ export default function Tables({ toast }) {
     <div>
       <div className="flex flex-wrap items-end justify-between gap-4 print:hidden">
         <div>
-          <h2 className="font-display text-2xl font-semibold">Mesas & QR codes</h2>
+          <h2 className="font-serif text-2xl">Mesas & QR codes</h2>
           <p className="mt-1 max-w-lg text-sm text-muted">
             Imprima e cole um QR em cada mesa. Os códigos apontam para <strong className="text-ink">{baseUrl}</strong> — ajuste o
             endereço público em Configurações. Cada QR tem uma chave própria: quem escaneia fica preso àquela mesa até a conta

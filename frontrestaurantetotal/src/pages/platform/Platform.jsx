@@ -30,7 +30,7 @@ const NEW_TENANT = {
   starterContent: true,
   tagline: 'Restaurante · Cozinha · Encontros',
   theme: 'terra',
-  accentColor: '#f6c35b',
+  accentColor: '#d4b483',
 }
 
 const dateBR = (iso) => (iso ? new Date(iso).toLocaleDateString('pt-BR') : '—')
@@ -163,8 +163,11 @@ export default function Platform() {
       <main className="mx-auto max-w-[1300px] px-[clamp(16px,5.7vw,96px)] py-10">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="eyebrow text-lime">✳ &nbsp; Plataforma</p>
-            <h1 className="mt-3 font-display text-[clamp(32px,4vw,48px)] font-bold tracking-[-0.05em]">Seus restaurantes clientes.</h1>
+            <p className="eyebrow flex items-center gap-3 text-lime">
+              <span className="h-px w-8 bg-lime/60" />
+              Plataforma
+            </p>
+            <h1 className="mt-3 font-serif text-[clamp(32px,4vw,48px)]">Seus restaurantes clientes.</h1>
           </div>
           <button className="btn-lime" onClick={() => setCreating({ ...NEW_TENANT })}>
             + Novo restaurante
@@ -325,7 +328,7 @@ export default function Platform() {
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="eyebrow text-lime">Identidade</p>
-                <h2 className="font-display text-2xl font-bold">{styling.tenant.name}</h2>
+                <h2 className="font-serif text-2xl">{styling.tenant.name}</h2>
               </div>
               <button className="btn-outline" onClick={() => setStyling(null)}>
                 ← Voltar aos restaurantes
@@ -402,7 +405,7 @@ export default function Platform() {
                           <span className="w-1/2" style={{ background: t.accentColor }} />
                         </span>
                         <div className="min-w-0">
-                          <h2 className="truncate font-display text-xl font-bold">{t.name}</h2>
+                          <h2 className="truncate font-serif text-2xl">{t.name}</h2>
                           <p className="truncate text-xs text-muted">
                             /r/{t.slug} · desde {dateBR(t.createdAt)}
                           </p>
@@ -410,7 +413,7 @@ export default function Platform() {
                       </div>
                       <span
                         className={`shrink-0 rounded-full px-3 py-1 text-[11px] font-semibold ${
-                          t.status === 'ACTIVE' ? 'bg-lime/15 text-lime' : 'bg-red-950 text-red-300'
+                          t.status === 'ACTIVE' ? 'bg-emerald-300/[0.08] text-emerald-200 ring-1 ring-inset ring-emerald-300/25' : 'bg-red-400/[0.06] text-red-300 ring-1 ring-inset ring-red-400/25'
                         }`}
                       >
                         {t.status === 'ACTIVE' ? 'Ativo' : 'Suspenso'}

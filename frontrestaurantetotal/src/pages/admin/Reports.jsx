@@ -32,7 +32,7 @@ export default function Reports({ toast }) {
   return (
     <div>
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <h2 className="font-display text-2xl font-semibold">Relatórios</h2>
+        <h2 className="font-serif text-2xl">Relatórios</h2>
         <div className="flex w-full flex-col gap-2 text-xs sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
           <div className="grid grid-cols-3 gap-2 sm:flex">
             {[
@@ -94,7 +94,7 @@ export default function Reports({ toast }) {
 
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
             <section className="rounded-2xl border border-line bg-dark p-5">
-              <h3 className="font-display text-lg font-semibold">Faturamento por dia</h3>
+              <h3 className="font-serif text-lg">Faturamento por dia</h3>
               {data.byDay.length === 0 && <p className="mt-4 text-sm text-muted">Sem vendas no período.</p>}
               <ul className="mt-4 space-y-2">
                 {data.byDay.map((d) => (
@@ -111,7 +111,7 @@ export default function Reports({ toast }) {
                 <div className="mt-6 flex flex-wrap gap-2 text-xs">
                   {Object.entries(data.byType).map(([k, v]) => (
                     <span key={k} className="rounded-lg bg-panel px-3 py-1.5">
-                      {ORDER_TYPES[k]?.icon} {ORDER_TYPES[k]?.short ?? k}: <strong>{v.orders}</strong> · {money(v.revenueCents)}
+                      {ORDER_TYPES[k]?.short ?? k}: <strong>{v.orders}</strong> · {money(v.revenueCents)}
                     </span>
                   ))}
                 </div>
@@ -128,7 +128,7 @@ export default function Reports({ toast }) {
             </section>
 
             <section className="rounded-2xl border border-line bg-dark p-5">
-              <h3 className="font-display text-lg font-semibold">Mais vendidos</h3>
+              <h3 className="font-serif text-lg">Mais vendidos</h3>
               <table className="mt-4 w-full text-sm">
                 <thead className="text-left text-xs text-muted">
                   <tr>

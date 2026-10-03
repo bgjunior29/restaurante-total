@@ -77,7 +77,7 @@ export default function SimpleCrud({ toast, title, intro, noun, endpoint, empty,
     <div className="max-w-3xl">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="font-display text-2xl font-semibold">{title}</h2>
+          <h2 className="font-serif text-2xl">{title}</h2>
           <p className="mt-1 max-w-xl text-sm text-muted">{intro}</p>
         </div>
         <button className="btn-lime py-2 text-sm" onClick={() => setForm({ ...empty, sortOrder: items.length })}>
@@ -110,7 +110,7 @@ export default function SimpleCrud({ toast, title, intro, noun, endpoint, empty,
             <div className="flex items-center gap-3 text-xs">
               <button
                 onClick={() => patch(item, { active: !item.active }, item.active ? `"${label(item)}" desativado(a).` : `"${label(item)}" ativado(a).`)}
-                className={`rounded-full px-3 py-1 font-semibold ${item.active ? 'bg-lime text-dark' : 'bg-panel text-muted'}`}
+                className={`rounded-md px-2.5 py-1 font-medium ${item.active ? 'bg-emerald-300/[0.08] text-emerald-200 ring-1 ring-inset ring-emerald-300/25' : 'bg-white/[0.03] text-muted ring-1 ring-inset ring-line'}`}
               >
                 {item.active ? 'Ativo' : 'Inativo'}
               </button>

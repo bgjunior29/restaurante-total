@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Spinner, useToast } from '../components/ui'
+import Icon from '../components/Icon'
 import { minutesSince, ORDER_TYPES, STATIONS, time } from '../lib/format'
 import { load, save } from '../lib/storage'
 import { useTenant } from '../lib/tenant'
@@ -64,7 +65,7 @@ export default function Kitchen() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="eyebrow text-lime">Tela da cozinha · ao vivo</p>
-            <h1 className="mt-2 font-display text-3xl font-bold tracking-[-0.05em]">
+            <h1 className="mt-2 font-serif text-3xl">
               {orders ? `${orders.length} na fila` : 'Fila de preparo'}
               {station && <span className="text-lime"> · {STATIONS[station]}</span>}
             </h1>
@@ -75,8 +76,8 @@ export default function Kitchen() {
                 key={k || 'all'}
                 aria-pressed={station === k}
                 onClick={() => setStation(k)}
-                className={`rounded-full border px-4 py-2 text-xs font-semibold transition ${
-                  station === k ? 'border-lime bg-lime text-dark' : 'border-line hover:border-lime'
+                className={`rounded-lg border px-3.5 py-2 text-xs font-medium transition ${
+                  station === k ? 'border-ink/80 bg-ink text-green' : 'border-line text-ink/75 hover:border-ink/30 hover:text-ink'
                 }`}
               >
                 {label}
@@ -88,9 +89,10 @@ export default function Kitchen() {
                 setSound((s) => !s)
               }}
               aria-pressed={sound}
-              className={`rounded-full border px-3 py-2 text-xs font-semibold ${sound ? 'border-lime text-lime' : 'border-line text-muted'}`}
+              className={`rounded-lg border px-3 py-2 text-sm ${sound ? 'border-lime/40 text-lime' : 'border-line text-muted'}`}
+              aria-label={sound ? 'Som ligado' : 'Som desligado'}
             >
-              {sound ? '🔔' : '🔕'}
+              <Icon name={sound ? 'bell' : 'bell-off'} />
             </button>
           </div>
         </div>
@@ -99,7 +101,7 @@ export default function Kitchen() {
           <Spinner label="Carregando a fila…" />
         ) : orders.length === 0 ? (
           <div className="mt-16 text-center">
-            <p className="font-display text-3xl font-bold">Fila vazia. 👩‍🍳</p>
+            <p className="font-serif text-4xl">Fila vazia.</p>
             <p className="mt-2 text-sm text-muted">Os novos pedidos aparecem aqui sozinhos, com aviso sonoro.</p>
           </div>
         ) : (
@@ -112,14 +114,14 @@ export default function Kitchen() {
               return (
                 <article
                   key={o.id}
-                  className={`flex flex-col rounded-[20px] border-2 bg-dark p-4 ${
-                    late ? 'border-red-400' : warn ? 'border-amber-400' : preparing ? 'border-lime/60' : 'border-line'
+                  className={`flex flex-col rounded-2xl border bg-dark p-4 shadow-[0_24px_48px_-24px_rgba(0,0,0,.6)] ${
+                    late ? 'border-red-400/70' : warn ? 'border-amber-300/60' : preparing ? 'border-lime/50' : 'border-line'
                   }`}
                 >
                   <header className="flex items-start justify-between gap-2">
                     <div>
-                      <p className="font-display text-2xl font-bold">
-                        {o.table ? o.table.label : `${ORDER_TYPES[o.type].icon} ${ORDER_TYPES[o.type].short}`}
+                      <p className="font-serif text-[28px] leading-tight">
+                        {o.table ? o.table.label : ORDER_TYPES[o.type].short}
                       </p>
                       <p className="text-xs text-muted">
                         {o.code} · {time(o.createdAt)}
@@ -127,8 +129,8 @@ export default function Kitchen() {
                       </p>
                     </div>
                     <span
-                      className={`rounded-xl px-3 py-1.5 font-display text-lg font-bold tabular-nums ${
-                        late ? 'bg-red-400 text-dark' : warn ? 'bg-amber-400 text-dark' : 'bg-panel'
+                      className={`rounded-lg px-3 py-1.5 font-display text-lg font-semibold tabular-nums ${
+                        late ? 'bg-red-400/15 text-red-300 ring-1 ring-red-400/40' : warn ? 'bg-amber-300/10 text-amber-200 ring-1 ring-amber-300/40' : 'bg-panel text-ink/80'
                       }`}
                     >
                       {min}′
@@ -136,23 +138,25 @@ export default function Kitchen() {
                   </header>
                   <ul className="mt-3 flex-1 space-y-2">
                     {o.items.map((i) => (
-                      <li key={i.id} className="rounded-xl bg-panel px-3 py-2">
+                      <li key={i.id} className="rounded-lg border border-line/70 bg-panel/60 px-3 py-2">
                         <p className="text-lg leading-tight">
-                          <strong className="text-lime">{i.quantity}×</strong> {i.name}
+                          <strong className="font-semibold text-lime">{i.quantity}×</strong> {i.name}
                         </p>
-                        {i.details && <p className="text-sm text-[#f4e3a6]">↳ {i.details}</p>}
+                        {i.details && <p className="text-sm text-lime/80">↳ {i.details}</p>}
                         {!station && <p className="text-[10px] text-muted uppercase">{STATIONS[i.station]}</p>}
                       </li>
                     ))}
                   </ul>
-                  {o.notes && <p className="mt-2 rounded-lg bg-[#3a3520] px-3 py-2 text-sm text-[#f4e3a6]">⚠ {o.notes}</p>}
+                  {o.notes && <p className="mt-2 flex gap-2 rounded-lg border border-amber-200/15 bg-amber-200/[0.05] px-3 py-2 text-sm text-amber-100">
+                      <Icon name="alert" className="mt-0.5 size-4" /> {o.notes}
+                    </p>}
                   <div className="mt-3 grid gap-2">
                     {preparing ? (
                       <button className="btn-lime py-3 text-base" onClick={() => advance(o, 'PRONTO')}>
-                        ✓ Pronto
+                        <Icon name="check" className="mr-1.5" /> Pronto
                       </button>
                     ) : (
-                      <button className="rounded-xl border border-lime py-3 font-display font-semibold text-lime" onClick={() => advance(o, 'EM_PREPARO')}>
+                      <button className="rounded-lg border border-lime/50 py-3 font-semibold text-lime transition hover:bg-lime/[0.06]" onClick={() => advance(o, 'EM_PREPARO')}>
                         Começar preparo
                       </button>
                     )}

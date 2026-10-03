@@ -55,7 +55,7 @@ export default function Team({ toast }) {
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_340px]">
       <section className="min-w-0">
-        <h2 className="font-display text-2xl font-semibold">Equipe</h2>
+        <h2 className="font-serif text-2xl">Equipe</h2>
         <p className="mt-1 text-sm text-muted">Atendentes cuidam dos pedidos e do salão. Cozinha vê só a fila de preparo. Administradores também acessam a gestão.</p>
         <ul className="mt-5 divide-y divide-line rounded-2xl border border-line bg-dark">
           {users.map((u) => (
@@ -98,7 +98,7 @@ export default function Team({ toast }) {
       </section>
 
       <form onSubmit={create} className="h-fit rounded-2xl border border-line bg-dark p-5">
-        <h3 className="font-display text-lg font-semibold">Novo usuário</h3>
+        <h3 className="font-serif text-lg">Novo usuário</h3>
         <label className="label mt-4">Nome</label>
         <input className="input" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
         <label className="label mt-3">Usuário (login)</label>

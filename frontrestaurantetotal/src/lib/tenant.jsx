@@ -72,7 +72,7 @@ export function TenantLayout() {
       <div className="flex min-h-screen flex-col items-center justify-center gap-3 p-6 text-center">
         <p className="eyebrow text-lime">{info.name}</p>
         <p className="font-display text-3xl font-bold">Cardápio indisponível.</p>
-        <p className="max-w-sm text-sm text-muted">Este cardápio está temporariamente fora do ar. Chame um atendente. 🙂</p>
+        <p className="max-w-sm text-sm text-muted">Este cardápio está temporariamente fora do ar. Chame um atendente.</p>
       </div>
     )
   }
