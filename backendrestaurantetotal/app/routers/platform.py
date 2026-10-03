@@ -2,12 +2,13 @@
 import os
 from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 
-from .. import cache
+from .. import cache, ratelimit
 from ..auth import create_token, hash_password, platform_user, verify_password
 from ..db import db
-from ..schemas import IdentityIn, LoginIn, TenantAdminResetIn, TenantCreateIn, TenantUpdateIn
+from ..images import save_image
+from ..schemas import IdentityIn, ImageIn, LoginIn, TenantAdminResetIn, TenantCreateIn, TenantUpdateIn
 from ..serializers import IDENTITY_FIELDS
 from ..starter import create_payment_methods, create_starter_content
 from ..tenancy import validate_slug
@@ -16,10 +17,14 @@ router = APIRouter(prefix="/api/platform", tags=["plataforma"])
 
 
 @router.post("/auth/login")
-async def login(body: LoginIn):
-    user = await db.platformuser.find_unique(where={"username": body.username.strip().lower()})
+async def login(body: LoginIn, request: Request):
+    username = body.username.strip().lower()
+    ratelimit.check_login("platform", request, username)
+    user = await db.platformuser.find_unique(where={"username": username})
     if user is None or not user.active or not verify_password(body.password, user.passwordHash):
+        ratelimit.login_failed("platform", request, username)
         raise HTTPException(401, "Usuário ou senha incorretos.")
+    ratelimit.login_ok("platform", request, username)
     return {
         "token": create_token(user.id, "platform"),
         "user": {"id": user.id, "username": user.username, "name": user.name, "role": "PLATFORM"},
@@ -147,6 +152,12 @@ async def read_tenant_identity(tid: int, _=Depends(platform_user)):
     """Identidade visual do restaurante (a mesma que o dono edita em Gestão → Identidade)."""
     t = await tenant_or_404(tid)
     return {k: getattr(t, k) for k in IDENTITY_FIELDS}
+
+
+@router.post("/tenants/{tid}/images", status_code=201)
+async def upload_tenant_image(tid: int, body: ImageIn, _=Depends(platform_user)):
+    await tenant_or_404(tid)
+    return await save_image(tid, body.dataBase64)
 
 
 @router.put("/tenants/{tid}/identity")

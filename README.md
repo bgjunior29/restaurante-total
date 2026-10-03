@@ -98,6 +98,44 @@ Mesmo modelo do Bar Total: `render.yaml` (API no Render, `rootDir: backendrestau
 (`backend\neon-setup.ps1`) e frontend no Vercel (`frontrestaurantetotal/vercel.json` e `.env.production` apontam para
 `restaurante-total-api.onrender.com` — ajuste para o nome real do serviço).
 
+## Segurança e proteção
+
+- **Login com limite de tentativas** (equipe e plataforma): 5 senhas erradas do mesmo aparelho no mesmo usuário
+  bloqueiam por 15 min; 20 erros no mesmo usuário vindos de qualquer lugar também bloqueiam. Acertar a senha zera os erros do aparelho.
+- **Anti-spam de pedidos:** até 40 pedidos a cada 10 min e 30 chamados a cada 5 min por aparelho, em cada restaurante
+  (generoso porque no Wi-Fi do restaurante todas as mesas saem pelo mesmo IP). Os limites estão em `app/ratelimit.py` e `routers/public.py`.
+- **Fotos enviadas** (produto e logo) ficam no banco (`Image`), servidas em `/api/img/<chave>` com cache de 1 ano.
+  O navegador reduz a foto para no máximo 1000 px antes de enviar (~100 KB); a API confere os primeiros bytes (só JPG, PNG e WebP, até 800 KB).
+- **Termos de uso e política de privacidade (LGPD)** em `/termos` e `/privacidade`, com link no rodapé e no checkout.
+  Preencha os dados do operador no topo de `pages/Legal.jsx` e peça para um advogado revisar antes de vender.
+- **Calculadora de economia** em `/economia`: quanto o restaurante paga de comissão nos aplicativos e quanto economiza no canal próprio.
+
+## Testes
+
+```bash
+cd backendrestaurantetotal
+.venv\Scripts\pip install -r requirements-dev.txt
+.venv\Scripts\python -m pytest
+```
+
+Sobem a API inteira contra um SQLite próprio (`tests/test.db`, recriado a cada execução) e cobrem: isolamento entre restaurantes,
+preço calculado no servidor, limite de login e de pedidos, upload de fotos e restaurante suspenso.
+O GitHub roda os testes e o build do site a cada push (`.github/workflows/testes.yml`).
+
+## Backup e restauração
+
+`.github/workflows/backup.yml` faz um backup do banco de produção todo dia às 4h (Brasília), criptografado com AES-256,
+guardado 30 dias em **Actions → Backup do banco → Artifacts**. Configure uma vez em
+**Settings → Secrets and variables → Actions**: `BACKUP_DATABASE_URL` (a URL do Neon) e `BACKUP_PASSPHRASE`
+(senha longa, guardada fora do GitHub; sem ela o backup não abre). Para testar, rode o workflow na mão (Run workflow).
+
+Restaurar (num banco vazio do Neon, com Docker e GnuPG instalados):
+
+```bash
+gpg --decrypt restaurante-total-AAAA-MM-DD.dump.gpg > backup.dump
+docker run --rm -i -e DB="<URL do banco novo>" postgres:17 sh -c 'pg_restore --no-owner --no-privileges -d "$DB"' < backup.dump
+```
+
 ## Estrutura
 
 ```

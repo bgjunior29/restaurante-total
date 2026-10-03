@@ -335,6 +335,7 @@ export default function Platform() {
               key={styling.tenant.id}
               initial={styling.identity}
               onSave={saveIdentity}
+              onUpload={(dataBase64) => papi(`/tenants/${styling.tenant.id}/images`, { method: 'POST', body: { dataBase64 } })}
               onCancel={() => setStyling(null)}
             />
           </section>

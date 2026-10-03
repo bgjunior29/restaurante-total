@@ -10,7 +10,7 @@ load_dotenv()
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 from fastapi.middleware.gzip import GZipMiddleware  # noqa: E402
-from fastapi.responses import FileResponse, JSONResponse  # noqa: E402
+from fastapi.responses import FileResponse, JSONResponse, Response  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 from prisma.errors import PrismaError  # noqa: E402
 
@@ -71,6 +71,19 @@ app.include_router(platform.router)
 @app.get("/api/health")
 async def health():
     return {"ok": True, "today": today()}
+
+
+@app.get("/api/img/{key}", include_in_schema=False)
+async def image(key: str):
+    """Foto enviada pela gestão. O endereço nunca muda de conteúdo, então o navegador e a Vercel guardam por 1 ano."""
+    img = await db.image.find_unique(where={"key": key})
+    if img is None:
+        return JSONResponse(status_code=404, content={"detail": "Imagem não encontrada."})
+    return Response(
+        content=img.data.decode(),
+        media_type=img.contentType,
+        headers={"Cache-Control": "public, max-age=31536000, immutable", "X-Content-Type-Options": "nosniff"},
+    )
 
 
 @app.websocket("/ws/{slug}")

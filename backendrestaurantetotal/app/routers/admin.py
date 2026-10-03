@@ -9,16 +9,18 @@ from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 
-from .. import cache
+from .. import cache, ratelimit
 from ..auth import hash_password
 from ..coupons import count_uses, normalize_code
 from ..db import db
+from ..images import save_image
 from ..insights import build_insights
 from ..tables import new_qr_key
 from ..schemas import (
     CategoryIn,
     CouponIn,
     IdentityIn,
+    ImageIn,
     OptionGroupIn,
     PaymentMethodIn,
     ProductIn,
@@ -349,6 +351,13 @@ async def delete_table(tid: int, user=Depends(admin_user)):
         await db.table.update(where={"id": tid}, data={"active": False})
     else:
         await db.table.delete(where={"id": tid})
+
+
+# ---------- Fotos (produtos e logo) ----------
+@router.post("/images", status_code=201)
+async def upload_image(body: ImageIn, request: Request, user=Depends(admin_user)):
+    ratelimit.hit(f"upload:{user.tenantId}", request, 60, 10 * 60, "Muitas fotos enviadas seguidas. Aguarde alguns minutos.")
+    return await save_image(user.tenantId, body.dataBase64)
 
 
 # ---------- Identidade e configurações ----------

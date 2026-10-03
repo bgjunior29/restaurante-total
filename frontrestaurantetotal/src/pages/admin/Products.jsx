@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTenant } from '../../lib/tenant'
 import { centsToInput, money, parseMoney, STATIONS } from '../../lib/format'
+import ImageField from '../../components/ImageField'
 
 const EMPTY = {
   name: '',
@@ -171,18 +172,13 @@ export default function Products({ toast }) {
               <input className="input" maxLength={240} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             </div>
             <div className="sm:col-span-2">
-              <label className="label">Foto (endereço da imagem, opcional)</label>
-              <div className="flex items-center gap-3">
-                {form.imageUrl && <img src={form.imageUrl} alt="" className="size-12 shrink-0 rounded-xl object-cover" />}
-                <input
-                  className="input"
-                  inputMode="url"
-                  maxLength={500}
-                  placeholder="https://…/foto.jpg"
-                  value={form.imageUrl}
-                  onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                />
-              </div>
+              <ImageField
+                label="Foto (opcional)"
+                value={form.imageUrl}
+                onChange={(imageUrl) => setForm((f) => ({ ...f, imageUrl }))}
+                upload={(dataBase64) => tapi('/admin/images', { method: 'POST', body: { dataBase64 } })}
+                hint="Tire a foto pelo celular ou escolha da galeria. Ela é reduzida automaticamente."
+              />
             </div>
             <div>
               <label className="label">Preço (R$)</label>

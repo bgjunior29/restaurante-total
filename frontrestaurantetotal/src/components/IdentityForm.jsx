@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { THEMES, themeVars } from '../lib/themes'
+import ImageField from './ImageField'
 import { Brand } from './ui'
 
 // Cores claras: o texto dos botões é escuro, então a cor de destaque precisa ser clara para ter contraste.
@@ -116,9 +117,10 @@ export function IdentityPreview({ form }) {
 
 /**
  * Formulário completo de identidade (usado na Gestão do restaurante e no painel da plataforma).
- * `initial` = valores atuais; `onSave(valores)` salva e devolve os valores gravados.
+ * `initial` = valores atuais; `onSave(valores)` salva e devolve os valores gravados;
+ * `onUpload(dataUrl)` envia o logo e devolve `{ url }`.
  */
-export default function IdentityForm({ initial, onSave, submitLabel = 'Salvar identidade', onCancel }) {
+export default function IdentityForm({ initial, onSave, onUpload, submitLabel = 'Salvar identidade', onCancel }) {
   const [form, setForm] = useState(initial)
   const [saving, setSaving] = useState(false)
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
@@ -158,9 +160,15 @@ export default function IdentityForm({ initial, onSave, submitLabel = 'Salvar id
               <input className="input" maxLength={60} placeholder="Restaurante · Cozinha · Encontros" value={form.tagline} onChange={set('tagline')} />
             </div>
             <div className="sm:col-span-2">
-              <label className="label">Logo (endereço da imagem, opcional)</label>
-              <input className="input" maxLength={500} placeholder="https://…/logo.png" value={form.logoUrl} onChange={set('logoUrl')} />
-              <p className="mt-1 text-[11px] text-muted">Imagem quadrada. Pode ser o link da foto de perfil do Instagram ou de um site.</p>
+              <ImageField
+                label="Logo (opcional)"
+                value={form.logoUrl}
+                onChange={(logoUrl) => setForm((f) => ({ ...f, logoUrl }))}
+                upload={onUpload}
+                maxSide={400}
+                placeholder="https://…/logo.png"
+                hint="Imagem quadrada. Pode enviar o arquivo ou colar o link da foto de perfil do Instagram."
+              />
             </div>
           </div>
         </section>

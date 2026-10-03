@@ -1,0 +1,72 @@
+"""Limite de tentativas em memória: protege o login contra quem tenta senhas sem parar
+e o envio de pedidos/chamados contra quem enche a cozinha de pedidos falsos.
+
+Vale para um processo só (um uvicorn), como o cache. Reiniciar o servidor zera os contadores.
+"""
+import time
+from collections import defaultdict, deque
+
+from fastapi import HTTPException, Request
+
+LOGIN_WINDOW = 15 * 60  # segundos
+LOGIN_MAX_PER_IP_USER = 5  # erros seguidos do mesmo aparelho no mesmo usuário
+LOGIN_MAX_PER_USER = 20  # erros no mesmo usuário vindos de qualquer lugar
+
+_hits: dict[str, deque] = defaultdict(deque)
+
+
+def client_ip(request: Request) -> str:
+    """IP do cliente. Na produção a requisição passa pela Vercel e pelo Render, que preenchem X-Forwarded-For."""
+    forwarded = request.headers.get("x-forwarded-for", "")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else "?"
+
+
+def _recent(key: str, window: int) -> deque:
+    hits = _hits[key]
+    limit = time.monotonic() - window
+    while hits and hits[0] < limit:
+        hits.popleft()
+    if not hits:
+        _hits.pop(key, None)
+        hits = _hits[key]
+    return hits
+
+
+def _wait_minutes(hits: deque, window: int) -> int:
+    return max(1, int((hits[0] + window - time.monotonic()) // 60) + 1)
+
+
+def check_login(scope: str, request: Request, username: str) -> None:
+    """Chame antes de conferir a senha. Bloqueia com 429 quem errou demais."""
+    ip = client_ip(request)
+    for key, limit in ((f"login:{scope}:{ip}:{username}", LOGIN_MAX_PER_IP_USER), (f"login:{scope}:{username}", LOGIN_MAX_PER_USER)):
+        hits = _recent(key, LOGIN_WINDOW)
+        if len(hits) >= limit:
+            raise HTTPException(429, f"Muitas tentativas erradas. Tente de novo em {_wait_minutes(hits, LOGIN_WINDOW)} min.")
+
+
+def login_failed(scope: str, request: Request, username: str) -> None:
+    now = time.monotonic()
+    ip = client_ip(request)
+    _hits[f"login:{scope}:{ip}:{username}"].append(now)
+    _hits[f"login:{scope}:{username}"].append(now)
+
+
+def login_ok(scope: str, request: Request, username: str) -> None:
+    """Senha certa: zera os erros deste aparelho (os do usuário expiram sozinhos)."""
+    _hits.pop(f"login:{scope}:{client_ip(request)}:{username}", None)
+
+
+def hit(name: str, request: Request, limit: int, window: int, message: str) -> None:
+    """Conta uma ação do aparelho e bloqueia com 429 ao passar de `limit` em `window` segundos."""
+    hits = _recent(f"{name}:{client_ip(request)}", window)
+    if len(hits) >= limit:
+        raise HTTPException(429, message)
+    hits.append(time.monotonic())
+
+
+def reset() -> None:
+    """Usado pelos testes."""
+    _hits.clear()

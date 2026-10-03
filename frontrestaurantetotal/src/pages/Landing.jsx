@@ -20,6 +20,9 @@ export default function Landing() {
   return (
     <div className="flex min-h-screen flex-col">
       <Topbar>
+        <Link to="/economia" className="hidden text-sm font-semibold text-lime underline-offset-4 hover:underline sm:inline">
+          Calcule sua economia
+        </Link>
         <Link to="/plataforma" className="btn-outline">
           Plataforma <span className="ml-1">↗</span>
         </Link>
@@ -59,6 +62,9 @@ export default function Landing() {
           </div>
           <button className="btn-lime">Abrir →</button>
         </form>
+        <Link to="/economia" className="mt-6 inline-block text-sm font-semibold text-lime underline underline-offset-4">
+          Quanto você perde em comissão de aplicativo? Calcule aqui →
+        </Link>
         <ul className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map(([title, text]) => (
             <li key={title} className="border-t border-line pt-4">

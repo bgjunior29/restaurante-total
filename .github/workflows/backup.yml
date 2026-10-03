@@ -1,0 +1,51 @@
+# Backup diário do banco de produção (Neon), criptografado, guardado por 30 dias nos artefatos do GitHub.
+#
+# Configurar uma vez em Settings → Secrets and variables → Actions → New repository secret:
+#   BACKUP_DATABASE_URL   connection string do Neon (a mesma DATABASE_URL do Render)
+#   BACKUP_PASSPHRASE     uma senha longa só para os backups; guarde-a fora do GitHub (sem ela o backup não abre)
+#
+# O arquivo é criptografado porque tem nome, telefone e endereço dos clientes dos restaurantes (LGPD).
+# Restaurar: veja "Backup e restauração" no README.
+name: Backup do banco
+
+on:
+  schedule:
+    - cron: "0 7 * * *" # 4h da manhã em Brasília, com os restaurantes fechados
+  workflow_dispatch: # Actions → Backup do banco → Run workflow, para um backup na hora
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Conferir segredos
+        env:
+          DB: ${{ secrets.BACKUP_DATABASE_URL }}
+          PASS: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          if [ -z "$DB" ] || [ -z "$PASS" ]; then
+            echo "::error::Defina BACKUP_DATABASE_URL e BACKUP_PASSPHRASE nos secrets do repositório."
+            exit 1
+          fi
+
+      - name: Gerar e criptografar o dump
+        env:
+          DB: ${{ secrets.BACKUP_DATABASE_URL }}
+          PASS: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          FILE="restaurante-total-$(date -u +%Y-%m-%d).dump"
+          # pg_dump da mesma versão do Neon (17), pelo Docker, para não dar "server version mismatch".
+          docker run --rm -e DB postgres:17 sh -c 'pg_dump --format=custom --no-owner --no-privileges "$DB"' > "$FILE"
+          test -s "$FILE"
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$PASS" --symmetric --cipher-algo AES256 -o "$FILE.gpg" "$FILE"
+          rm "$FILE"
+          echo "FILE=$FILE.gpg" >> "$GITHUB_ENV"
+          ls -lh "$FILE.gpg"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.FILE }}
+          path: ${{ env.FILE }}
+          retention-days: 30
+          if-no-files-found: error

@@ -1,9 +1,9 @@
 """Rotas abertas do cliente (QR code da mesa, retirada e delivery): /api/t/{slug}/..."""
 import asyncio
 import secrets
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 
-from .. import cache, stock
+from .. import cache, ratelimit, stock
 from ..bill import SESSION_INCLUDE, bill_out
 from ..coupons import discount_for, normalize_code, validate_coupon
 from ..db import db
@@ -18,6 +18,8 @@ router = APIRouter(prefix="/api/t/{slug}", tags=["público"])
 
 ORDER_INCLUDE = {"items": True, "table": True, "review": True}
 OPEN_SESSION = ["OPEN", "BILL_REQUESTED"]
+ORDERS_PER_IP = 40  # pedidos a cada 10 min, por restaurante
+CALLS_PER_IP = 30  # chamados a cada 5 min, por restaurante
 
 
 @router.get("/info")
@@ -163,7 +165,9 @@ async def open_session_for(tx, tenant_id: int, table, token: str | None):
 
 
 @router.post("/orders", status_code=201)
-async def create_order(body: OrderIn, tenant=Depends(active_tenant)):
+async def create_order(body: OrderIn, request: Request, tenant=Depends(active_tenant)):
+    # Generoso de propósito: no Wi-Fi do restaurante todas as mesas saem pelo mesmo IP.
+    ratelimit.hit(f"order:{tenant.id}", request, ORDERS_PER_IP, 10 * 60, "Muitos pedidos seguidos deste aparelho. Aguarde alguns minutos.")
     if not tenant.ordersOpen:
         raise HTTPException(409, "O restaurante não está recebendo pedidos agora.")
     if not body.items:
@@ -325,7 +329,8 @@ async def create_call(tenant, table, kind: str):
 
 
 @router.post("/calls", status_code=201)
-async def call_waiter(body: CallIn, tenant=Depends(active_tenant)):
+async def call_waiter(body: CallIn, request: Request, tenant=Depends(active_tenant)):
+    ratelimit.hit(f"call:{tenant.id}", request, CALLS_PER_IP, 5 * 60, "Muitos chamados seguidos. A equipe já foi avisada.")
     table = await table_from_qr(tenant.id, body.tableNumber, body.tableKey)
     call = await create_call(tenant, table, body.kind)
     return {"id": call.id, "kind": call.kind, "createdAt": call.createdAt.isoformat()}

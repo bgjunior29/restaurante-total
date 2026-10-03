@@ -314,3 +314,19 @@ model Review {
 
   @@index([tenantId, createdAt])
 }
+
+// ---------- Fotos enviadas (produtos e logo) ----------
+
+// Guardadas no próprio banco: o disco do Render é apagado a cada deploy. O navegador já reduz a foto
+// antes de enviar (~100 KB), então cabem milhares no plano do banco.
+model Image {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique // vai no endereço: /api/img/<key>
+  tenantId    Int
+  contentType String
+  data        Bytes
+  size        Int
+  createdAt   DateTime @default(now())
+
+  @@index([tenantId])
+}

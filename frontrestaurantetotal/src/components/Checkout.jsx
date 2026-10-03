@@ -431,6 +431,11 @@ export default function CheckoutDrawer({
             <button className="btn-lime mt-5 w-full" disabled={sending || empty || !menu.ordersOpen || Boolean(missing)} onClick={confirm}>
               {sending ? 'Enviando…' : `Confirmar pedido · ${money(total)} →`}
             </button>
+            <p className="mt-2 text-center text-[10px] text-[#5d6558]">
+              Ao confirmar, você concorda com os{' '}
+              <a href="/termos" target="_blank" rel="noreferrer" className="underline">termos</a> e a{' '}
+              <a href="/privacidade" target="_blank" rel="noreferrer" className="underline">política de privacidade</a>.
+            </p>
             {!menu.ordersOpen && <p className="mt-2 text-xs text-red-800">Pedidos pausados no momento.</p>}
             {menu.ordersOpen && missing && <p className="mt-2 text-xs text-[#6b2f12]">{missing}</p>}
           </>

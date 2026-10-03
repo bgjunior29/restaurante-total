@@ -8,10 +8,12 @@ import Customer from './pages/Customer'
 import Floor from './pages/Floor'
 import Kitchen from './pages/Kitchen'
 import Landing from './pages/Landing'
+import { Privacy, Terms } from './pages/Legal'
 import Login from './pages/Login'
 import Panel from './pages/Panel'
 import Platform from './pages/platform/Platform'
 import PlatformLogin from './pages/platform/PlatformLogin'
+import Savings from './pages/Savings'
 import Track from './pages/Track'
 
 /** Área da equipe. `roles` limita quem entra; cozinha só vê a tela da cozinha. */
@@ -45,6 +47,9 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
+      <Route path="/economia" element={<Savings />} />
+      <Route path="/termos" element={<Terms />} />
+      <Route path="/privacidade" element={<Privacy />} />
 
       <Route path="/r/:slug" element={<TenantLayout />}>
         <Route index element={<Customer />} />

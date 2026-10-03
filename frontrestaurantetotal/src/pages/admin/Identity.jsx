@@ -26,5 +26,11 @@ export default function Identity({ toast }) {
     }
   }
 
-  return <IdentityForm initial={initial} onSave={save} />
+  return (
+    <IdentityForm
+      initial={initial}
+      onSave={save}
+      onUpload={(dataBase64) => tapi('/admin/images', { method: 'POST', body: { dataBase64 } })}
+    />
+  )
 }

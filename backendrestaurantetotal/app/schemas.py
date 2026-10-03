@@ -17,9 +17,13 @@ OptionalMoney = Field(default=0, ge=0, le=10_000_00)
 
 def _https(v: str, what: str) -> str:
     v = v.strip()
-    if v and not v.startswith(("https://", "http://")):
+    if v and not v.startswith(("https://", "http://", "/api/img/")):
         raise ValueError(f"{what} precisa ser um endereço começando com https://")
     return v
+
+
+class ImageIn(BaseModel):
+    dataBase64: str = Field(min_length=10, max_length=1_200_000)  # ~800 KB depois de decodificado
 
 
 class LoginIn(BaseModel):

@@ -1,9 +1,9 @@
 """Rotas da equipe: login, pedidos, cozinha, salão (contas das mesas) e chamados. /api/t/{slug}/..."""
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
-from .. import cache, stock, whatsapp
+from .. import cache, ratelimit, stock, whatsapp
 from ..auth import create_token, verify_password
 from ..bill import SESSION_INCLUDE, bill_out
 from ..db import db
@@ -31,10 +31,15 @@ ALLOWED = {
 
 
 @router.post("/auth/login")
-async def login(body: LoginIn, tenant=Depends(active_tenant)):
-    user = await db.user.find_first(where={"tenantId": tenant.id, "username": body.username.strip().lower()})
+async def login(body: LoginIn, request: Request, tenant=Depends(active_tenant)):
+    username = body.username.strip().lower()
+    scope = f"t{tenant.id}"
+    ratelimit.check_login(scope, request, username)
+    user = await db.user.find_first(where={"tenantId": tenant.id, "username": username})
     if user is None or not user.active or not verify_password(body.password, user.passwordHash):
+        ratelimit.login_failed(scope, request, username)
         raise HTTPException(401, "Usuário ou senha incorretos.")
+    ratelimit.login_ok(scope, request, username)
     return {"token": create_token(user.id, "tenant", tenant.id, user.role), "user": user_out(user)}
 
 

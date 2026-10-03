@@ -83,7 +83,11 @@ export function Footer({ name = 'Restaurante Total' }) {
       <span className="uppercase">
         {name} <span className="mx-2 text-lime">✳</span> Feito para boas refeições
       </span>
-      <span>© {new Date().getFullYear()}</span>
+      <span className="flex gap-4">
+        <Link to="/termos" className="hover:text-ink">Termos</Link>
+        <Link to="/privacidade" className="hover:text-ink">Privacidade</Link>
+        <span>© {new Date().getFullYear()}</span>
+      </span>
     </footer>
   )
 }
