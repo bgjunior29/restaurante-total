@@ -103,7 +103,12 @@ async def update_status(order_id: int, body: StatusIn, user=Depends(staff_user),
         data["readyAt"] = now
     if body.status == "ENTREGUE":
         data["finishedAt"] = now
-    order = await db.order.update(where={"id": order_id}, data=data, include=ORDER_INCLUDE)
+    # Só grava se ninguém mudou o status no meio do caminho: dois garçons cancelando juntos
+    # não podem devolver o estoque duas vezes.
+    changed = await db.order.update_many(where={"id": order_id, "status": current.status}, data=data)
+    if changed == 0:
+        raise HTTPException(409, "Outra pessoa acabou de mudar este pedido. Atualize a tela.")
+    order = await db.order.find_unique(where={"id": order_id}, include=ORDER_INCLUDE)
     if body.status == "CANCELADO":
         await stock.release(db, current.items or [])
         cache.invalidate(user.tenantId)

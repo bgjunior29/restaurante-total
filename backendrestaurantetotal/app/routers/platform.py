@@ -55,25 +55,62 @@ def tenant_row(t, usage: dict) -> dict:
     }
 
 
-async def usage_for(tenant_id: int) -> dict:
+async def usage_map(tenant_ids: list[int]) -> dict[int, dict]:
+    """Uso de vários restaurantes com 4 consultas agrupadas, não importa quantos sejam.
+
+    (Antes eram ~5 consultas por restaurante e todos os pedidos carregados só para contar:
+    com 100 restaurantes o painel levava perto de 1 minuto.)
+    """
+    if not tenant_ids:
+        return {}
     since = datetime.now(timezone.utc) - timedelta(days=30)
-    orders = await db.order.find_many(
-        where={"tenantId": tenant_id, "createdAt": {"gte": since}, "status": {"not": "CANCELADO"}}
+    scope = {"tenantId": {"in": tenant_ids}}
+    recent = await db.order.group_by(
+        by=["tenantId"],
+        where={**scope, "createdAt": {"gte": since}, "status": {"not": "CANCELADO"}},
+        count=True,
+        sum={"totalCents": True},
     )
-    last = await db.order.find_first(where={"tenantId": tenant_id}, order={"createdAt": "desc"})
-    return {
-        "orders30d": len(orders),
-        "revenue30dCents": sum(o.totalCents for o in orders),
-        "users": await db.user.count(where={"tenantId": tenant_id, "active": True}),
-        "tables": await db.table.count(where={"tenantId": tenant_id, "active": True}),
-        "lastOrderAt": last.createdAt.isoformat() if last else None,
-    }
+    last = await db.order.group_by(by=["tenantId"], where=scope, max={"createdAt": True})
+    users = await db.user.group_by(by=["tenantId"], where={**scope, "active": True}, count=True)
+    tables = await db.table.group_by(by=["tenantId"], where={**scope, "active": True}, count=True)
+
+    def by_tenant(rows):
+        return {r["tenantId"]: r for r in rows}
+
+    recent, last, users, tables = by_tenant(recent), by_tenant(last), by_tenant(users), by_tenant(tables)
+    out = {}
+    for tid in tenant_ids:
+        r, lo = recent.get(tid), last.get(tid)
+        last_at = lo["_max"]["createdAt"] if lo else None
+        out[tid] = {
+            "orders30d": r["_count"]["_all"] if r else 0,
+            "revenue30dCents": (r["_sum"]["totalCents"] or 0) if r else 0,
+            "users": users[tid]["_count"]["_all"] if tid in users else 0,
+            "tables": tables[tid]["_count"]["_all"] if tid in tables else 0,
+            "lastOrderAt": _iso(last_at),
+        }
+    return out
+
+
+def _iso(value) -> str | None:
+    """O agrupamento devolve a data como datetime (Postgres) ou texto (SQLite)."""
+    if value is None:
+        return None
+    if isinstance(value, str):
+        return datetime.fromisoformat(value.replace("Z", "+00:00")).isoformat()
+    return value.isoformat()
+
+
+async def usage_for(tenant_id: int) -> dict:
+    return (await usage_map([tenant_id]))[tenant_id]
 
 
 @router.get("/tenants")
 async def list_tenants(_=Depends(platform_user)):
     tenants = await db.tenant.find_many(order={"createdAt": "asc"})
-    return [tenant_row(t, await usage_for(t.id)) for t in tenants]
+    usage = await usage_map([t.id for t in tenants])
+    return [tenant_row(t, usage[t.id]) for t in tenants]
 
 
 @router.get("/summary")

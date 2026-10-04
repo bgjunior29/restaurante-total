@@ -198,6 +198,7 @@ async def create_order(body: OrderIn, request: Request, tenant=Depends(active_te
     subtotal = sum(i["unitPriceCents"] * i["quantity"] for i in items)
 
     discount = 0
+    coupon = None
     code = normalize_code(body.couponCode)
     if code:
         coupon = await validate_coupon(tenant.id, code, subtotal)
@@ -220,6 +221,12 @@ async def create_order(body: OrderIn, request: Request, tenant=Depends(active_te
         session = await open_session_for(tx, tenant.id, table, body.sessionToken) if table else None
         # Numeração por restaurante, sem repetir mesmo com pedidos simultâneos.
         seq = await tx.tenant.update(where={"id": tenant.id}, data={"orderSeq": {"increment": 1}})
+        # A linha do restaurante fica travada até o fim da transação, então pedidos simultâneos do mesmo
+        # restaurante passam um de cada vez por aqui: a contagem de usos do cupom não estoura o limite.
+        if coupon is not None and coupon.maxUses is not None:
+            used = await tx.order.count(where={"tenantId": tenant.id, "couponCode": code, "status": {"not": "CANCELADO"}})
+            if used >= coupon.maxUses:
+                raise HTTPException(400, "Este cupom atingiu o limite de usos.")
         order = await tx.order.create(
             data={
                 "tenantId": tenant.id,

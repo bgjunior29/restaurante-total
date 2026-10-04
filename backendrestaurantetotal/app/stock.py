@@ -38,7 +38,11 @@ async def reserve(tx, products: dict, items: list[dict]) -> list[int]:
 
 
 async def release(db, items) -> None:
-    """Devolve ao estoque os itens de um pedido cancelado."""
+    """Devolve ao estoque os itens de um pedido cancelado.
+
+    Produto que tinha saído do cardápio por ter zerado volta sozinho. Produto desligado à mão pelo
+    dono (com estoque sobrando) continua desligado.
+    """
     qty: Counter = Counter()
     for i in items:
         if i.productId:
@@ -47,4 +51,7 @@ async def release(db, items) -> None:
         p = await db.product.find_unique(where={"id": pid})
         if p is None or p.stockQty is None:
             continue
-        await db.product.update(where={"id": pid}, data={"stockQty": {"increment": q}})
+        data: dict = {"stockQty": {"increment": q}}
+        if not p.available and p.stockQty <= 0:
+            data["available"] = True
+        await db.product.update(where={"id": pid}, data=data)

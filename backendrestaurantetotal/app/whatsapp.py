@@ -15,6 +15,7 @@ import re
 import urllib.request
 
 log = logging.getLogger("restaurantetotal.whatsapp")
+_pending: set[asyncio.Task] = set()  # envios em andamento
 
 API_VERSION = os.getenv("WHATSAPP_API_VERSION", "v21.0")
 
@@ -83,4 +84,6 @@ async def notify_status(tenant, order, track_url: str = "") -> None:
         except Exception:
             log.exception("Falha ao enviar WhatsApp do pedido %s", order.code)
 
-    asyncio.create_task(run())
+    task = asyncio.create_task(run())
+    _pending.add(task)  # sem uma referência guardada, o Python pode descartar a tarefa antes de terminar
+    task.add_done_callback(_pending.discard)
