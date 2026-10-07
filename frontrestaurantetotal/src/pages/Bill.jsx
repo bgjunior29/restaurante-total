@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Spinner, Stepper, Topbar, useToast } from '../components/ui'
 import Icon from '../components/Icon'
+import PixBox from '../components/PixBox'
 import { money, STATUS, time } from '../lib/format'
 import { forgetBill, myTable } from '../lib/storage'
 import { useTenant } from '../lib/tenant'
@@ -17,6 +18,7 @@ export default function Bill() {
   const [people, setPeople] = useState(1)
   const [withService, setWithService] = useState(true)
   const [busy, setBusy] = useState(false)
+  const [pix, setPix] = useState(null) // { amountCents, code } do valor escolhido (serviço e divisão)
 
   const refresh = useCallback(() => {
     tapi(`/bill/${token}`)
@@ -30,6 +32,19 @@ export default function Bill() {
 
   useEffect(refresh, [refresh])
   useLive(slug, (event) => event !== 'order_created' && event !== 'call_created' && refresh(), 20000)
+
+  // O código Pix acompanha o total da tela: com/sem serviço e a parte de cada um na divisão.
+  const pixOn = Boolean(bill?.pixEnabled) && bill?.status !== 'CLOSED' && bill?.subtotalCents > 0
+  useEffect(() => {
+    if (!pixOn) return
+    let alive = true
+    tapi(`/bill/${token}/pix?service=${withService}&people=${people}`)
+      .then((p) => alive && setPix(p))
+      .catch(() => alive && setPix(null))
+    return () => {
+      alive = false
+    }
+  }, [pixOn, tapi, token, withService, people, bill?.subtotalCents])
 
   async function requestBill() {
     setBusy(true)
@@ -90,8 +105,8 @@ export default function Bill() {
           {closed
             ? `Pago com ${bill.paymentMethod}. Volte sempre.`
             : bill.status === 'BILL_REQUESTED'
-              ? 'O garçom já foi avisado e vem até a sua mesa com a maquininha.'
-              : 'Todas as rodadas da mesa ficam aqui. Quando terminar, peça a conta por esta tela.'}
+              ? `O garçom já foi avisado. Pague ${bill.pixEnabled ? 'com o Pix abaixo ou ' : ''}em dinheiro no balcão.`
+              : `Todas as rodadas da mesa ficam aqui. Quando terminar, pague ${bill.pixEnabled ? 'com o Pix abaixo ou ' : ''}em dinheiro no balcão.`}
         </p>
 
         <section className="mt-8 space-y-3">
@@ -152,6 +167,21 @@ export default function Bill() {
             <strong className="font-display text-lg">{money(perPerson)} / pessoa</strong>
           </div>
         </section>
+
+        {pixOn && pix && (
+          <PixBox
+            code={pix.code}
+            total={pix.amountCents}
+            title={people > 1 ? 'Sua parte no Pix' : 'Pague com Pix'}
+            note="Depois de pagar, mostre o comprovante ao garçom ou no balcão para fechar a conta."
+          />
+        )}
+        {!closed && (
+          <p className="mt-4 rounded-2xl border border-line p-4 text-center text-sm text-ink/75">
+            <Icon name="receipt" className="mr-1.5 text-lime" />
+            Prefere dinheiro? Pague no <strong className="text-ink">balcão</strong>.
+          </p>
+        )}
 
         {!closed && (
           <div className="mt-6 grid gap-3 sm:grid-cols-2">

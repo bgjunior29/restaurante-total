@@ -54,3 +54,27 @@ def test_acompanhamento_mostra_pix_ate_pagar(client):
     order = pickup_order(client, first_product(menu), cash["id"]).json()
     tracked = client.get(f"/api/t/{SLUG}/track/{order['token']}").json()
     assert tracked["paymentKind"] == "CASH" and tracked["pixCode"] is None
+
+
+def test_conta_da_mesa_gera_pix_do_total_e_da_divisao(client):
+    headers = login(client, SLUG)
+    settings = client.get(f"/api/t/{SLUG}/admin/settings", headers=headers).json()
+    client.put(f"/api/t/{SLUG}/admin/settings", headers=headers, json={**settings, "pixKey": "loja@exemplo.com", "serviceFeePct": 10})
+    table = client.get(f"/api/t/{SLUG}/admin/tables", headers=headers).json()[1]
+    menu = client.get(f"/api/t/{SLUG}/menu").json()
+    product = first_product(menu)
+    r = client.post(
+        f"/api/t/{SLUG}/orders",
+        json={"type": "MESA", "tableNumber": table["number"], "tableKey": table["qrKey"], "items": [{"productId": product["id"], "quantity": 2}]},
+    )
+    assert r.status_code == 201, r.text
+    token = r.json()["sessionToken"]
+
+    bill = client.get(f"/api/t/{SLUG}/bill/{token}").json()
+    assert bill["pixEnabled"] is True
+    subtotal = product["priceCents"] * 2
+    full = client.get(f"/api/t/{SLUG}/bill/{token}/pix").json()
+    assert full["amountCents"] == subtotal + subtotal * 10 // 100
+    assert f"MESA{table['number']}" in full["code"] and full["code"][-4:] == _crc16(full["code"][:-4])
+    split = client.get(f"/api/t/{SLUG}/bill/{token}/pix?service=false&people=3").json()
+    assert split["amountCents"] == -(-subtotal // 3)

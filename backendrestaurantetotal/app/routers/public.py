@@ -317,9 +317,33 @@ async def session_by_token(tenant, token: str):
     return session
 
 
+async def pix_enabled(tenant) -> bool:
+    """Pix na conta da mesa: precisa da chave cadastrada e da forma de pagamento Pix ativa."""
+    if not tenant.pixKey:
+        return False
+    return await db.paymentmethod.count(where={"tenantId": tenant.id, "kind": "PIX", "active": True}) > 0
+
+
 @router.get("/bill/{token}")
 async def bill(token: str, tenant=Depends(get_tenant)):
-    return bill_out(await session_by_token(tenant, token), tenant.serviceFeePct)
+    return {**bill_out(await session_by_token(tenant, token), tenant.serviceFeePct), "pixEnabled": await pix_enabled(tenant)}
+
+
+@router.get("/bill/{token}/pix")
+async def bill_pix(token: str, service: bool = True, people: int = 1, tenant=Depends(get_tenant)):
+    """Código Pix da conta da mesa: total com ou sem serviço, ou a parte de cada pessoa."""
+    session = await session_by_token(tenant, token)
+    if session.status == "CLOSED":
+        raise HTTPException(409, "Esta conta já foi fechada.")
+    if not await pix_enabled(tenant):
+        raise HTTPException(404, "Este restaurante não recebe Pix pelo celular.")
+    bill = bill_out(session, tenant.serviceFeePct)
+    total = bill["subtotalCents"] + (bill["serviceCents"] if service else 0)
+    amount = -(-total // max(1, min(people, 50)))  # arredonda para cima, como a divisão da tela
+    if amount <= 0:
+        raise HTTPException(409, "A conta ainda está vazia.")
+    txid = f"MESA{session.table.number}" if session.table else "MESA"
+    return {"amountCents": amount, "code": pix_code(tenant.pixKey, tenant.name, city_from_address(tenant.address), amount, txid)}
 
 
 @router.post("/bill/{token}/request")

@@ -341,7 +341,7 @@ export default function CheckoutDrawer({
               <p className="mt-4 rounded-xl border border-[#d7d5c4] bg-card px-4 py-3 text-xs leading-relaxed text-[#5d6558]">
                 <Icon name="receipt" className="mr-1.5 text-olive" />
                 Este pedido entra na <strong>conta da mesa</strong>. Você paga tudo no final
-                {menu.serviceFeePct > 0 && <> (taxa de serviço de {menu.serviceFeePct}%)</>} e pode pedir a conta pelo celular.
+                {menu.serviceFeePct > 0 && <> (taxa de serviço de {menu.serviceFeePct}%)</>}: pela conta no celular você paga com Pix, ou em dinheiro no balcão.
               </p>
             ) : (
               <>
