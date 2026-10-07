@@ -26,7 +26,7 @@ function Fields({ form, setForm }) {
           ))}
         </select>
         {form.kind === 'PIX' && (
-          <p className="mt-1 text-[11px] text-muted">A chave Pix é definida em Configurações e aparece para o cliente.</p>
+          <p className="mt-1 text-[11px] text-muted">A chave Pix é definida em Configurações; o cliente recebe o código copia e cola com o valor do pedido.</p>
         )}
       </div>
     </>

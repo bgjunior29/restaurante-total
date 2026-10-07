@@ -133,15 +133,6 @@ export default function CheckoutDrawer({
     }
   }
 
-  async function copyPix() {
-    try {
-      await navigator.clipboard.writeText(menu.pixKey)
-      showToast('Chave Pix copiada.')
-    } catch {
-      showToast('Não deu para copiar. Selecione a chave e copie manualmente.', 'error')
-    }
-  }
-
   async function confirm() {
     setSending(true)
     const address = [
@@ -153,7 +144,7 @@ export default function CheckoutDrawer({
       .filter(Boolean)
       .join(' - ')
     save(CUSTOMER_KEY, { type, name, phone, cep, street, number, district, city, addressRef })
-    const changeCents = payment?.kind === 'CASH' && changeFor ? parseMoney(changeFor) : 0
+    const changeCents = payment?.kind === 'CASH' && type === 'DELIVERY' && changeFor ? parseMoney(changeFor) : 0
     try {
       const order = await tapi('/orders', {
         method: 'POST',
@@ -354,7 +345,7 @@ export default function CheckoutDrawer({
               </p>
             ) : (
               <>
-                <p className="mt-4 text-xs font-semibold">{type === 'DELIVERY' ? 'Pagamento na entrega' : 'Pagamento na retirada'}</p>
+                <p className="mt-4 text-xs font-semibold">Forma de pagamento</p>
                 <div className="mt-2 grid grid-cols-2 gap-2">
                   {menu.paymentMethods.map((m) => (
                     <button
@@ -369,18 +360,23 @@ export default function CheckoutDrawer({
                     </button>
                   ))}
                 </div>
-                {payment?.kind === 'PIX' && menu.pixKey && (
-                  <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-[#d7d5c4] bg-card px-4 py-3 text-xs">
-                    <span className="min-w-0">
-                      <span className="block text-[#5d6558]">Chave Pix · envie o comprovante</span>
-                      <strong className="block truncate select-all">{menu.pixKey}</strong>
-                    </span>
-                    <button type="button" onClick={copyPix} className="shrink-0 rounded-full bg-dark px-3 py-1.5 font-semibold text-ink">
-                      Copiar
-                    </button>
-                  </div>
+                {payment?.kind === 'PIX' && (
+                  <p className="mt-3 rounded-xl border border-[#d7d5c4] bg-card px-4 py-3 text-xs leading-relaxed text-[#5d6558]">
+                    <Icon name="receipt" className="mr-1.5 text-olive" />
+                    Ao confirmar, geramos o <strong>código Pix copia e cola</strong> e o QR code com o valor exato do pedido.
+                  </p>
                 )}
                 {payment?.kind === 'CASH' && (
+                  <p className="mt-3 rounded-xl border border-[#d7d5c4] bg-card px-4 py-3 text-xs leading-relaxed text-[#5d6558]">
+                    <Icon name="receipt" className="mr-1.5 text-olive" />
+                    {type === 'DELIVERY' ? (
+                      <>Pague em <strong>dinheiro ao entregador</strong>, na entrega.</>
+                    ) : (
+                      <>Pague em <strong>dinheiro no balcão</strong>, ao retirar o pedido.</>
+                    )}
+                  </p>
+                )}
+                {payment?.kind === 'CASH' && type === 'DELIVERY' && (
                   <Field label="Troco para quanto? (opcional)" className="mt-3">
                     <input className="input-light mt-2" inputMode="decimal" placeholder="Ex.: 100,00" value={changeFor} onChange={(e) => setChangeFor(e.target.value)} />
                   </Field>

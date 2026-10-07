@@ -132,8 +132,8 @@ export default function Settings({ toast }) {
 
       <Section title="Pagamento e WhatsApp">
         <div>
-          <label className="label">Chave Pix (mostrada ao cliente que escolher uma forma do tipo Pix)</label>
-          <input className="input" maxLength={120} placeholder="CNPJ, e-mail, telefone ou chave aleatória" value={form.pixKey} onChange={set('pixKey')} />
+          <label className="label">Chave Pix (gera o código copia e cola com o valor de cada pedido pago por Pix)</label>
+          <input className="input" maxLength={120} placeholder="CPF, CNPJ, e-mail, celular (+55 11 99999-9999) ou chave aleatória" value={form.pixKey} onChange={set('pixKey')} />
         </div>
         <Toggle
           checked={form.notifyWhatsapp}

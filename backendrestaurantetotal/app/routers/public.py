@@ -8,6 +8,7 @@ from ..bill import SESSION_INCLUDE, bill_out
 from ..coupons import discount_for, normalize_code, validate_coupon
 from ..db import db
 from ..insights import recent_pairs
+from ..pix import city_from_address, pix_code
 from ..realtime import hub
 from ..schemas import CallIn, CouponCheckIn, OrderIn, ReviewIn
 from ..serializers import option_group_out, order_out, tenant_public
@@ -266,7 +267,19 @@ async def track(token: str, tenant=Depends(get_tenant)):
     order = await db.order.find_unique(where={"token": token}, include=ORDER_INCLUDE)
     if order is None or order.tenantId != tenant.id:
         raise HTTPException(404, "Pedido não encontrado.")
-    return {**order_out(order, public=True), "estimate": estimate(tenant, order)}
+    return {**order_out(order, public=True), "estimate": estimate(tenant, order), **(await payment_info(tenant, order))}
+
+
+async def payment_info(tenant, order) -> dict:
+    """Tipo da forma de pagamento e, para Pix ainda não pago, o código copia e cola com o valor do pedido."""
+    if order.type == "MESA" or not order.paymentMethod:
+        return {"paymentKind": None, "pixCode": None}
+    method = await db.paymentmethod.find_first(where={"tenantId": tenant.id, "name": order.paymentMethod})
+    kind = method.kind if method else None
+    code = None
+    if kind == "PIX" and tenant.pixKey and not order.paid and order.status != "CANCELADO":
+        code = pix_code(tenant.pixKey, tenant.name, city_from_address(tenant.address), order.totalCents, order.code)
+    return {"paymentKind": kind, "pixCode": code}
 
 
 def estimate(tenant, order) -> int | None:
