@@ -20,6 +20,10 @@ services:
         sync: false # senha do admin do restaurante de exemplo (só usada num banco vazio)
       - key: PLATFORM_ADMIN_PASSWORD
         sync: false # senha do login /plataforma (só usada num banco vazio; sem ela o login não é criado)
+      # Mesmo valor da variável ORIGIN_SECRET da Vercel: a API só aceita /api/* que chegue com esse segredo.
+      # Defina PRIMEIRO na Vercel (e faça o deploy de lá); só depois aqui. Vazio = API aberta como antes.
+      - key: ORIGIN_SECRET
+        sync: false
       - key: CORS_ORIGINS
         value: https://frontrestaurantetotal.vercel.app
       - key: PUBLIC_URL

@@ -3,24 +3,53 @@ e o envio de pedidos/chamados contra quem enche a cozinha de pedidos falsos.
 
 Vale para um processo só (um uvicorn), como o cache. Reiniciar o servidor zera os contadores.
 """
+import os
+import secrets
 import time
 from collections import defaultdict, deque
 
 from fastapi import HTTPException, Request
+from starlette.requests import HTTPConnection
 
 LOGIN_WINDOW = 15 * 60  # segundos
 LOGIN_MAX_PER_IP_USER = 5  # erros seguidos do mesmo aparelho no mesmo usuário
 LOGIN_MAX_PER_USER = 20  # erros no mesmo usuário vindos de qualquer lugar
 
+ORIGIN_HEADER = "x-origin-secret"  # a Vercel coloca em toda requisição que repassa para a API (vercel.json)
+
 _hits: dict[str, deque] = defaultdict(deque)
 
 
-def client_ip(request: Request) -> str:
-    """IP do cliente. Na produção a requisição passa pela Vercel e pelo Render, que preenchem X-Forwarded-For."""
-    forwarded = request.headers.get("x-forwarded-for", "")
+def origin_secret() -> str:
+    return os.getenv("ORIGIN_SECRET", "")
+
+
+def from_vercel(conn: HTTPConnection) -> bool:
+    """A requisição veio pela Vercel (traz o segredo combinado), e não direto no Render."""
+    secret = origin_secret()
+    given = conn.headers.get(ORIGIN_HEADER, "")
+    return bool(secret) and secrets.compare_digest(given.encode(), secret.encode())
+
+
+def client_ip(conn: HTTPConnection) -> str:
+    """IP do cliente.
+
+    - Pela Vercel (segredo confere): x-real-ip, que a Vercel preenche com o IP do visitante.
+    - WebSocket (vai direto ao Render): CF-Connecting-IP, que o Cloudflare na frente do Render preenche.
+    - Sem ORIGIN_SECRET configurado (PC, testes): primeiro valor de X-Forwarded-For. O Render não limpa esse
+      cabeçalho, então ele só é confiável quando a API recusa quem não vem pela Vercel (guards.OriginGuard).
+    """
+    headers = conn.headers
+    real = headers.get("x-real-ip", "").strip()
+    if real and from_vercel(conn):
+        return real
+    cloudflare = headers.get("cf-connecting-ip", "").strip()
+    if cloudflare and conn.scope["type"] == "websocket":
+        return cloudflare
+    forwarded = headers.get("x-forwarded-for", "")
     if forwarded:
         return forwarded.split(",")[0].strip()
-    return request.client.host if request.client else "?"
+    return conn.client.host if conn.client else "?"
 
 
 def _recent(key: str, window: int) -> deque:

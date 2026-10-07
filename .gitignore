@@ -8,3 +8,6 @@ __pycache__/
 .env
 .prisma-cache/
 tests/test.db*
+
+# Documentação interna (local, fora do git)
+docs/

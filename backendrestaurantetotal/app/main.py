@@ -16,6 +16,8 @@ from prisma.errors import PrismaError  # noqa: E402
 
 from . import cache  # noqa: E402
 from .db import db  # noqa: E402
+from .guards import BodyLimit, OriginGuard  # noqa: E402
+from .ratelimit import client_ip  # noqa: E402
 from .realtime import hub  # noqa: E402
 from .routers import admin, platform, public, staff  # noqa: E402
 from .tables import ensure_qr_keys  # noqa: E402
@@ -54,6 +56,7 @@ async def database_error(request: Request, exc: PrismaError):
 
 # Cardápio e listas de pedidos comprimidos: menos dados no 4G do cliente.
 app.add_middleware(GZipMiddleware, minimum_size=1000)
+app.add_middleware(BodyLimit)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[o.strip() for o in os.getenv("CORS_ORIGINS", "").split(",") if o.strip()],
@@ -61,6 +64,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# Por último = mais externo: recusa quem pula a Vercel antes de qualquer outra coisa.
+app.add_middleware(OriginGuard)
 
 app.include_router(public.router)
 app.include_router(staff.router)
@@ -92,7 +97,8 @@ async def websocket(ws: WebSocket, slug: str):
     if tenant is None:
         await ws.close(code=4404)
         return
-    await hub.connect(tenant.id, ws)
+    if not await hub.connect(tenant.id, ws, client_ip(ws)):
+        return
     try:
         while True:
             await ws.receive_text()  # mantém a conexão viva (ping do cliente)

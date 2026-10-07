@@ -36,9 +36,10 @@ export function useLive(slug, onEvent, pollMs = 20000) {
         handler.current('reconnected')
         ping = setInterval(() => ws.readyState === 1 && ws.send('ping'), 25000)
       }
-      ws.onclose = () => {
+      ws.onclose = (e) => {
         clearInterval(ping)
-        if (!closed) retry = setTimeout(connect, 3000)
+        // 4429 = conexões demais deste IP: espera mais antes de tentar (o "tick" segue atualizando a tela).
+        if (!closed) retry = setTimeout(connect, e.code === 4429 ? 30000 : 3000)
       }
     }
     connect()

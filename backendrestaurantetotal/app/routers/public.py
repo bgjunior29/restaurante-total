@@ -21,6 +21,7 @@ ORDER_INCLUDE = {"items": True, "table": True, "review": True}
 OPEN_SESSION = ["OPEN", "BILL_REQUESTED"]
 ORDERS_PER_IP = 40  # pedidos a cada 10 min, por restaurante
 CALLS_PER_IP = 30  # chamados a cada 5 min, por restaurante
+COUPON_CHECKS_PER_IP = 20  # conferências de cupom a cada 10 min, por restaurante (impede testar códigos em massa)
 
 
 @router.get("/info")
@@ -133,7 +134,10 @@ def delivery_fee(tenant, subtotal: int) -> int:
 
 
 @router.post("/coupons/check")
-async def check_coupon(body: CouponCheckIn, tenant=Depends(active_tenant)):
+async def check_coupon(body: CouponCheckIn, request: Request, tenant=Depends(active_tenant)):
+    ratelimit.hit(
+        f"coupon:{tenant.id}", request, COUPON_CHECKS_PER_IP, 10 * 60, "Muitas tentativas de cupom. Aguarde alguns minutos."
+    )
     coupon = await validate_coupon(tenant.id, body.code, body.subtotalCents)
     return {
         "code": coupon.code,
