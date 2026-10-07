@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import PixBox from '../components/PixBox'
 import { Spinner, Topbar, useToast } from '../components/ui'
 import { FLOWS, money, ORDER_TYPES, pad2, STATUS, time, waLink } from '../lib/format'
-import { myBill } from '../lib/storage'
+import { myBill, myOrders } from '../lib/storage'
 import { useTenant } from '../lib/tenant'
 import { useLive } from '../lib/useLive'
 
@@ -74,6 +74,7 @@ export default function Track() {
   const cancelled = order.status === 'CANCELADO'
   const finished = order.status === 'ENTREGUE'
   const bill = order.type === 'MESA' ? myBill(slug) : null
+  const mine = myOrders(slug)
   const eta = order.estimate ? new Date(new Date(order.createdAt).getTime() + order.estimate * 60000) : null
   const whats = waLink(info.whatsapp, `Olá! Sobre o pedido ${order.code}:`)
   const back = order.table ? to(`/mesa/${order.table.number}`) : to()
@@ -122,6 +123,33 @@ export default function Track() {
               </li>
             ))}
           </ol>
+        )}
+
+        {mine.length > 1 && (
+          <nav className="mt-8 rounded-2xl border border-line p-4" aria-label="Seus pedidos de hoje">
+            <p className="text-xs text-muted">
+              Você fez <strong className="text-ink">{mine.length} pedidos</strong> hoje neste celular. Toque para ver cada um:
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {mine.map((o) => (
+                <Link
+                  key={o.token}
+                  to={to(`/pedido/${o.token}`)}
+                  aria-current={o.token === token ? 'page' : undefined}
+                  className={`rounded-lg border px-3 py-1.5 text-xs font-medium ${
+                    o.token === token ? 'border-lime bg-lime/10 text-lime' : 'border-line hover:border-ink/40'
+                  }`}
+                >
+                  {o.code} · {time(o.createdAt)}
+                </Link>
+              ))}
+            </div>
+            {bill && (
+              <Link to={to(`/conta/${bill.token}`)} className="mt-3 block text-xs text-lime underline-offset-2 hover:underline">
+                Ver todos os pedidos da mesa juntos na conta →
+              </Link>
+            )}
+          </nav>
         )}
 
         <section className="mt-8 rounded-2xl border border-line bg-dark p-5">

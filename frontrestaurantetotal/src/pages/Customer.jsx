@@ -228,7 +228,7 @@ export default function Customer() {
         )}
         {!billHere && recent.length > 0 && (
           <Link to={to(`/pedido/${recent[0].token}`)} className="btn-outline">
-            Meu pedido
+            {recent.length > 1 ? `Meus pedidos (${recent.length})` : 'Meu pedido'}
           </Link>
         )}
         {atTable && (
@@ -382,7 +382,7 @@ export default function Customer() {
 
                 {recent.length > 0 && (
                   <div className="mt-10">
-                    <p className="eyebrow mb-3 text-olive">Seus pedidos de hoje</p>
+                    <p className="eyebrow mb-3 text-olive">Seus pedidos de hoje ({recent.length})</p>
                     <div className="flex flex-wrap gap-2">
                       {recent.map((o) => (
                         <Link

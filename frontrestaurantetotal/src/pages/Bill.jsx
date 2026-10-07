@@ -84,6 +84,7 @@ export default function Bill() {
   const total = bill.subtotalCents + service
   const split = closed ? bill.people : people
   const perPerson = Math.ceil(total / split)
+  const cancelled = bill.orders.filter((o) => o.status === 'CANCELADO').length
 
   return (
     <div className="min-h-screen">
@@ -109,7 +110,11 @@ export default function Bill() {
               : `Todas as rodadas da mesa ficam aqui. Quando terminar, pague ${bill.pixEnabled ? 'com o Pix abaixo ou ' : ''}em dinheiro no balcão.`}
         </p>
 
-        <section className="mt-8 space-y-3">
+        <p className="mt-8 text-xs font-semibold uppercase tracking-wider text-muted">
+          {bill.orders.length} pedido{bill.orders.length === 1 ? '' : 's'} nesta conta
+          {cancelled > 0 && ` · ${cancelled} cancelado${cancelled > 1 ? 's' : ''}`}
+        </p>
+        <section className="mt-3 space-y-3">
           {bill.orders.map((o) => (
             <div key={o.id} className={`rounded-2xl border border-line bg-dark p-4 ${o.status === 'CANCELADO' ? 'opacity-50' : ''}`}>
               <div className="flex items-center justify-between text-xs">
