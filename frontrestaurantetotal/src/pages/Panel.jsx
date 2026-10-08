@@ -1,22 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import Icon from '../components/Icon'
 import { Spinner, Topbar, useToast } from '../components/ui'
 import { useAuth } from '../lib/auth'
-import { CALL_KINDS, minutesSince, money, nextStep, ORDER_TYPES, STATUS, time, todayISO, waLink } from '../lib/format'
+import { CALL_KINDS, minutesSince, money, nextStep, ORDER_TYPES, STATUS, time, waLink } from '../lib/format'
 import { load, save } from '../lib/storage'
 import { useTenant } from '../lib/tenant'
 import { beep, unlockAudio, useLive } from '../lib/useLive'
 
+// Só o que está em andamento: pedido terminado (entregue e pago, ou cancelado) sai daqui e vai para Gestão → Histórico.
 const FILTERS = [
   ['ABERTOS', 'Em aberto'],
   ['RECEBIDO', 'Recebido'],
   ['EM_PREPARO', 'Em preparo'],
   ['PRONTO', 'Pronto'],
   ['SAIU_ENTREGA', 'Em entrega'],
-  ['ENTREGUE', 'Entregue'],
-  ['CANCELADO', 'Cancelado'],
-  ['TODOS', 'Todos do dia'],
+  ['ENTREGUE', 'Entregue, a receber'],
 ]
 const TYPE_FILTERS = [['', 'Todos'], ...Object.entries(ORDER_TYPES).map(([k, t]) => [k, t.short])]
 
@@ -92,11 +91,11 @@ export function whatsText(order, restaurant) {
 }
 
 export default function Panel() {
-  const { slug, info, tapi } = useTenant()
+  const { slug, info, tapi, to } = useTenant()
+  const { user } = useAuth()
   const [toast, showToast] = useToast()
   const [filter, setFilter] = useState('ABERTOS')
   const [type, setType] = useState('')
-  const [day, setDay] = useState(todayISO())
   const [orders, setOrders] = useState(null)
   const [calls, setCalls] = useState([])
   const [stats, setStats] = useState(null)
@@ -115,11 +114,10 @@ export default function Panel() {
   const refresh = useCallback(async () => {
     const id = ++reqId.current
     try {
-      const base = filter === 'ABERTOS' ? '?open_only=true' : `?day=${day}${filter !== 'TODOS' ? `&status=${filter}` : ''}`
-      const q = `${base}${type ? `&type=${type}` : ''}`
-      const [o, s, c] = await Promise.all([tapi(`/orders${q}`), tapi(`/stats?day=${day}`), tapi('/calls')])
+      const q = `?open_only=true${type ? `&type=${type}` : ''}`
+      const [o, s, c] = await Promise.all([tapi(`/orders${q}`), tapi('/stats'), tapi('/calls')])
       if (id !== reqId.current) return // chegou a resposta de um filtro antigo: ignora
-      setOrders(filter === 'ABERTOS' ? [...o].sort(byPriority) : o)
+      setOrders([...(filter === 'ABERTOS' ? o : o.filter((x) => x.status === filter))].sort(byPriority))
       setStats(s)
       setCalls(c)
       setOnline(true)
@@ -128,7 +126,7 @@ export default function Panel() {
       if (e.status === 0) setOnline(false)
       else showToast(e.message, 'error')
     }
-  }, [filter, type, day, showToast, tapi])
+  }, [filter, type, showToast, tapi])
 
   useEffect(() => {
     refresh()
@@ -219,14 +217,11 @@ export default function Panel() {
               <Icon name={sound ? 'bell' : 'bell-off'} />
               {sound ? 'Som ligado' : 'Som desligado'}
             </button>
-            <input
-              type="date"
-              aria-label="Dia"
-              className="input w-auto py-2 [color-scheme:dark]"
-              value={day}
-              max={todayISO()}
-              onChange={(e) => e.target.value && setDay(e.target.value)}
-            />
+            {user?.role === 'ADMIN' && (
+              <Link to={to('/equipe/admin/historico')} className="inline-flex items-center gap-2 rounded-lg border border-line px-3 py-2 text-xs font-medium text-ink/80 hover:border-ink/30 hover:text-ink">
+                <Icon name="clock" /> Histórico
+              </Link>
+            )}
           </div>
         </div>
 

@@ -33,6 +33,7 @@ from ..schemas import (
 from ..serializers import (
     identity_data,
     identity_out,
+    order_out,
     coupon_out,
     option_group_out,
     payment_method_out,
@@ -537,3 +538,43 @@ async def remove_blocked(bid: int, user=Depends(admin_user)):
     removed = await db.blockedphone.delete_many(where={"id": bid, "tenantId": user.tenantId})
     if removed == 0:
         raise HTTPException(404, "Telefone não encontrado.")
+
+
+# ---------- Histórico de pedidos concluídos ----------
+
+HISTORY_STATUSES = {"done": ["ENTREGUE"], "canceled": ["CANCELADO"], "all": ["ENTREGUE", "CANCELADO"]}
+
+
+@router.get("/history")
+async def history(day: str | None = None, type: str | None = None, status: str = "all", q: str = "", user=Depends(admin_user)):
+    """Pedidos que já terminaram (entregues ou cancelados) de um dia. Saem das telas da equipe e ficam só aqui."""
+    if status not in HISTORY_STATUSES:
+        raise HTTPException(400, "Filtro inválido.")
+    start, end = local_day_bounds(day)
+    where: dict = {"tenantId": user.tenantId, "createdAt": {"gte": start, "lt": end}, "status": {"in": HISTORY_STATUSES[status]}}
+    if type in ("MESA", "RETIRADA", "DELIVERY"):
+        where["type"] = type
+    orders = await db.order.find_many(
+        where=where, include={"items": True, "table": True, "review": True}, order={"createdAt": "desc"}, take=500
+    )
+    term = q.strip().lower()
+    digits = "".join(c for c in term if c.isdigit())
+    if term:
+        orders = [
+            o
+            for o in orders
+            if term in o.code.lower()
+            or term in o.customerName.lower()
+            or (digits and digits in "".join(c for c in o.customerPhone if c.isdigit()))
+        ]
+    done = [o for o in orders if o.status == "ENTREGUE"]
+    return {
+        "orders": [order_out(o) for o in orders],
+        "summary": {
+            "done": len(done),
+            "canceled": len(orders) - len(done),
+            "totalCents": sum(o.totalCents for o in done),
+            "paidCents": sum(o.totalCents for o in done if o.paid),
+        },
+    }
+

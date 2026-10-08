@@ -65,6 +65,8 @@ async def list_orders(
     open_only: bool = False,
     user=Depends(floor_user),
 ):
+    if not open_only and user.role != "ADMIN":
+        raise HTTPException(403, "Pedidos concluídos ficam no histórico, só para o administrador (Gestão → Histórico).")
     where: dict = {"tenantId": user.tenantId}
     if open_only:
         # Tudo que ainda precisa de atenção: pedido ativo, ou retirada/delivery ainda não pago.

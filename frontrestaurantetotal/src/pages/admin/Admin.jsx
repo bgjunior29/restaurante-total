@@ -5,6 +5,7 @@ import { useTenant } from '../../lib/tenant'
 import { StaffTopbar } from '../Panel'
 import Coupons from './Coupons'
 import DeliveryAdmin from './DeliveryAdmin'
+import History from './History'
 import Identity from './Identity'
 import Insights from './Insights'
 import OptionGroups from './OptionGroups'
@@ -23,6 +24,7 @@ const TABS = [
   ['mesas', 'Mesas & QR', Tables],
   ['delivery', 'Delivery', DeliveryAdmin],
   ['identidade', 'Identidade', Identity],
+  ['historico', 'Histórico', History],
   ['relatorios', 'Relatórios', Reports],
   ['inteligencia', 'Inteligência', Insights],
   ['equipe', 'Equipe', Team],

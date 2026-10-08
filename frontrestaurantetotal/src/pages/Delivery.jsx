@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import Icon from '../components/Icon'
 import { Spinner, useToast } from '../components/ui'
-import { money, ORDER_TYPES, time, todayISO } from '../lib/format'
+import { useAuth } from '../lib/auth'
+import { money, ORDER_TYPES, time } from '../lib/format'
 import { load, save } from '../lib/storage'
 import { useTenant } from '../lib/tenant'
 import { beep, unlockAudio, useLive } from '../lib/useLive'
@@ -29,10 +31,10 @@ const COLUMNS = {
  * Cada comanda tem endereço com mapa, pagamento e troco, impressão para o entregador e bloqueio de telefone.
  */
 export default function Delivery() {
-  const { slug, info, tapi } = useTenant()
+  const { slug, info, tapi, to } = useTenant()
+  const { user } = useAuth()
   const [toast, showToast] = useToast()
   const [type, setType] = useState('DELIVERY')
-  const [view, setView] = useState('open') // open | done
   const [orders, setOrders] = useState(null)
   const [methods, setMethods] = useState([])
   const [online, setOnline] = useState(true)
@@ -51,17 +53,16 @@ export default function Delivery() {
   const refresh = useCallback(async () => {
     const id = ++reqId.current
     try {
-      const q = view === 'open' ? `?open_only=true&type=${type}` : `?day=${todayISO()}&type=${type}`
-      const list = await tapi(`/orders${q}`)
+      const list = await tapi(`/orders?open_only=true&type=${type}`)
       if (id !== reqId.current) return
-      setOrders(view === 'open' ? list.filter((o) => o.status !== 'ENTREGUE' && o.status !== 'CANCELADO') : list.filter((o) => o.status === 'ENTREGUE' || o.status === 'CANCELADO'))
+      setOrders(list.filter((o) => o.status !== 'CANCELADO'))
       setOnline(true)
     } catch (e) {
       if (id !== reqId.current) return
       if (e.status === 0) setOnline(false)
       else showToast(e.message, 'error')
     }
-  }, [tapi, type, view, showToast])
+  }, [tapi, type, showToast])
 
   useEffect(() => {
     setOrders(null)
@@ -132,7 +133,8 @@ export default function Delivery() {
     }
   }
 
-  const columns = COLUMNS[type]
+  // Entregue mas ainda não pago continua aqui até receber; depois vai para o histórico.
+  const columns = [...COLUMNS[type], ...(orders?.some((o) => o.status === 'ENTREGUE') ? [['ENTREGUE', 'Entregues, falta receber']] : [])]
   const toReceive = orders?.filter((o) => !o.paid && o.status !== 'CANCELADO').reduce((s, o) => s + o.totalCents, 0) ?? 0
   const card = (o) => (
     <OrderCard
@@ -196,24 +198,14 @@ export default function Delivery() {
                 </button>
               ))}
             </div>
-            <div className="flex gap-2">
-              {[
-                ['open', 'Em andamento'],
-                ['done', 'Concluídos hoje'],
-              ].map(([k, label]) => (
-                <button
-                  key={k}
-                  onClick={() => setView(k)}
-                  aria-pressed={view === k}
-                  className={`rounded-lg border px-3.5 py-2 text-xs font-medium transition ${view === k ? 'border-ink/80 bg-ink text-green' : 'border-line text-ink/75 hover:text-ink'}`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+            {user?.role === 'ADMIN' && (
+              <Link to={to('/equipe/admin/historico')} className="text-xs font-medium text-muted underline-offset-4 hover:text-ink hover:underline">
+                Pedidos concluídos ficam no Histórico →
+              </Link>
+            )}
           </div>
 
-          {orders && view === 'open' && (
+          {orders && (
             <p className="mt-4 text-xs text-muted">
               {orders.length} {orders.length === 1 ? 'comanda aberta' : 'comandas abertas'} · a receber <strong className="text-ink">{money(toReceive)}</strong>
             </p>
@@ -221,12 +213,6 @@ export default function Delivery() {
 
           {orders === null ? (
             <Spinner label="Carregando comandas…" />
-          ) : view === 'done' ? (
-            orders.length === 0 ? (
-              <Empty text="Nenhuma comanda concluída hoje." />
-            ) : (
-              <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{orders.map(card)}</div>
-            )
           ) : orders.length === 0 ? (
             <Empty
               title="Nenhuma comanda aberta."
@@ -234,7 +220,7 @@ export default function Delivery() {
             />
           ) : (
             // Celular: uma coluna por etapa, uma embaixo da outra. Telas grandes: quadro lado a lado.
-            <div className={`mt-5 grid items-start gap-5 md:grid-cols-2 ${columns.length === 4 ? 'xl:grid-cols-4' : 'xl:grid-cols-3'}`}>
+            <div className={`mt-5 grid items-start gap-5 md:grid-cols-2 ${columns.length >= 4 ? 'xl:grid-cols-4' : 'xl:grid-cols-3'}`}>
               {columns.map(([status, label]) => {
                 const list = orders.filter((o) => o.status === status).sort((a, b) => a.createdAt.localeCompare(b.createdAt))
                 return (
