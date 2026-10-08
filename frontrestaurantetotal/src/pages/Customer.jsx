@@ -468,7 +468,7 @@ export default function Customer({ mode }) {
         </section>
       </main>
 
-      <Footer name={menu.name} />
+      <Footer name={menu.name} legalBase={to()} />
       <div className={`bg-green text-center ${count > 0 ? 'pb-28 lg:pb-6' : 'pb-6'}`}>
         <Link to={to('/equipe')} className="text-[11px] text-muted/60 hover:text-lime">
           Área da equipe

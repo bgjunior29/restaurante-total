@@ -73,17 +73,14 @@ export function Topbar({ brand, to, compact = false, children }) {
   )
 }
 
-export function Footer({ name = 'Restaurante Total' }) {
+/** Rodapé. No cardápio de um restaurante, `legalBase` aponta para os termos e a privacidade dele (/r/<slug>). */
+export function Footer({ name = 'Restaurante Total', legalBase = '' }) {
   return (
     <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-line/60 bg-green px-[clamp(16px,5.7vw,96px)] py-8 text-[11px] text-muted">
-      <span>
-        <span className="font-serif text-[15px] text-ink/80">{name}</span>
-        <span className="mx-3 text-line">|</span>
-        <span className="tracking-[0.18em] uppercase">Hospitalidade, do salão à entrega</span>
-      </span>
+      <span className="font-serif text-[15px] text-ink/80">{name}</span>
       <span className="flex gap-4">
-        <Link to="/termos" className="hover:text-ink">Termos</Link>
-        <Link to="/privacidade" className="hover:text-ink">Privacidade</Link>
+        <Link to={`${legalBase}/termos`} className="hover:text-ink">Termos</Link>
+        <Link to={`${legalBase}/privacidade`} className="hover:text-ink">Privacidade</Link>
         <span>© {new Date().getFullYear()}</span>
       </span>
     </footer>

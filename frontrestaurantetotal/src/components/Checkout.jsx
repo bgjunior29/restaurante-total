@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { money, ORDER_TYPES, parseMoney, validPhone } from '../lib/format'
 import { load, save } from '../lib/storage'
+import { useTenant } from '../lib/tenant'
 import Icon from './Icon'
 
 const CUSTOMER_KEY = 'rt_customer' // nome, telefone e endereço lembrados neste aparelho
@@ -39,6 +40,7 @@ export default function CheckoutDrawer({
   onStale,
   showToast,
 }) {
+  const { to } = useTenant()
   const saved = load(CUSTOMER_KEY, {})
   // Mesa e delivery não se misturam: com o QR o pedido vai para a conta da mesa; pelo link, é delivery ou retirada.
   const types = table ? ['MESA'] : [menu.deliveryEnabled && 'DELIVERY', menu.pickupEnabled && 'RETIRADA'].filter(Boolean)
@@ -387,8 +389,8 @@ export default function CheckoutDrawer({
             </button>
             <p className="mt-2 text-center text-[10px] text-[#5d6558]">
               Ao confirmar, você concorda com os{' '}
-              <a href="/termos" target="_blank" rel="noreferrer" className="underline">termos</a> e a{' '}
-              <a href="/privacidade" target="_blank" rel="noreferrer" className="underline">política de privacidade</a>.
+              <a href={to('/termos')} target="_blank" rel="noreferrer" className="underline">termos</a> e a{' '}
+              <a href={to('/privacidade')} target="_blank" rel="noreferrer" className="underline">política de privacidade</a>.
             </p>
             {!menu.ordersOpen && <p className="mt-2 text-xs text-red-800">Pedidos pausados no momento.</p>}
             {menu.ordersOpen && missing && <p className="mt-2 text-xs text-[#6b2f12]">{missing}</p>}

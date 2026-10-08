@@ -15,6 +15,8 @@ const Kitchen = lazy(() => import('./pages/Kitchen'))
 const Landing = lazy(() => import('./pages/Landing'))
 const Terms = lazy(() => import('./pages/Legal').then((m) => ({ default: m.Terms })))
 const Privacy = lazy(() => import('./pages/Legal').then((m) => ({ default: m.Privacy })))
+const RestaurantTerms = lazy(() => import('./pages/Legal').then((m) => ({ default: m.RestaurantTerms })))
+const RestaurantPrivacy = lazy(() => import('./pages/Legal').then((m) => ({ default: m.RestaurantPrivacy })))
 const Login = lazy(() => import('./pages/Login'))
 const Panel = lazy(() => import('./pages/Panel'))
 const Platform = lazy(() => import('./pages/platform/Platform'))
@@ -61,6 +63,8 @@ export default function App() {
           <Route index element={<Customer />} />
           <Route path="mesa/:numero" element={<Customer />} />
           <Route path="delivery" element={<Customer mode="delivery" />} />
+          <Route path="termos" element={<RestaurantTerms />} />
+          <Route path="privacidade" element={<RestaurantPrivacy />} />
           <Route path="pedido/:token" element={<Track />} />
           <Route path="conta/:token" element={<Bill />} />
           <Route path="equipe/login" element={<Login />} />
