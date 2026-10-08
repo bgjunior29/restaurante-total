@@ -9,6 +9,7 @@ import Track from './pages/Track'
 
 // O cliente que abre o QR baixa só o cardápio; equipe, gestão, plataforma e páginas do site vêm sob demanda.
 const Admin = lazy(() => import('./pages/admin/Admin'))
+const Delivery = lazy(() => import('./pages/Delivery'))
 const Floor = lazy(() => import('./pages/Floor'))
 const Kitchen = lazy(() => import('./pages/Kitchen'))
 const Landing = lazy(() => import('./pages/Landing'))
@@ -59,6 +60,7 @@ export default function App() {
         <Route path="/r/:slug" element={<TenantLayout />}>
           <Route index element={<Customer />} />
           <Route path="mesa/:numero" element={<Customer />} />
+          <Route path="delivery" element={<Customer mode="delivery" />} />
           <Route path="pedido/:token" element={<Track />} />
           <Route path="conta/:token" element={<Bill />} />
           <Route path="equipe/login" element={<Login />} />
@@ -75,6 +77,14 @@ export default function App() {
             element={
               <RequireStaff roles={FLOOR}>
                 <Floor />
+              </RequireStaff>
+            }
+          />
+          <Route
+            path="equipe/delivery"
+            element={
+              <RequireStaff roles={FLOOR}>
+                <Delivery />
               </RequireStaff>
             }
           />

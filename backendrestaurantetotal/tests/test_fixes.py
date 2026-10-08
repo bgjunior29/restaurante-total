@@ -1,5 +1,5 @@
 """Correções da revisão técnica: estoque no cancelamento, cancelamento repetido, limite do cupom e painel da plataforma."""
-from .conftest import login, platform_login
+from .conftest import login, new_phone, platform_login
 
 SLUG = "cantina-da-nonna"
 
@@ -26,7 +26,7 @@ def order(client, pid: int, qty: int = 1, coupon: str = "") -> dict:
         json={
             "type": "RETIRADA",
             "customerName": "Cliente",
-            "customerPhone": "11999998888",
+            "customerPhone": new_phone(),
             "paymentMethodId": pay,
             "couponCode": coupon,
             "items": [{"productId": pid, "quantity": qty}],

@@ -49,6 +49,13 @@ async def staff_user(tenant=Depends(active_tenant), creds: HTTPAuthorizationCred
     return user
 
 
+async def floor_user(user=Depends(staff_user)):
+    """Atendimento (admin e garçom/caixa). A cozinha não vê telefone, endereço nem pagamento dos clientes."""
+    if user.role not in ("ADMIN", "STAFF"):
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Seu acesso é só da cozinha.")
+    return user
+
+
 async def admin_user(user=Depends(staff_user)):
     if user.role != "ADMIN":
         raise HTTPException(status.HTTP_403_FORBIDDEN, "Apenas administradores.")

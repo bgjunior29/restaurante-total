@@ -4,6 +4,7 @@ import { useToast } from '../../components/ui'
 import { useTenant } from '../../lib/tenant'
 import { StaffTopbar } from '../Panel'
 import Coupons from './Coupons'
+import DeliveryAdmin from './DeliveryAdmin'
 import Identity from './Identity'
 import Insights from './Insights'
 import OptionGroups from './OptionGroups'
@@ -20,6 +21,7 @@ const TABS = [
   ['cupons', 'Cupons', Coupons],
   ['pagamentos', 'Pagamentos', Payments],
   ['mesas', 'Mesas & QR', Tables],
+  ['delivery', 'Delivery', DeliveryAdmin],
   ['identidade', 'Identidade', Identity],
   ['relatorios', 'Relatórios', Reports],
   ['inteligencia', 'Inteligência', Insights],

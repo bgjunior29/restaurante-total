@@ -43,7 +43,13 @@ function HeroMenuCard({ menu, products }) {
 /** Chave da linha do carrinho: mesmo produto com adicionais diferentes = linhas diferentes. */
 const lineKey = (productId, optionIds) => `${productId}:${[...optionIds].sort((a, b) => a - b).join(',')}`
 
-export default function Customer() {
+/**
+ * Cardápio do cliente em dois modos que não se misturam:
+ * - salão: aberto pelo QR da mesa, o pedido vai para a conta da mesa;
+ * - delivery: o link do restaurante (ou /delivery, para divulgar), o pedido é entrega ou retirada.
+ * `mode="delivery"` ignora a mesa lembrada neste celular.
+ */
+export default function Customer({ mode }) {
   const { numero } = useParams()
   const [search] = useSearchParams()
   const navigate = useNavigate()
@@ -85,7 +91,9 @@ export default function Customer() {
   // que escaneou antes (enquanto a conta estiver aberta); mesa diferente só depois de fechar a conta de lá.
   const urlTable = Number(numero) || null
   const urlKey = search.get('k') || ''
+  const deliveryLink = mode === 'delivery'
   useEffect(() => {
+    if (deliveryLink) return setSeat({ status: 'none' })
     const saved = myTable(slug)
     const target = urlTable
       ? { number: urlTable, key: urlKey || (saved?.number === urlTable ? saved.key : '') }
@@ -106,7 +114,7 @@ export default function Customer() {
         else if (e.status === 400 || e.status === 403) setSeat({ status: 'invalid', message: e.message })
         else setSeat({ status: 'none', message: e.message })
       })
-  }, [slug, urlTable, urlKey, tapi])
+  }, [slug, urlTable, urlKey, tapi, deliveryLink])
 
   const table = seat.status === 'ok' ? seat.table.number : null
   const atTable = table != null
@@ -211,8 +219,10 @@ export default function Customer() {
     Boolean,
   )
   const whats = waLink(menu.whatsapp, `Olá, ${menu.name}!`)
-  const billHere = bill && (!table || bill.table === table) ? bill : null
-  const offers = [menu.pickupEnabled && 'retirada', menu.deliveryEnabled && 'delivery'].filter(Boolean)
+  // No link de delivery a conta da mesa não aparece: são coisas separadas.
+  const billHere = !deliveryLink && bill && (!table || bill.table === table) ? bill : null
+  const offers = [menu.deliveryEnabled && 'delivery', menu.pickupEnabled && 'retirada'].filter(Boolean)
+  const takeoutLabel = menu.deliveryEnabled ? (menu.pickupEnabled ? 'Delivery e retirada' : 'Delivery') : 'Retirada no balcão'
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -262,7 +272,7 @@ export default function Customer() {
             <div>
               <p className="eyebrow flex items-center gap-3 text-lime">
                 <span className="h-px w-8 bg-lime/60" />
-                {atTable ? `Boas-vindas à mesa ${pad2(table)}` : offers.length ? `Salão, ${offers.join(' e ')}` : 'Boas-vindas'}
+                {atTable ? `Boas-vindas à mesa ${pad2(table)}` : offers.length ? takeoutLabel : 'Boas-vindas'}
               </p>
               <h1 className="my-6 font-serif text-[clamp(44px,6.6vw,104px)] leading-[.95] md:my-7">
                 {menu.heroTitle}
@@ -286,7 +296,7 @@ export default function Customer() {
               )}
               <div className="mt-8 flex flex-wrap gap-3">
                 <a href="#cardapio" className="btn-lime inline-flex items-center gap-2">
-                  Ver cardápio <Icon name="arrow" className="size-4 rotate-90" />
+                  {!atTable && menu.deliveryEnabled ? 'Pedir delivery' : 'Ver cardápio'} <Icon name="arrow" className="size-4 rotate-90" />
                 </a>
                 {whats && (
                   <a href={whats} target="_blank" rel="noreferrer" className="btn-outline inline-flex items-center gap-2 py-3">
@@ -298,9 +308,11 @@ export default function Customer() {
             <HeroMenuCard menu={menu} products={products} />
           </div>
           <ol className="hidden gap-4 pb-12 sm:grid sm:grid-cols-3">
-            {(atTable
-              ? ['Monte seu pedido', 'Acompanhe o preparo', 'Peça a conta pelo celular']
-              : ['Monte seu pedido', 'Escolha mesa, retirada ou delivery', 'Acompanhe até chegar']
+            {(atTable || !offers.length
+              ? [atTable ? 'Monte seu pedido' : 'Escaneie o QR da sua mesa', 'Acompanhe o preparo', 'Peça a conta pelo celular']
+              : menu.deliveryEnabled
+                ? ['Monte seu pedido', 'Informe o endereço e como vai pagar', 'Acompanhe até chegar na sua porta']
+                : ['Monte seu pedido', 'Pague e retire no balcão', 'Acompanhe o preparo']
             ).map((t, i) => (
               <li key={t} className="flex items-baseline gap-4 border-t border-line pt-5 text-sm text-ink/70">
                 <span className="font-serif text-3xl text-lime italic">{pad2(i + 1)}</span>
@@ -340,10 +352,11 @@ export default function Customer() {
                 </div>
               ) : (
                 <p className="max-w-[220px] text-xs text-[#6b7266]">
-                  {seat.status === 'checking' ? 'Conferindo sua mesa…' : 'No salão? Escaneie o QR code da sua mesa para pedir nela.'}
+                  {seat.status === 'checking' ? 'Conferindo sua mesa…' : 'No salão? Escaneie o QR code da sua mesa: o pedido vai para a conta dela.'}
                 </p>
               )}
             </div>
+            {!atTable && seat.status !== 'checking' && <TakeoutInfo menu={menu} />}
 
             <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-7 lg:grid-cols-[minmax(0,1fr)_380px]">
               {/* min-w-0: a barra de categorias rola sozinha sem alargar a coluna (e a página) no celular. */}
@@ -399,9 +412,9 @@ export default function Customer() {
               </div>
 
               <aside className="flex flex-col gap-4 lg:sticky lg:top-24">
-                {(menu.pickupEnabled || menu.deliveryEnabled) && (
-                  <div className="rounded-2xl border border-[#e2dccf] bg-card p-6 text-sm">
-                    <h3 className="font-serif text-2xl">Também para levar</h3>
+                {!atTable && (menu.pickupEnabled || menu.deliveryEnabled) && (
+                  <div className="hidden rounded-2xl border border-[#e2dccf] bg-card p-6 text-sm lg:block">
+                    <h3 className="font-serif text-2xl">{takeoutLabel}</h3>
                     <ul className="mt-3 space-y-2 text-xs text-[#6b6458]">
                       {menu.pickupEnabled && (
                         <li className="flex gap-2.5">
@@ -414,6 +427,7 @@ export default function Customer() {
                           {menu.freeDeliveryAboveCents > 0 && ` (grátis acima de ${money(menu.freeDeliveryAboveCents)})`}
                         </li>
                       )}
+                      {menu.deliveryEnabled && menu.minDeliveryCents > 0 && <li>Pedido mínimo para entrega: {money(menu.minDeliveryCents)}</li>}
                       {menu.deliveryEnabled && menu.deliveryArea && <li>Atendemos: {menu.deliveryArea}</li>}
                     </ul>
                   </div>
@@ -537,6 +551,45 @@ function TableLocked({ seat, to, bill }) {
           </Link>
         )}
       </div>
+    </div>
+  )
+}
+
+/** Faixa do modo delivery: o que a pessoa precisa saber antes de montar o pedido (some no salão). */
+function TakeoutInfo({ menu }) {
+  if (!menu.deliveryEnabled && !menu.pickupEnabled) {
+    return (
+      <div className="mb-6 flex items-start gap-3 rounded-2xl border border-[#e2dccf] bg-card px-5 py-4 text-sm">
+        <Icon name="utensils" className="mt-0.5 size-4 shrink-0 text-olive" />
+        <p>
+          No momento os pedidos pelo site são só no salão. <strong>Escaneie o QR code da sua mesa</strong> para pedir.
+        </p>
+      </div>
+    )
+  }
+  const chips = [
+    menu.deliveryEnabled && ['scooter', `Entrega em ~${menu.deliveryTimeMin} min`],
+    menu.deliveryEnabled && [
+      'receipt',
+      menu.freeDeliveryAboveCents > 0
+        ? `Taxa ${money(menu.deliveryFeeCents)} · grátis acima de ${money(menu.freeDeliveryAboveCents)}`
+        : menu.deliveryFeeCents > 0
+          ? `Taxa de entrega ${money(menu.deliveryFeeCents)}`
+          : 'Entrega grátis',
+    ],
+    menu.deliveryEnabled && menu.minDeliveryCents > 0 && ['bag', `Mínimo ${money(menu.minDeliveryCents)}`],
+    menu.pickupEnabled && ['bag', `Retirada em ~${menu.prepTimeMin} min`],
+  ].filter(Boolean)
+  return (
+    <div className="mb-6">
+      <ul className="flex flex-wrap gap-2 text-xs" aria-label="Como funciona a entrega">
+        {chips.map(([icon, text]) => (
+          <li key={text} className="flex items-center gap-2 rounded-full border border-[#e2dccf] bg-card px-3.5 py-2">
+            <Icon name={icon} className="size-3.5 text-olive" /> {text}
+          </li>
+        ))}
+      </ul>
+      {menu.deliveryEnabled && menu.deliveryArea && <p className="mt-2 text-xs text-[#6b7266]">Atendemos: {menu.deliveryArea}</p>}
     </div>
   )
 }

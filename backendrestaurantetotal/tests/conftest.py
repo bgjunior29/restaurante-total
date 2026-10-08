@@ -51,6 +51,14 @@ def clean_limits():
     ratelimit.reset()
 
 
+_phones = iter(range(10_000_000, 99_999_999))
+
+
+def new_phone() -> str:
+    """Celular válido e diferente a cada pedido de teste (o limite de pedidos abertos é por telefone)."""
+    return f"119{next(_phones)}"
+
+
 def login(client, slug: str, username: str = "admin", password: str = "admin123") -> dict:
     r = client.post(f"/api/t/{slug}/auth/login", json={"username": username, "password": password})
     assert r.status_code == 200, r.text

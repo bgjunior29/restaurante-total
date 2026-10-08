@@ -1,4 +1,6 @@
 """Pedidos: o preço vem sempre do banco, nunca do celular do cliente."""
+from .conftest import new_phone
+
 SLUG = "cantina-da-nonna"
 
 
@@ -13,7 +15,7 @@ def pickup_order(client, product: dict, payment_id: int, headers: dict | None = 
         json={
             "type": "RETIRADA",
             "customerName": "Cliente Teste",
-            "customerPhone": "11999998888",
+            "customerPhone": new_phone(),
             "paymentMethodId": payment_id,
             "items": [{"productId": product["id"], "quantity": 2, "priceCents": 1}],  # preço falso é ignorado
             **extra,
@@ -46,11 +48,12 @@ def test_pedido_de_mesa_exige_chave_do_qr(client):
 
 
 def test_limite_de_pedidos_por_aparelho(client):
-    from app.routers import public
+    """Para levar o limite é menor que o da mesa (que divide o Wi-Fi do salão)."""
+    from app import delivery
 
     menu = client.get(f"/api/t/{SLUG}/menu").json()
     product, pay = first_product(menu), menu["paymentMethods"][0]["id"]
     headers = {"X-Forwarded-For": "203.0.113.9"}
-    statuses = [pickup_order(client, product, pay, headers).status_code for _ in range(public.ORDERS_PER_IP + 1)]
-    assert statuses[:-1] == [201] * public.ORDERS_PER_IP
+    statuses = [pickup_order(client, product, pay, headers).status_code for _ in range(delivery.TAKEOUT_PER_IP + 1)]
+    assert statuses[:-1] == [201] * delivery.TAKEOUT_PER_IP
     assert statuses[-1] == 429

@@ -9,7 +9,7 @@ from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 
-from .. import cache, ratelimit
+from .. import cache, delivery, ratelimit
 from ..auth import hash_password
 from ..coupons import count_uses, normalize_code
 from ..db import db
@@ -17,6 +17,7 @@ from ..images import save_image
 from ..insights import build_insights
 from ..tables import new_qr_key
 from ..schemas import (
+    BlockedPhoneIn,
     CategoryIn,
     CouponIn,
     IdentityIn,
@@ -493,3 +494,45 @@ async def low_stock(user=Depends(admin_user)):
         {"id": p.id, "name": p.name, "stockQty": p.stockQty, "lowStockAt": p.lowStockAt, "available": p.available}
         for p in rows
     ]
+
+
+# ---------- Delivery: telefones bloqueados ----------
+
+
+def blocked_out(b) -> dict:
+    return {
+        "id": b.id,
+        "phone": delivery.format_phone(b.phone) if delivery.valid_phone(b.phone) else b.phone,
+        "reason": b.reason,
+        "createdBy": b.createdBy,
+        "createdAt": b.createdAt.isoformat(),
+    }
+
+
+@router.get("/blocked-phones")
+async def list_blocked(user=Depends(admin_user)):
+    rows = await db.blockedphone.find_many(where={"tenantId": user.tenantId}, order={"createdAt": "desc"})
+    return [blocked_out(b) for b in rows]
+
+
+@router.post("/blocked-phones", status_code=201)
+async def add_blocked(body: BlockedPhoneIn, user=Depends(admin_user)):
+    digits = delivery.phone_digits(body.phone)
+    if not delivery.valid_phone(digits):
+        raise HTTPException(400, "Telefone inválido. Use o DDD, ex.: (11) 98888-7777.")
+    reason = delivery.clean_text(body.reason)
+    b = await db.blockedphone.upsert(
+        where={"tenantId_phone": {"tenantId": user.tenantId, "phone": digits}},
+        data={
+            "create": {"tenantId": user.tenantId, "phone": digits, "reason": reason, "createdBy": user.name},
+            "update": {"reason": reason, "createdBy": user.name},
+        },
+    )
+    return blocked_out(b)
+
+
+@router.delete("/blocked-phones/{bid}", status_code=204)
+async def remove_blocked(bid: int, user=Depends(admin_user)):
+    removed = await db.blockedphone.delete_many(where={"id": bid, "tenantId": user.tenantId})
+    if removed == 0:
+        raise HTTPException(404, "Telefone não encontrado.")

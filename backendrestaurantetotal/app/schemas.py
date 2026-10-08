@@ -54,11 +54,21 @@ class OrderIn(BaseModel):
     changeForCents: int = OptionalMoney
     couponCode: str = Field(default="", max_length=30)
     items: list[CartItemIn] = Field(default_factory=list, max_length=60)
+    website: str = Field(default="", max_length=200)  # campo-isca: escondido na tela, só robô preenche
 
 
 class CouponCheckIn(BaseModel):
     code: str = Field(min_length=1, max_length=30)
     subtotalCents: int = Field(ge=0)
+
+
+class BlockPhoneIn(BaseModel):
+    reason: str = Field(default="", max_length=120)
+
+
+class BlockedPhoneIn(BaseModel):
+    phone: str = Field(min_length=8, max_length=20)
+    reason: str = Field(default="", max_length=120)
 
 
 class CallIn(BaseModel):

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { money, ORDER_TYPES, parseMoney } from '../lib/format'
+import { money, ORDER_TYPES, parseMoney, validPhone } from '../lib/format'
 import { load, save } from '../lib/storage'
 import { Stepper } from './ui'
 import Icon from './Icon'
@@ -41,11 +41,8 @@ export default function CheckoutDrawer({
   showToast,
 }) {
   const saved = load(CUSTOMER_KEY, {})
-  const types = [
-    table && 'MESA', // pedido na mesa só com o QR escaneado
-    menu.pickupEnabled && 'RETIRADA',
-    menu.deliveryEnabled && 'DELIVERY',
-  ].filter(Boolean)
+  // Mesa e delivery não se misturam: com o QR o pedido vai para a conta da mesa; pelo link, é delivery ou retirada.
+  const types = table ? ['MESA'] : [menu.deliveryEnabled && 'DELIVERY', menu.pickupEnabled && 'RETIRADA'].filter(Boolean)
   const atTable = Boolean(table)
   const [type, setType] = useState(() => (atTable || !types.includes(saved.type) ? types[0] : saved.type) || 'MESA')
   const [name, setName] = useState(saved.name || '')
@@ -57,6 +54,7 @@ export default function CheckoutDrawer({
   const [city, setCity] = useState(saved.city || '')
   const [addressRef, setAddressRef] = useState(saved.addressRef || '')
   const [notes, setNotes] = useState('')
+  const [website, setWebsite] = useState('') // campo-isca: invisível para pessoas, robôs preenchem
   const [paymentId, setPaymentId] = useState(() => menu.paymentMethods[0]?.id ?? null)
   const [changeFor, setChangeFor] = useState('')
   const [couponText, setCouponText] = useState('')
@@ -91,18 +89,20 @@ export default function CheckoutDrawer({
   const fee = type === 'DELIVERY' && !freeDelivery ? menu.deliveryFeeCents : 0
   const total = subtotal - discount + fee
   const belowMin = type === 'DELIVERY' && subtotal < menu.minDeliveryCents
-  const phoneOk = phone.replace(/\D/g, '').length >= 10
+  const phoneOk = validPhone(phone)
   const addressOk = street.trim().length > 2 && number.trim() && district.trim()
   const missing =
     type === 'MESA'
       ? !table && 'Escaneie o QR code da sua mesa para pedir nela.'
-      : !name.trim() || !phoneOk
-        ? 'Informe nome e telefone com DDD.'
-        : type === 'DELIVERY' && !addressOk
-          ? 'Complete o endereço de entrega.'
-          : belowMin
-            ? `Pedido mínimo para delivery: ${money(menu.minDeliveryCents)}.`
-            : !paymentId && 'Escolha a forma de pagamento.'
+      : name.trim().length < 2
+        ? 'Informe seu nome.'
+        : !phoneOk
+          ? 'Informe um telefone válido com DDD, ex.: (11) 98888-7777.'
+          : type === 'DELIVERY' && !addressOk
+            ? 'Complete o endereço de entrega.'
+            : belowMin
+              ? `Pedido mínimo para delivery: ${money(menu.minDeliveryCents)}.`
+              : !paymentId && 'Escolha a forma de pagamento.'
 
   async function onCep(value) {
     setCep(value)
@@ -161,6 +161,7 @@ export default function CheckoutDrawer({
           paymentMethodId: type === 'MESA' ? null : paymentId,
           changeForCents: Number.isFinite(changeCents) ? changeCents : 0,
           couponCode: coupon?.code || '',
+          website,
           items: lines.map((l) => ({ productId: l.productId, quantity: l.quantity, optionIds: l.optionIds })),
         },
       })
@@ -257,30 +258,25 @@ export default function CheckoutDrawer({
               ← Voltar ao pedido
             </button>
 
-            {types.length > 1 && !atTable && (
+            {types.length > 1 && (
               <>
                 <p className="mt-5 text-xs font-semibold">Como você quer receber?</p>
-                <div className="mt-2 grid grid-cols-3 gap-2">
+                <div className="mt-2 grid grid-cols-2 gap-2">
                   {types.map((t) => (
                     <button
                       key={t}
                       aria-pressed={type === t}
                       onClick={() => setType(t)}
-                      className={`rounded-xl border px-2 py-3 text-xs font-medium transition ${
+                      className={`flex flex-col items-center gap-1.5 rounded-xl border px-2 py-3 text-xs font-medium transition ${
                         type === t ? 'border-dark bg-dark text-cream [&_svg]:text-cream' : 'border-[#e2dccf] bg-card hover:border-[#b9b1a2]'
                       }`}
                     >
-                      <Icon name={ORDER_TYPES[t].icon} className="mx-auto mb-1.5 block size-5 text-olive" />
+                      <Icon name={ORDER_TYPES[t].icon} className="size-5 text-olive" />
                       {ORDER_TYPES[t].short}
                     </button>
                   ))}
                 </div>
               </>
-            )}
-            {atTable && types.length > 1 && (
-              <button onClick={() => setType(type === 'MESA' ? types[1] : 'MESA')} className="mt-4 self-start text-[11px] text-olive underline">
-                {type === 'MESA' ? 'Quer levar para casa? Peça para retirada ou delivery' : '← Voltar para pedido na mesa'}
-              </button>
             )}
 
             <Field label={type === 'MESA' ? 'Seu nome (opcional)' : 'Seu nome'} className="mt-5">
@@ -326,6 +322,17 @@ export default function CheckoutDrawer({
               </div>
             )}
 
+            <input
+              type="text"
+              name="nao-preencha"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="pointer-events-none absolute size-px overflow-hidden opacity-0"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+            />
+
             <Field label="Observações (opcional)" className="mt-4">
               <textarea
                 className="input-light mt-2 resize-none"
@@ -339,7 +346,7 @@ export default function CheckoutDrawer({
 
             {type === 'MESA' ? (
               <p className="mt-4 rounded-xl border border-[#d7d5c4] bg-card px-4 py-3 text-xs leading-relaxed text-[#5d6558]">
-                <Icon name="receipt" className="mr-1.5 text-olive" />
+                <Icon name="receipt" className="mr-1.5 size-[1.1em] text-olive" />
                 Este pedido entra na <strong>conta da mesa</strong>. Você paga tudo no final
                 {menu.serviceFeePct > 0 && <> (taxa de serviço de {menu.serviceFeePct}%)</>}: pela conta no celular você paga com Pix, ou em dinheiro no balcão.
               </p>
@@ -362,13 +369,13 @@ export default function CheckoutDrawer({
                 </div>
                 {payment?.kind === 'PIX' && (
                   <p className="mt-3 rounded-xl border border-[#d7d5c4] bg-card px-4 py-3 text-xs leading-relaxed text-[#5d6558]">
-                    <Icon name="receipt" className="mr-1.5 text-olive" />
+                    <Icon name="receipt" className="mr-1.5 size-[1.1em] text-olive" />
                     Ao confirmar, geramos o <strong>código Pix copia e cola</strong> e o QR code com o valor exato do pedido.
                   </p>
                 )}
                 {payment?.kind === 'CASH' && (
                   <p className="mt-3 rounded-xl border border-[#d7d5c4] bg-card px-4 py-3 text-xs leading-relaxed text-[#5d6558]">
-                    <Icon name="receipt" className="mr-1.5 text-olive" />
+                    <Icon name="receipt" className="mr-1.5 size-[1.1em] text-olive" />
                     {type === 'DELIVERY' ? (
                       <>Pague em <strong>dinheiro ao entregador</strong>, na entrega.</>
                     ) : (

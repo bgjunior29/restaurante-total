@@ -80,6 +80,7 @@ model Tenant {
   calls          ServiceCall[]
   coupons        Coupon[]
   reviews        Review[]
+  blockedPhones  BlockedPhone[]
 }
 
 model User {
@@ -193,6 +194,19 @@ model Coupon {
   createdAt     DateTime  @default(now())
 
   @@unique([tenantId, code])
+}
+
+// Telefone bloqueado para pedidos de delivery e retirada (trote, pedido falso, calote).
+model BlockedPhone {
+  id        Int      @id @default(autoincrement())
+  tenantId  Int
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  phone     String // só dígitos, com DDD (ex.: 11988887777)
+  reason    String   @default("")
+  createdBy String   @default("") // nome de quem bloqueou
+  createdAt DateTime @default(now())
+
+  @@unique([tenantId, phone])
 }
 
 // ---------- Salão ----------

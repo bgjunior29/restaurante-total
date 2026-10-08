@@ -3,7 +3,7 @@ import asyncio
 import secrets
 from fastapi import APIRouter, Depends, HTTPException, Request
 
-from .. import cache, ratelimit, stock
+from .. import cache, delivery, ratelimit, stock
 from ..bill import SESSION_INCLUDE, bill_out
 from ..coupons import discount_for, normalize_code, validate_coupon
 from ..db import db
@@ -178,8 +178,14 @@ async def create_order(body: OrderIn, request: Request, tenant=Depends(active_te
     if not body.items:
         raise HTTPException(400, "Adicione ao menos um item ao pedido.")
 
-    name = body.customerName.strip()
-    phone = body.customerPhone.strip()
+    if body.website:
+        raise HTTPException(400, "Não foi possível enviar o pedido. Atualize a página e tente de novo.")
+
+    name = delivery.clean_text(body.customerName)
+    phone = ""
+    address = delivery.clean_text(body.address) if body.type == "DELIVERY" else ""
+    address_ref = delivery.clean_text(body.addressRef) if body.type == "DELIVERY" else ""
+    notes = delivery.clean_text(body.notes)
     table = None
     payment = None
 
@@ -191,10 +197,12 @@ async def create_order(body: OrderIn, request: Request, tenant=Depends(active_te
             raise HTTPException(409, "No momento não estamos fazendo pedidos para retirada.")
         if body.type == "DELIVERY" and not tenant.deliveryEnabled:
             raise HTTPException(409, "No momento não estamos fazendo entregas.")
-        if not name or len("".join(c for c in phone if c.isdigit())) < 10:
-            raise HTTPException(400, "Informe seu nome e um telefone com DDD para avisarmos sobre o pedido.")
-        if body.type == "DELIVERY" and len(body.address.strip()) < 8:
+        if len(name) < 2:
+            raise HTTPException(400, "Informe seu nome para avisarmos sobre o pedido.")
+        if body.type == "DELIVERY" and len(address) < 8:
             raise HTTPException(400, "Informe o endereço completo para a entrega.")
+        units = sum(i.quantity for i in body.items)
+        phone = await delivery.check_takeout(tenant.id, body.customerPhone, units, request)
         payment = await db.paymentmethod.find_first(where={"id": body.paymentMethodId or 0, "tenantId": tenant.id})
         if payment is None or not payment.active:
             raise HTTPException(400, "Forma de pagamento indisponível. Escolha outra.")
@@ -241,10 +249,10 @@ async def create_order(body: OrderIn, request: Request, tenant=Depends(active_te
                 "tableId": table.id if table else None,
                 "sessionId": session.id if session else None,
                 "customerName": name,
-                "customerPhone": phone if body.type != "MESA" else "",
-                "address": body.address.strip() if body.type == "DELIVERY" else "",
-                "addressRef": body.addressRef.strip() if body.type == "DELIVERY" else "",
-                "notes": body.notes.strip(),
+                "customerPhone": phone,
+                "address": address,
+                "addressRef": address_ref,
+                "notes": notes,
                 "paymentMethod": payment.name if payment else "",
                 "changeForCents": change_for,
                 "couponCode": code if discount else "",

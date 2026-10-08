@@ -3,14 +3,14 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
-from .. import cache, ratelimit, stock, whatsapp
+from .. import cache, delivery, ratelimit, stock, whatsapp
 from ..auth import create_token, verify_password
 from ..bill import SESSION_INCLUDE, bill_out
 from ..db import db
 from ..realtime import hub
-from ..schemas import CloseSessionIn, LoginIn, PaymentIn, StatusIn
+from ..schemas import BlockPhoneIn, CloseSessionIn, LoginIn, PaymentIn, StatusIn
 from ..serializers import call_out, order_out, user_out
-from ..tenancy import active_tenant, staff_user
+from ..tenancy import active_tenant, floor_user, staff_user
 from ..timeutil import local_day_bounds
 
 router = APIRouter(prefix="/api/t/{slug}", tags=["equipe"])
@@ -28,6 +28,8 @@ ALLOWED = {
     "ENTREGUE": {"PRONTO", "SAIU_ENTREGA"},
     "CANCELADO": set(),
 }
+# A cozinha só mexe no preparo; sair para entrega, entregar e cancelar ficam com o atendimento.
+KITCHEN_CAN = {"RECEBIDO", "EM_PREPARO", "PRONTO"}
 
 
 @router.post("/auth/login")
@@ -61,7 +63,7 @@ async def list_orders(
     type: str | None = None,
     day: str | None = Query(default=None, description="YYYY-MM-DD; padrão: hoje"),
     open_only: bool = False,
-    user=Depends(staff_user),
+    user=Depends(floor_user),
 ):
     where: dict = {"tenantId": user.tenantId}
     if open_only:
@@ -90,6 +92,8 @@ async def update_status(order_id: int, body: StatusIn, user=Depends(staff_user),
     current = await owned_order(user.tenantId, order_id)
     if body.status == current.status:
         return order_out(await db.order.find_unique(where={"id": order_id}, include=ORDER_INCLUDE))
+    if user.role == "KITCHEN" and (body.status not in KITCHEN_CAN or current.status not in KITCHEN_CAN):
+        raise HTTPException(403, "A cozinha só marca preparo e pronto. Saída, entrega e cancelamento ficam com o atendimento.")
     if body.status not in ALLOWED[current.status]:
         raise HTTPException(409, "Esse pedido não pode ir para esse status (atualize a tela).")
     if body.status == "SAIU_ENTREGA" and current.type != "DELIVERY":
@@ -119,7 +123,7 @@ async def update_status(order_id: int, body: StatusIn, user=Depends(staff_user),
 
 
 @router.patch("/orders/{order_id}/payment")
-async def update_payment(order_id: int, body: PaymentIn, user=Depends(staff_user)):
+async def update_payment(order_id: int, body: PaymentIn, user=Depends(floor_user)):
     current = await owned_order(user.tenantId, order_id)
     if current.type == "MESA":
         raise HTTPException(400, "Pedidos da mesa são pagos no fechamento da conta (Salão).")
@@ -134,8 +138,26 @@ async def update_payment(order_id: int, body: PaymentIn, user=Depends(staff_user
     return order_out(order)
 
 
+@router.post("/orders/{order_id}/block-phone", status_code=201)
+async def block_phone(order_id: int, body: BlockPhoneIn, user=Depends(floor_user)):
+    """Bloqueia o telefone do pedido (trote, calote): ele não consegue mais pedir delivery nem retirada pelo site."""
+    order = await owned_order(user.tenantId, order_id)
+    digits = delivery.phone_digits(order.customerPhone)
+    if order.type == "MESA" or not digits:
+        raise HTTPException(400, "Este pedido não tem telefone para bloquear.")
+    reason = delivery.clean_text(body.reason) or f"Pedido {order.code}"
+    await db.blockedphone.upsert(
+        where={"tenantId_phone": {"tenantId": user.tenantId, "phone": digits}},
+        data={
+            "create": {"tenantId": user.tenantId, "phone": digits, "reason": reason, "createdBy": user.name},
+            "update": {"reason": reason, "createdBy": user.name},
+        },
+    )
+    return {"ok": True, "phone": delivery.format_phone(digits) if delivery.valid_phone(digits) else digits}
+
+
 @router.get("/payment-methods")
-async def payment_methods(user=Depends(staff_user)):
+async def payment_methods(user=Depends(floor_user)):
     """Formas ativas, para o funcionário escolher ao receber."""
     rows = await db.paymentmethod.find_many(
         where={"tenantId": user.tenantId, "active": True}, order={"sortOrder": "asc"}
@@ -144,7 +166,7 @@ async def payment_methods(user=Depends(staff_user)):
 
 
 @router.get("/stats")
-async def stats(day: str | None = None, user=Depends(staff_user)):
+async def stats(day: str | None = None, user=Depends(floor_user)):
     start, end = local_day_bounds(day)
     orders = await db.order.find_many(
         where={"tenantId": user.tenantId, "createdAt": {"gte": start, "lt": end}, "status": {"not": "CANCELADO"}},
@@ -178,7 +200,8 @@ async def kitchen(station: str | None = None, user=Depends(staff_user)):
     )
     out = []
     for o in orders:
-        data = order_out(o)
+        data = order_out(o, public=True)
+        data.pop("address", None)  # a cozinha não precisa do endereço do cliente
         if station:
             data["items"] = [i for i in data["items"] if i["station"] == station]
             if not data["items"]:
@@ -212,7 +235,7 @@ async def call_done(call_id: int, user=Depends(staff_user)):
 
 
 @router.get("/floor")
-async def floor(user=Depends(staff_user), tenant=Depends(active_tenant)):
+async def floor(user=Depends(floor_user), tenant=Depends(active_tenant)):
     """Mapa do salão: cada mesa ativa com a conta aberta (se houver) e chamados pendentes."""
     tables = await db.table.find_many(where={"tenantId": user.tenantId, "active": True}, order={"number": "asc"})
     sessions = await db.tablesession.find_many(
@@ -248,7 +271,7 @@ async def owned_session(tenant_id: int, session_id: int):
 
 @router.post("/sessions/{session_id}/close")
 async def close_session(
-    session_id: int, body: CloseSessionIn, user=Depends(staff_user), tenant=Depends(active_tenant)
+    session_id: int, body: CloseSessionIn, user=Depends(floor_user), tenant=Depends(active_tenant)
 ):
     s = await owned_session(user.tenantId, session_id)
     if s.status == "CLOSED":
@@ -288,7 +311,7 @@ async def close_session(
 
 
 @router.patch("/sessions/{session_id}/people")
-async def set_people(session_id: int, people: int = Query(ge=1, le=50), user=Depends(staff_user)):
+async def set_people(session_id: int, people: int = Query(ge=1, le=50), user=Depends(floor_user)):
     s = await owned_session(user.tenantId, session_id)
     await db.tablesession.update(where={"id": s.id}, data={"people": people})
     await hub.broadcast(user.tenantId, "session_updated", {"id": s.id})

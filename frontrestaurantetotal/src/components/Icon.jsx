@@ -15,17 +15,23 @@ const PATHS = {
   clock: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM12 6v6l4 2',
   arrow: 'M5 12h14M12 5l7 7-7 7',
   plus: 'M12 5v14M5 12h14',
+  printer: 'M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6Z',
+  ban: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM4.9 4.9l14.2 14.2',
+  phone: 'M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z',
+  link: 'M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7',
   chat: 'M7.9 20A9 9 0 1 0 4 16.1L2 22Z',
 }
 
 export default function Icon({ name, className = 'size-[1.1em]', strokeWidth = 1.6, filled = false }) {
   const d = PATHS[name]
   if (!d) return null
+  // Classe sem tamanho (ex.: só "mr-1.5 text-lime") não pode deixar o SVG ocupar a largura toda.
+  const size = /(^|\s)size-/.test(className) ? '' : 'size-[1.1em] '
   return (
     <svg
       viewBox="0 0 24 24"
       aria-hidden
-      className={`inline-block shrink-0 align-[-0.15em] ${className}`}
+      className={`inline-block shrink-0 align-[-0.15em] ${size}${className}`}
       fill={filled ? 'currentColor' : 'none'}
       stroke="currentColor"
       strokeWidth={strokeWidth}

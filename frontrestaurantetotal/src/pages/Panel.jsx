@@ -36,7 +36,7 @@ export function useNow(ms = 30000) {
 }
 
 const navClass = ({ isActive }) =>
-  `rounded-lg px-3 py-2 text-center text-[13px] font-medium whitespace-nowrap transition lg:px-4 ${
+  `rounded-lg px-1 py-2 text-center text-[12px] font-medium whitespace-nowrap transition sm:px-3 sm:text-[13px] lg:px-4 ${
     isActive ? 'bg-white/[0.07] text-ink' : 'text-muted hover:bg-white/[0.04] hover:text-ink'
   }`
 
@@ -50,6 +50,7 @@ export function StaffTopbar() {
   const floor = user?.role !== 'KITCHEN'
   const links = [
     floor && ['/equipe', 'Pedidos', true],
+    floor && ['/equipe/delivery', 'Delivery'],
     floor && ['/equipe/salao', 'Salão'],
     ['/equipe/cozinha', 'Cozinha'],
     user?.role === 'ADMIN' && ['/equipe/admin', 'Gestão'],
@@ -78,7 +79,7 @@ export function StaffTopbar() {
 }
 
 /** Mensagem pronta de WhatsApp para o cliente, conforme o status do pedido. */
-function whatsText(order, restaurant) {
+export function whatsText(order, restaurant) {
   const step = {
     RECEBIDO: 'recebemos seu pedido e ele já está na fila',
     EM_PREPARO: 'seu pedido está sendo preparado',
@@ -327,7 +328,11 @@ export default function Panel() {
   )
 }
 
-function OrderCard({ order: o, act, methods, fresh, lateAfter, restaurant }) {
+/** Endereço da entrega no Google Maps (abre o app no celular do entregador). */
+export const mapLink = (address) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
+
+/** `onPrint` e `onBlock` (comandas de delivery) mostram os botões de imprimir e de bloquear o telefone. */
+export function OrderCard({ order: o, act, methods, fresh, lateAfter, restaurant, onPrint, onBlock }) {
   const now = useNow()
   const [busy, setBusy] = useState(false)
   const [paying, setPaying] = useState(false) // escolhendo a forma de pagamento
@@ -382,11 +387,18 @@ function OrderCard({ order: o, act, methods, fresh, lateAfter, restaurant }) {
       </div>
 
       {o.address && (
-        <p className="mt-3 rounded-lg bg-panel px-3 py-2 text-xs">
-          <Icon name="pin" className="mr-1.5 text-muted" />
+        <a
+          href={mapLink(o.address)}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-3 block rounded-lg bg-panel px-3 py-2 text-xs transition hover:ring-1 hover:ring-lime/40"
+          title="Abrir no mapa"
+        >
+          <Icon name="pin" className="mr-1.5 size-[1.1em] text-muted" />
           {o.address}
           {o.addressRef && <span className="block text-muted">{o.addressRef}</span>}
-        </p>
+          <span className="mt-1 block text-[10px] font-semibold text-lime">Abrir no mapa →</span>
+        </a>
       )}
 
       <ul className="mt-4 divide-y divide-line border-y border-line text-sm">
@@ -472,14 +484,28 @@ function OrderCard({ order: o, act, methods, fresh, lateAfter, restaurant }) {
           </div>
         </div>
       )}
-      {!closed && !paying && (
-        <button
-          disabled={busy}
-          className="mt-3 self-end text-[11px] text-muted hover:text-red-300"
-          onClick={() => confirm(`Cancelar o pedido ${o.code}? Os itens voltam ao estoque.`) && run('status', { status: 'CANCELADO' })}
-        >
-          Cancelar pedido
-        </button>
+      {(onPrint || onBlock || (!closed && !paying)) && (
+        <div className="mt-3 flex flex-wrap items-center justify-end gap-x-4 gap-y-2 text-[11px] text-muted">
+          {onPrint && (
+            <button className="inline-flex items-center gap-1.5 hover:text-ink" onClick={() => onPrint(o)}>
+              <Icon name="printer" /> Imprimir comanda
+            </button>
+          )}
+          {onBlock && o.customerPhone && (
+            <button className="inline-flex items-center gap-1.5 hover:text-red-300" onClick={() => onBlock(o)} title="Trote ou calote: este telefone não consegue mais pedir pelo site">
+              <Icon name="ban" /> Bloquear telefone
+            </button>
+          )}
+          {!closed && !paying && (
+            <button
+              disabled={busy}
+              className="hover:text-red-300"
+              onClick={() => confirm(`Cancelar o pedido ${o.code}? Os itens voltam ao estoque.`) && run('status', { status: 'CANCELADO' })}
+            >
+              Cancelar pedido
+            </button>
+          )}
+        </div>
       )}
     </article>
   )

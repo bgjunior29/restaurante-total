@@ -90,7 +90,12 @@ def login_ok(scope: str, request: Request, username: str) -> None:
 
 def hit(name: str, request: Request, limit: int, window: int, message: str) -> None:
     """Conta uma ação do aparelho e bloqueia com 429 ao passar de `limit` em `window` segundos."""
-    hits = _recent(f"{name}:{client_ip(request)}", window)
+    hit_key(f"{name}:{client_ip(request)}", limit, window, message)
+
+
+def hit_key(key: str, limit: int, window: int, message: str) -> None:
+    """Como `hit`, mas por uma chave qualquer (ex.: telefone), valendo para todos os aparelhos."""
+    hits = _recent(key, window)
     if len(hits) >= limit:
         raise HTTPException(429, message)
     hits.append(time.monotonic())

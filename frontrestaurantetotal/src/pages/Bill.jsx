@@ -183,7 +183,7 @@ export default function Bill() {
         )}
         {!closed && (
           <p className="mt-4 rounded-2xl border border-line p-4 text-center text-sm text-ink/75">
-            <Icon name="receipt" className="mr-1.5 text-lime" />
+            <Icon name="receipt" className="mr-1.5 size-[1.1em] text-lime" />
             Prefere dinheiro? Pague no <strong className="text-ink">balcão</strong>.
           </p>
         )}
