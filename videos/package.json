@@ -1,0 +1,19 @@
+{
+  "name": "movitech-videos",
+  "private": true,
+  "description": "Vídeos de divulgação feitos com Remotion (cardápio do Point Arena, Movitech).",
+  "type": "module",
+  "scripts": {
+    "dados": "node scripts/baixar-cardapio.mjs",
+    "estudio": "remotion studio src/index.jsx",
+    "reel": "node scripts/baixar-cardapio.mjs && remotion render src/index.jsx CardapioReel out/point-arena-cardapio.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.534",
+    "@remotion/google-fonts": "4.0.534",
+    "qrcode.react": "4.2.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.534"
+  }
+}

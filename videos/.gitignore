@@ -1,0 +1,6 @@
+node_modules/
+out/
+# baixados do cardápio a cada execução
+public/pratos/
+public/logo.*
+src/cardapio.json
