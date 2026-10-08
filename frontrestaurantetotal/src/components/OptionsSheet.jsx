@@ -49,6 +49,15 @@ export default function OptionsSheet({ product, onClose, onAdd }) {
         aria-label={`Opções de ${product.name}`}
         className="relative flex max-h-[90vh] w-full max-w-lg animate-[rise_.25s_ease-out] flex-col overflow-hidden rounded-t-3xl bg-cream text-dark outline-none sm:rounded-3xl"
       >
+        {product.imageUrl && (
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            decoding="async"
+            className="aspect-[16/9] max-h-[32vh] w-full shrink-0 bg-[#efe9dd] object-cover"
+            onError={(e) => e.currentTarget.remove()}
+          />
+        )}
         <div className="flex items-start justify-between gap-3 p-6 pb-3">
           <div>
             <h2 className="font-serif text-2xl">{product.name}</h2>

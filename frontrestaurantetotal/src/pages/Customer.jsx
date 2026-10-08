@@ -18,7 +18,7 @@ function HeroMenuCard({ menu, products }) {
       <div className="absolute -inset-8 rounded-[40px] bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--color-lime)_14%,transparent),transparent)]" />
       <div className="relative rotate-[1.2deg] rounded-[6px] bg-cream p-2 text-dark shadow-[0_40px_80px_-30px_rgba(0,0,0,.8)]">
         <div className="rounded-[3px] border border-olive/30 px-9 pt-9 pb-8">
-          {photo && <img src={photo.imageUrl} alt="" className="mb-7 h-40 w-full rounded-[2px] object-cover" />}
+          {photo && <img src={photo.imageUrl} alt="" decoding="async" className="mb-7 aspect-[16/9] max-h-48 w-full rounded-[2px] object-cover" />}
           <p className="eyebrow text-center text-[9px] text-olive">{menu.name}</p>
           <p className="mt-2 text-center font-serif text-[40px] leading-none italic">Menu</p>
           <div className="mx-auto mt-4 mb-6 h-px w-16 bg-olive/40" />
@@ -550,7 +550,17 @@ function ProductCard({ product: p, qty, onAdd, onQty }) {
       }`}
     >
       {p.imageUrl && (
-        <img src={p.imageUrl} alt="" loading="lazy" className="w-28 shrink-0 object-cover transition duration-500 group-hover:scale-[1.03] sm:w-36" onError={(e) => e.currentTarget.remove()} />
+        // A foto ocupa uma faixa proporcional ao cartão (celular, 2 colunas ou desktop) e preenche a altura toda, sem distorcer.
+        <div className="relative w-[34%] max-w-[176px] min-w-[104px] shrink-0 overflow-hidden bg-[#efe9dd]">
+          <img
+            src={p.imageUrl}
+            alt={p.name}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-[1.04]"
+            onError={(e) => e.currentTarget.parentElement.remove()}
+          />
+        </div>
       )}
       <div className="flex min-w-0 flex-1 flex-col p-5">
         <span className="eyebrow flex items-center gap-2 text-[9px] text-[#8a8274]">
