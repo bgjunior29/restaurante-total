@@ -85,6 +85,34 @@ async def list_orders(
     return [order_out(o) for o in orders]
 
 
+@router.get("/orders/finished-today")
+async def finished_today(user=Depends(floor_user)):
+    """Pedidos que terminaram hoje, só com o status: o garçom confere se saiu, foi entregue ou cancelado.
+    Sem telefone, endereço nem valores (o histórico completo é do administrador)."""
+    start, end = local_day_bounds(None)
+    orders = await db.order.find_many(
+        where={"tenantId": user.tenantId, "createdAt": {"gte": start, "lt": end}, "status": {"in": ["ENTREGUE", "CANCELADO"]}},
+        include={"table": True},
+        order={"createdAt": "desc"},
+        take=300,
+    )
+    return [
+        {
+            "id": o.id,
+            "code": o.code,
+            "type": o.type,
+            "table": {"label": o.table.label} if o.table else None,
+            "customerName": o.customerName,
+            "status": o.status,
+            "paid": o.paid,
+            "createdAt": o.createdAt.isoformat(),
+            "finishedAt": o.finishedAt.isoformat() if o.finishedAt else None,
+            "updatedAt": o.updatedAt.isoformat(),
+        }
+        for o in orders
+    ]
+
+
 def track_url(tenant, order) -> str:
     return f"{tenant.publicUrl}/r/{tenant.slug}/pedido/{order.token}" if tenant.publicUrl else ""
 

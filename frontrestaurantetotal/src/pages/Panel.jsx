@@ -16,6 +16,7 @@ const FILTERS = [
   ['PRONTO', 'Pronto'],
   ['SAIU_ENTREGA', 'Em entrega'],
   ['ENTREGUE', 'Entregue, a receber'],
+  ['FINALIZADOS', 'Finalizados hoje'],
 ]
 const TYPE_FILTERS = [['', 'Todos'], ...Object.entries(ORDER_TYPES).map(([k, t]) => [k, t.short])]
 
@@ -114,10 +115,12 @@ export default function Panel() {
   const refresh = useCallback(async () => {
     const id = ++reqId.current
     try {
-      const q = `?open_only=true${type ? `&type=${type}` : ''}`
-      const [o, s, c] = await Promise.all([tapi(`/orders${q}`), tapi('/stats'), tapi('/calls')])
+      // Finalizados hoje: só o status (sem dados do cliente); o histórico completo fica com o admin.
+      const path = filter === 'FINALIZADOS' ? '/orders/finished-today' : `/orders?open_only=true${type ? `&type=${type}` : ''}`
+      const [o, s, c] = await Promise.all([tapi(path), tapi('/stats'), tapi('/calls')])
       if (id !== reqId.current) return // chegou a resposta de um filtro antigo: ignora
-      setOrders([...(filter === 'ABERTOS' ? o : o.filter((x) => x.status === filter))].sort(byPriority))
+      if (filter === 'FINALIZADOS') setOrders(type ? o.filter((x) => x.type === type) : o)
+      else setOrders([...(filter === 'ABERTOS' ? o : o.filter((x) => x.status === filter))].sort(byPriority))
       setStats(s)
       setCalls(c)
       setOnline(true)
@@ -306,10 +309,14 @@ export default function Panel() {
                 <p className="font-serif text-2xl text-ink">Tudo em dia.</p>
                 <p className="mt-1">Nenhum pedido esperando. Os novos aparecem aqui sozinhos.</p>
               </>
+            ) : filter === 'FINALIZADOS' ? (
+              'Nenhum pedido finalizado hoje.'
             ) : (
               'Nenhum pedido aqui por enquanto.'
             )}
           </div>
+        ) : filter === 'FINALIZADOS' ? (
+          <FinishedList orders={orders} />
         ) : (
           <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {orders.map((o) => (
@@ -320,6 +327,37 @@ export default function Panel() {
       </main>
       {toast}
     </div>
+  )
+}
+
+/** Finalizados hoje: o garçom confere se o pedido foi entregue ou cancelado (só leitura). */
+function FinishedList({ orders }) {
+  return (
+    <ul className="mt-5 divide-y divide-line overflow-hidden rounded-2xl border border-line">
+      {orders.map((o) => {
+        const st = STATUS[o.status]
+        const t = ORDER_TYPES[o.type]
+        return (
+          <li key={o.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 bg-dark/80 px-4 py-3 text-sm sm:grid-cols-[6rem_minmax(0,1fr)_auto_auto]">
+            <span className="font-semibold">
+              {o.code}
+              <span className="ml-2 text-xs font-normal text-muted tabular-nums">{time(o.createdAt)}</span>
+            </span>
+            <span className={`justify-self-end rounded-md px-2 py-0.5 text-[11px] font-medium sm:order-3 ${st.badge}`}>{st.label}</span>
+            <span className="flex min-w-0 items-center gap-2 sm:order-2">
+              <Icon name={t.icon} className="size-4 shrink-0 text-muted" />
+              <span className="truncate">
+                {o.table ? o.table.label : t.short}
+                {o.customerName && <span className="text-muted"> · {o.customerName}</span>}
+              </span>
+            </span>
+            <span className="text-right text-xs text-muted sm:order-4">
+              {o.status === 'CANCELADO' ? `às ${time(o.updatedAt)}` : `${o.finishedAt ? `às ${time(o.finishedAt)}` : ''}${o.type !== 'MESA' && o.paid ? ' · pago' : ''}`}
+            </span>
+          </li>
+        )
+      })}
+    </ul>
   )
 }
 

@@ -66,3 +66,24 @@ def test_so_o_admin_ve_o_historico(client, staff_headers):
     assert client.get(f"/api/t/{SLUG}/orders", headers=staff_headers).status_code == 403
     assert client.get(f"/api/t/{SLUG}/orders?open_only=true", headers=staff_headers).status_code == 200
     assert client.get(f"/api/t/{SLUG}/admin/history?status=xyz", headers=login(client, SLUG)).status_code == 400
+
+
+def test_garcom_ve_status_dos_finalizados_de_hoje_sem_dados_pessoais(client, staff_headers):
+    order = pickup(client, "Carla Status")
+    url = f"/api/t/{SLUG}/orders/{order['id']}/status"
+    assert client.patch(url, headers=staff_headers, json={"status": "CANCELADO"}).status_code == 200
+    rows = client.get(f"/api/t/{SLUG}/orders/finished-today", headers=staff_headers).json()
+    mine = next(r for r in rows if r["id"] == order["id"])
+    assert mine["status"] == "CANCELADO" and mine["customerName"] == "Carla Status"
+    assert "customerPhone" not in mine and "address" not in mine and "totalCents" not in mine
+
+
+def test_cozinha_nao_ve_finalizados(client):
+    admin = login(client, SLUG)
+    client.post(
+        f"/api/t/{SLUG}/admin/users",
+        headers=admin,
+        json={"username": "cozinha-hist", "name": "Cozinha", "password": "cozinha123", "role": "KITCHEN"},
+    )
+    kitchen = login(client, SLUG, "cozinha-hist", "cozinha123")
+    assert client.get(f"/api/t/{SLUG}/orders/finished-today", headers=kitchen).status_code == 403

@@ -21,7 +21,6 @@ const Login = lazy(() => import('./pages/Login'))
 const Panel = lazy(() => import('./pages/Panel'))
 const Platform = lazy(() => import('./pages/platform/Platform'))
 const PlatformLogin = lazy(() => import('./pages/platform/PlatformLogin'))
-const Savings = lazy(() => import('./pages/Savings'))
 
 /** Área da equipe. `roles` limita quem entra; cozinha só vê a tela da cozinha. */
 function RequireStaff({ roles, children }) {
@@ -55,7 +54,6 @@ export default function App() {
     <Suspense fallback={<Spinner />}>
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/economia" element={<Savings />} />
         <Route path="/termos" element={<Terms />} />
         <Route path="/privacidade" element={<Privacy />} />
 

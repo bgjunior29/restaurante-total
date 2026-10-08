@@ -5,7 +5,7 @@ import { useTenant } from '../lib/tenant'
 
 // Quem opera a plataforma. Preencha antes de vender (e peça para um advogado revisar os textos abaixo).
 const OPERATOR = {
-  name: 'Restaurante Total', // razão social ou seu nome completo
+  name: 'Movitech', // razão social ou seu nome completo
   doc: '[CNPJ ou CPF]',
   email: '[seu e-mail de contato]',
   city: '[cidade/UF]',
@@ -44,8 +44,8 @@ export function Terms() {
     <Page title="Termos de uso">
       <Section title="1. Quem somos">
         <p>
-          O Restaurante Total é uma plataforma de cardápio digital, pedidos e gestão para restaurantes, operada por {OPERATOR.name} (
-          {OPERATOR.doc}). Cada restaurante que usa a plataforma é um negócio independente e responsável pelos produtos, preços, preparo,
+          A {OPERATOR.name} ({OPERATOR.doc}) é uma plataforma para solução de sistemas e multi-sistemas: SaaS, links e apps. Estes termos
+          valem para o sistema de cardápio digital, pedidos e gestão para restaurantes. Cada restaurante que usa a plataforma é um negócio independente e responsável pelos produtos, preços, preparo,
           entrega e atendimento.
         </p>
       </Section>
@@ -86,7 +86,7 @@ export function Privacy() {
       <Section title="Quem cuida dos seus dados">
         <p>
           O <strong>restaurante</strong> em que você faz o pedido é o controlador dos seus dados: ele decide como usá-los para preparar,
-          entregar e falar com você sobre o pedido. A plataforma Restaurante Total ({OPERATOR.name}, {OPERATOR.doc}) é a operadora: guarda e
+          entregar e falar com você sobre o pedido. A plataforma Movitech ({OPERATOR.doc}) é a operadora: guarda e
           processa os dados em nome do restaurante, seguindo esta política.
         </p>
       </Section>

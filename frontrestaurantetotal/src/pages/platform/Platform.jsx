@@ -154,7 +154,7 @@ export default function Platform() {
 
   return (
     <div className="min-h-screen">
-      <Topbar brand={{ name: 'Restaurante Total', tagline: 'Plataforma', platform: true }} to="/plataforma">
+      <Topbar brand={{ name: 'Movitech', tagline: 'Plataforma', platform: true }} to="/plataforma">
         <span className="hidden text-xs text-muted sm:inline">{user?.name}</span>
         <button onClick={logout} className="act">
           Sair

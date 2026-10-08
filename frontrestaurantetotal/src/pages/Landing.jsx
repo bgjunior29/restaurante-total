@@ -4,6 +4,26 @@ import Icon from "../components/Icon";
 import { Footer, Topbar } from "../components/ui";
 import { slugify } from "../lib/format";
 
+// O que a Movitech entrega.
+const SOLUTIONS = [
+  [
+    "layers",
+    "SaaS e multi-sistemas",
+    "Sistemas por assinatura que atendem várias empresas ao mesmo tempo, cada uma com os seus dados, a sua equipe e a sua marca.",
+  ],
+  [
+    "link",
+    "Links",
+    "Páginas e links prontos para divulgar no Instagram, no WhatsApp e no Google: cardápio, catálogo, pedidos e agendamentos.",
+  ],
+  [
+    "smartphone",
+    "Apps",
+    "Aplicativos que abrem direto no celular, sem baixar nada, com painel para a equipe e para o dono do negócio.",
+  ],
+];
+
+// Sistema para restaurantes, a primeira solução da Movitech em produção.
 const FEATURES = [
   [
     "utensils",
@@ -113,7 +133,7 @@ function PanelPreview() {
   );
 }
 
-/** Página inicial do produto: apresenta o sistema e leva ao restaurante (pelo endereço), à calculadora ou à plataforma. */
+/** Página inicial da Movitech: apresenta a plataforma e leva ao restaurante (pelo endereço) ou à plataforma. */
 export default function Landing() {
   const navigate = useNavigate();
   const [slug, setSlug] = useState("");
@@ -121,41 +141,44 @@ export default function Landing() {
   return (
     <div className="flex min-h-screen flex-col">
       <Topbar>
-        <Link
-          to="/economia"
+        <a
+          href="#solucoes"
           className="hidden text-[13px] text-muted transition hover:text-ink sm:inline"
         >
-          Calculadora de economia
-        </Link>
+          Soluções
+        </a>
         <Link to="/plataforma" className="btn-outline">
           Entrar
         </Link>
       </Topbar>
 
-      <main className="flex-1">
+      <main className="flex-1 overflow-x-clip">
         <section className="mx-auto grid w-full max-w-[1280px] items-center gap-16 px-[clamp(16px,5.7vw,96px)] pt-16 pb-20 lg:grid-cols-[1.05fr_.95fr] lg:pt-24">
           <div>
             <p className="eyebrow flex items-center gap-3 text-lime">
               <span className="h-px w-8 bg-lime/60" />
-              Plataforma para restaurantes
+              Movitech · SaaS, links e apps
             </p>
             <h1 className="mt-7 font-serif text-[clamp(46px,6.4vw,96px)] leading-[.95]">
-              Do QR da mesa
+              Sistemas que movem
               <br />
-              <em className="text-lime">à conta fechada.</em>
+              <em className="text-lime">o seu negócio.</em>
             </h1>
             <p className="mt-7 max-w-[520px] text-[16px] leading-[1.7] text-ink/65">
-              Salão, cozinha e delivery numa operação só. O cliente pede pelo
-              celular, a cozinha recebe na hora e o garçom fecha a conta com
-              taxa de serviço e divisão. Cada restaurante com a sua marca, o seu
-              cardápio e os seus números.
+              A Movitech é uma plataforma para solução de sistemas e
+              multi-sistemas: SaaS, links e apps com a sua marca. A primeira
+              solução já está rodando em restaurantes, do QR da mesa ao
+              delivery.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
-              <Link
-                to="/economia"
+              <a
+                href="#solucoes"
                 className="btn-lime inline-flex items-center gap-2"
               >
-                Calcule sua economia <Icon name="arrow" className="size-4" />
+                Conheça as soluções <Icon name="arrow" className="size-4 rotate-90" />
+              </a>
+              <Link to="/plataforma" className="btn-outline py-3">
+                Entrar na plataforma
               </Link>
             </div>
             <form
@@ -188,14 +211,36 @@ export default function Landing() {
           <PanelPreview />
         </section>
 
+        <section id="solucoes" className="mx-auto max-w-[1280px] scroll-mt-24 px-[clamp(16px,5.7vw,96px)] pt-12 pb-12">
+          <p className="eyebrow flex items-center gap-3 text-lime">
+            <span className="h-px w-8 bg-lime/60" />
+            Soluções
+          </p>
+          <h2 className="mt-5 max-w-2xl font-serif text-[clamp(34px,4vw,56px)] leading-[1.02]">
+            Um sistema para cada negócio,{" "}
+            <em className="text-lime">uma plataforma para todos.</em>
+          </h2>
+          <ul className="mt-14 grid gap-4 md:grid-cols-3">
+            {SOLUTIONS.map(([icon, title, text]) => (
+              <li key={title} className="rounded-2xl border border-line bg-dark/60 p-8">
+                <span className="flex size-11 items-center justify-center rounded-xl bg-lime/10 text-lime">
+                  <Icon name={icon} className="size-5" />
+                </span>
+                <p className="mt-6 font-serif text-2xl">{title}</p>
+                <p className="mt-2 text-sm leading-relaxed text-ink/60">{text}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         <section className="mx-auto max-w-[1280px] px-[clamp(16px,5.7vw,96px)] py-24">
           <p className="eyebrow flex items-center gap-3 text-lime">
             <span className="h-px w-8 bg-lime/60" />
-            Tudo em um só lugar
+            Em produção · Movitech Restaurantes
           </p>
           <h2 className="mt-5 max-w-2xl font-serif text-[clamp(34px,4vw,56px)] leading-[1.02]">
-            Feito para a rotina de quem{" "}
-            <em className="text-lime">serve bem.</em>
+            Salão, cozinha e delivery{" "}
+            <em className="text-lime">numa operação só.</em>
           </h2>
           <ul className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-line bg-line/70 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map(([icon, title, text]) => (
@@ -212,27 +257,6 @@ export default function Landing() {
           </ul>
         </section>
 
-        <section className="mx-auto max-w-[1280px] px-[clamp(16px,5.7vw,96px)] pb-24">
-          <div className="relative overflow-hidden rounded-3xl border border-line bg-dark px-8 py-14 text-center sm:px-16">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,color-mix(in_srgb,var(--color-lime)_14%,transparent),transparent_60%)]" />
-            <div className="relative">
-              <h2 className="mx-auto max-w-2xl font-serif text-[clamp(32px,4vw,52px)] leading-[1.05]">
-                Quanto a comissão dos aplicativos{" "}
-                <em className="text-lime">custa para você?</em>
-              </h2>
-              <p className="mx-auto mt-4 max-w-lg text-sm text-ink/60">
-                No canal próprio não existe comissão por pedido. Faça a conta
-                com os números do seu restaurante.
-              </p>
-              <Link
-                to="/economia"
-                className="btn-lime mt-8 inline-flex items-center gap-2"
-              >
-                Abrir a calculadora <Icon name="arrow" className="size-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
       </main>
       <Footer />
     </div>
