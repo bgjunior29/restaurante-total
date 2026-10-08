@@ -173,6 +173,21 @@ class TableIn(BaseModel):
     active: bool = True
 
 
+HHMM = r"^([01][0-9]|2[0-3]):[0-5][0-9]$"
+
+
+class HourRange(BaseModel):
+    open: str = Field(pattern=HHMM)
+    close: str = Field(pattern=HHMM)  # menor que open = passa da meia-noite (ex.: 18:00 às 02:00)
+
+    @field_validator("close")
+    @classmethod
+    def not_empty(cls, v: str, info) -> str:
+        if v == info.data.get("open"):
+            raise ValueError("Abertura e fechamento não podem ser no mesmo horário.")
+        return v
+
+
 class IdentityIn(BaseModel):
     name: str = Field(min_length=1, max_length=60)
     tagline: str = Field(default="", max_length=60)
@@ -187,6 +202,17 @@ class IdentityIn(BaseModel):
     whatsapp: str = Field(default="", max_length=20)
     instagram: str = Field(default="", max_length=60)
     address: str = Field(default="", max_length=160)
+    # Horários por dia da semana (0 = domingo … 6 = sábado). Vazio = não informado (o cardápio usa openingHours).
+    weeklyHours: list[list[HourRange]] = Field(default_factory=list, max_length=7)
+
+    @field_validator("weeklyHours")
+    @classmethod
+    def seven_days(cls, v: list) -> list:
+        if v and len(v) != 7:
+            raise ValueError("Informe os horários dos 7 dias da semana.")
+        if any(len(day) > 3 for day in v):
+            raise ValueError("No máximo 3 horários por dia.")
+        return v
 
     @field_validator("logoUrl")
     @classmethod

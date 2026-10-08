@@ -31,7 +31,8 @@ from ..schemas import (
     UserUpdateIn,
 )
 from ..serializers import (
-    IDENTITY_FIELDS,
+    identity_data,
+    identity_out,
     coupon_out,
     option_group_out,
     payment_method_out,
@@ -365,13 +366,13 @@ async def upload_image(body: ImageIn, request: Request, user=Depends(admin_user)
 @router.get("/identity")
 async def read_identity(user=Depends(admin_user)):
     t = await db.tenant.find_unique(where={"id": user.tenantId})
-    return {k: getattr(t, k) for k in IDENTITY_FIELDS}
+    return identity_out(t)
 
 
 @router.put("/identity")
 async def write_identity(body: IdentityIn, user=Depends(admin_user)):
-    t = await db.tenant.update(where={"id": user.tenantId}, data=body.model_dump())
-    return {k: getattr(t, k) for k in IDENTITY_FIELDS}
+    t = await db.tenant.update(where={"id": user.tenantId}, data=identity_data(body))
+    return identity_out(t)
 
 
 @router.get("/settings")

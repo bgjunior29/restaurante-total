@@ -9,7 +9,7 @@ from ..auth import create_token, hash_password, platform_user, verify_password
 from ..db import db
 from ..images import save_image
 from ..schemas import IdentityIn, ImageIn, LoginIn, TenantAdminResetIn, TenantCreateIn, TenantUpdateIn
-from ..serializers import IDENTITY_FIELDS
+from ..serializers import identity_data, identity_out
 from ..starter import create_payment_methods, create_starter_content
 from ..tenancy import validate_slug
 
@@ -188,7 +188,7 @@ async def tenant_or_404(tid: int):
 async def read_tenant_identity(tid: int, _=Depends(platform_user)):
     """Identidade visual do restaurante (a mesma que o dono edita em Gestão → Identidade)."""
     t = await tenant_or_404(tid)
-    return {k: getattr(t, k) for k in IDENTITY_FIELDS}
+    return identity_out(t)
 
 
 @router.post("/tenants/{tid}/images", status_code=201)
@@ -200,9 +200,9 @@ async def upload_tenant_image(tid: int, body: ImageIn, _=Depends(platform_user))
 @router.put("/tenants/{tid}/identity")
 async def write_tenant_identity(tid: int, body: IdentityIn, _=Depends(platform_user)):
     await tenant_or_404(tid)
-    t = await db.tenant.update(where={"id": tid}, data=body.model_dump())
+    t = await db.tenant.update(where={"id": tid}, data=identity_data(body))
     cache.invalidate(tid)
-    return {k: getattr(t, k) for k in IDENTITY_FIELDS}
+    return identity_out(t)
 
 
 @router.post("/tenants/{tid}/admin")

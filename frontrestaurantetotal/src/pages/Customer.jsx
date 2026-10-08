@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import CartSummary from '../components/CartSummary'
 import CheckoutDrawer from '../components/Checkout'
 import OptionsSheet from '../components/OptionsSheet'
+import { StoreBar, StoreSheet } from '../components/StoreProfile'
 import { Footer, Spinner, Stepper, Topbar, useToast } from '../components/ui'
 import Icon from '../components/Icon'
 import { money, pad2, waLink } from '../lib/format'
@@ -71,6 +72,8 @@ export default function Customer({ mode }) {
   const [editing, setEditing] = useState(null) // linha da sacola sendo editada (abre as opções preenchidas)
   const [coupon, setCoupon] = useState(null) // { code, discountCents }, validado para o subtotal atual
   const [calling, setCalling] = useState(false)
+  const [profile, setProfile] = useState(false) // perfil da loja aberto
+  const closeProfile = useCallback(() => setProfile(false), [])
   const [recent] = useState(() => myOrders(slug))
   const bill = myBill(slug)
 
@@ -278,10 +281,6 @@ export default function Customer({ mode }) {
   return (
     <div className="flex min-h-screen flex-col">
       <Topbar brand={menu} to={to()} compact>
-        <span className="hidden items-center gap-2 text-xs text-muted lg:flex">
-          <i className={`size-1.5 rounded-full ${menu.ordersOpen ? 'bg-emerald-400 shadow-[0_0_0_3px_rgba(52,211,153,.15)]' : 'bg-red-400'}`} />
-          {menu.ordersOpen ? 'Aberto para pedidos' : 'Pedidos pausados'}
-        </span>
         {billHere && (
           <Link to={to(`/conta/${billHere.token}`)} className="btn-outline">
             Minha conta
@@ -315,6 +314,7 @@ export default function Customer({ mode }) {
           </div>
         )}
       </Topbar>
+      <StoreBar menu={menu} onOpen={() => setProfile(true)} />
 
       <main className="flex-1">
         {/* HERO */}
@@ -476,7 +476,7 @@ export default function Customer({ mode }) {
       </div>
 
       {/* Barra do pedido no celular: sempre à mão, sem precisar rolar até o fim. */}
-      {count > 0 && !drawer && !choosing && (
+      {count > 0 && !drawer && !choosing && !profile && (
         <div className="fixed inset-x-0 bottom-0 z-30 animate-[rise_.25s_ease-out] p-3 pb-[max(12px,env(safe-area-inset-bottom))] lg:hidden">
           <button
             onClick={() => setDrawer('review')}
@@ -492,6 +492,8 @@ export default function Customer({ mode }) {
           </button>
         </div>
       )}
+
+      {profile && <StoreSheet menu={menu} atTable={atTable} onClose={closeProfile} />}
 
       {choosing && (
         <OptionsSheet

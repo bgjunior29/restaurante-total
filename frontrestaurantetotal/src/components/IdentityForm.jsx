@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { DAYS, WEEK_ORDER } from '../lib/hours'
 import { THEMES, themeVars } from '../lib/themes'
 import ImageField from './ImageField'
 import { Brand } from './ui'
@@ -120,6 +121,92 @@ export function IdentityPreview({ form }) {
  * `initial` = valores atuais; `onSave(valores)` salva e devolve os valores gravados;
  * `onUpload(dataUrl)` envia o logo e devolve `{ url }`.
  */
+const EMPTY_WEEK = () => [[], ...Array.from({ length: 5 }, () => [{ open: '11:30', close: '15:00' }]), []]
+
+/** Horário de atendimento por dia: aberto/fechado e até 3 intervalos (almoço, jantar…). */
+export function HoursEditor({ value, onChange }) {
+  const week = value?.length === 7 ? value : null
+  if (!week) {
+    return (
+      <div className="rounded-xl border border-dashed border-line p-4 text-sm text-muted">
+        Com os horários por dia, o cardápio mostra sozinho "Aberto agora" ou "Loja fechada, abre amanhã às 11h30".
+        <button type="button" className="btn-outline mt-3 block text-sm" onClick={() => onChange(EMPTY_WEEK())}>
+          Definir horários por dia
+        </button>
+      </div>
+    )
+  }
+  const setDay = (d, ranges) => onChange(week.map((r, i) => (i === d ? ranges : r)))
+  return (
+    <div className="divide-y divide-line rounded-xl border border-line">
+      {WEEK_ORDER.map((d) => {
+        const ranges = week[d]
+        const open = ranges.length > 0
+        return (
+          <div key={d} className="flex flex-wrap items-start gap-x-4 gap-y-2 p-3">
+            <label className="flex w-32 shrink-0 items-center gap-2 pt-2 text-sm font-medium">
+              <input
+                type="checkbox"
+                className="size-4 accent-lime"
+                checked={open}
+                onChange={(e) => setDay(d, e.target.checked ? [{ open: '11:30', close: '15:00' }] : [])}
+              />
+              {DAYS[d]}
+            </label>
+            {open ? (
+              <div className="flex min-w-0 flex-1 flex-col gap-2">
+                {ranges.map((r, i) => (
+                  <div key={i} className="flex flex-wrap items-center gap-2 text-sm">
+                    <input
+                      type="time"
+                      aria-label={`${DAYS[d]}: abre`}
+                      className="input w-auto py-1.5 [color-scheme:dark]"
+                      value={r.open}
+                      required
+                      onChange={(e) => setDay(d, ranges.map((x, j) => (j === i ? { ...x, open: e.target.value } : x)))}
+                    />
+                    <span className="text-muted">às</span>
+                    <input
+                      type="time"
+                      aria-label={`${DAYS[d]}: fecha`}
+                      className="input w-auto py-1.5 [color-scheme:dark]"
+                      value={r.close}
+                      required
+                      onChange={(e) => setDay(d, ranges.map((x, j) => (j === i ? { ...x, close: e.target.value } : x)))}
+                    />
+                    {ranges.length > 1 && (
+                      <button type="button" className="text-xs text-muted hover:text-red-300" onClick={() => setDay(d, ranges.filter((_, j) => j !== i))}>
+                        Remover
+                      </button>
+                    )}
+                  </div>
+                ))}
+                {ranges.length < 3 && (
+                  <button
+                    type="button"
+                    className="self-start text-xs font-semibold text-lime hover:underline"
+                    onClick={() => setDay(d, [...ranges, { open: '19:00', close: '23:00' }])}
+                  >
+                    + outro horário
+                  </button>
+                )}
+              </div>
+            ) : (
+              <span className="pt-2 text-sm text-muted">Fechado</span>
+            )}
+          </div>
+        )
+      })}
+      <div className="flex flex-wrap items-center justify-between gap-2 p-3 text-xs text-muted">
+        <span>Fechamento antes da abertura (ex.: 18:00 às 02:00) = passa da meia-noite.</span>
+        <button type="button" className="underline hover:text-ink" onClick={() => onChange([])}>
+          Não informar horários
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function IdentityForm({ initial, onSave, onUpload, submitLabel = 'Salvar identidade', onCancel }) {
   const [form, setForm] = useState(initial)
   const [saving, setSaving] = useState(false)
@@ -195,8 +282,12 @@ export default function IdentityForm({ initial, onSave, onUpload, submitLabel = 
           <h2 className="font-serif text-2xl">Informações</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div className="sm:col-span-2">
-              <label className="label">Horário de funcionamento</label>
-              <input className="input" maxLength={200} placeholder="Ter a Dom, 11h30 às 15h e 19h às 23h" value={form.openingHours} onChange={set('openingHours')} />
+              <label className="label">Horário de atendimento</label>
+              <HoursEditor value={form.weeklyHours} onChange={(weeklyHours) => setForm({ ...form, weeklyHours })} />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="label">Observação sobre o horário (opcional)</label>
+              <input className="input" maxLength={200} placeholder="Ex.: feriados abrimos só no almoço" value={form.openingHours} onChange={set('openingHours')} />
             </div>
             <div>
               <label className="label">Telefone</label>

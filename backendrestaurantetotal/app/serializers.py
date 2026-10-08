@@ -1,3 +1,5 @@
+import json
+
 IDENTITY_FIELDS = [
     "name",
     "tagline",
@@ -12,6 +14,7 @@ IDENTITY_FIELDS = [
     "whatsapp",
     "instagram",
     "address",
+    "weeklyHours",
 ]
 
 SETTINGS_FIELDS = [
@@ -48,12 +51,34 @@ PUBLIC_OPERATION_FIELDS = [
 ]
 
 
+def weekly_hours(raw: str) -> list:
+    """weeklyHours guardado como JSON → lista de 7 dias (ou [] se não informado/ inválido)."""
+    try:
+        days = json.loads(raw) if raw else []
+    except ValueError:
+        return []
+    return days if isinstance(days, list) and len(days) == 7 else []
+
+
+def identity_out(t) -> dict:
+    data = {k: getattr(t, k) for k in IDENTITY_FIELDS}
+    data["weeklyHours"] = weekly_hours(t.weeklyHours)
+    return data
+
+
+def identity_data(body) -> dict:
+    """IdentityIn → colunas do banco (os horários viram JSON)."""
+    data = body.model_dump()
+    data["weeklyHours"] = json.dumps(data["weeklyHours"]) if data["weeklyHours"] else ""
+    return data
+
+
 def tenant_public(t) -> dict:
     """O que qualquer visitante do cardápio pode ver do restaurante."""
     return {
         "slug": t.slug,
         "status": t.status,
-        **{k: getattr(t, k) for k in IDENTITY_FIELDS},
+        **identity_out(t),
         **{k: getattr(t, k) for k in PUBLIC_OPERATION_FIELDS},
     }
 
