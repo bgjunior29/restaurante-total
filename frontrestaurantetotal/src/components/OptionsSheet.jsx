@@ -2,15 +2,19 @@ import { useEffect, useRef, useState } from 'react'
 import { money } from '../lib/format'
 import { Stepper } from './ui'
 
-/** Escolha de adicionais/variações de um produto, respeitando mínimo e máximo de cada grupo. */
-export default function OptionsSheet({ product, onClose, onAdd }) {
+/**
+ * Escolha de adicionais/variações de um produto, respeitando mínimo e máximo de cada grupo.
+ * `initial` ({ optionIds, quantity }) abre já preenchido, para editar um item da sacola.
+ */
+export default function OptionsSheet({ product, onClose, onAdd, initial }) {
   const [picked, setPicked] = useState(() => {
+    if (initial) return initial.optionIds
     // Grupo obrigatório com uma única opção já vem marcado.
     const start = []
     for (const g of product.optionGroups) if (g.minSelect >= 1 && g.options.length === 1) start.push(g.options[0].id)
     return start
   })
-  const [quantity, setQuantity] = useState(1)
+  const [quantity, setQuantity] = useState(initial?.quantity ?? 1)
   const panel = useRef(null)
 
   useEffect(() => {
@@ -121,7 +125,7 @@ export default function OptionsSheet({ product, onClose, onAdd }) {
         <div className="flex items-center gap-3 border-t border-[#e3dfcd] p-5 pb-[max(20px,env(safe-area-inset-bottom))]">
           <Stepper light min={1} label={product.name} value={quantity} onChange={setQuantity} />
           <button className="btn-lime flex-1" disabled={missing.length > 0} onClick={() => onAdd(picked, quantity)}>
-            {missing.length ? `Escolha: ${missing[0].name.toLowerCase()}` : `Adicionar · ${money(unit * quantity)}`}
+            {missing.length ? `Escolha: ${missing[0].name.toLowerCase()}` : `${initial ? 'Salvar' : 'Adicionar'} · ${money(unit * quantity)}`}
           </button>
         </div>
       </div>

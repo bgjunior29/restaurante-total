@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { money, ORDER_TYPES, parseMoney, validPhone } from '../lib/format'
 import { load, save } from '../lib/storage'
-import { Stepper } from './ui'
 import Icon from './Icon'
 
 const CUSTOMER_KEY = 'rt_customer' // nome, telefone e endereço lembrados neste aparelho
@@ -31,10 +30,10 @@ export default function CheckoutDrawer({
   tapi,
   table, // mesa do QR { number, label, key } ou null
   lines,
-  setLineQty,
   subtotal,
-  suggestions,
-  onSuggest,
+  review, // conteúdo da etapa 1 (a sacola)
+  coupon, // { code, discountCents } — fica na página, para valer na sacola e aqui
+  setCoupon,
   sessionToken,
   onDone,
   onStale,
@@ -57,8 +56,7 @@ export default function CheckoutDrawer({
   const [website, setWebsite] = useState('') // campo-isca: invisível para pessoas, robôs preenchem
   const [paymentId, setPaymentId] = useState(() => menu.paymentMethods[0]?.id ?? null)
   const [changeFor, setChangeFor] = useState('')
-  const [couponText, setCouponText] = useState('')
-  const [coupon, setCoupon] = useState(null) // { code, discountCents }
+  const [couponText, setCouponText] = useState(coupon?.code || '')
   const [sending, setSending] = useState(false)
   const [cepBusy, setCepBusy] = useState(false)
   const panel = useRef(null)
@@ -80,9 +78,6 @@ export default function CheckoutDrawer({
     panel.current?.scrollTo({ top: 0 })
     panel.current?.focus({ preventScroll: true })
   }, [step])
-
-  // Cupom vale para o subtotal em que foi validado: mudou o pedido, valida de novo.
-  useEffect(() => setCoupon(null), [subtotal])
 
   const discount = coupon?.discountCents || 0
   const freeDelivery = menu.freeDeliveryAboveCents > 0 && subtotal >= menu.freeDeliveryAboveCents
@@ -205,53 +200,7 @@ export default function CheckoutDrawer({
         </div>
 
         {step === 'review' ? (
-          <>
-            <p className="mt-6 text-xs text-[#5d6558]">Confira seus itens antes de continuar.</p>
-            <ul className="mt-3 divide-y divide-[#dcd8c6]">
-              {lines.map((l) => (
-                <li key={l.key} className="flex items-center justify-between gap-3 py-3.5">
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold">{l.name}</p>
-                    {l.details && <p className="text-xs text-olive">{l.details}</p>}
-                    <p className="text-xs text-[#6b7266]">
-                      {money(l.unit)} cada · <strong>{money(l.unit * l.quantity)}</strong>
-                    </p>
-                  </div>
-                  <Stepper light label={l.name} value={l.quantity} onChange={(q) => setLineQty(l.key, q)} />
-                </li>
-              ))}
-            </ul>
-            {empty && <p className="py-6 text-sm text-[#6b7266]">Seu pedido está vazio.</p>}
-
-            {suggestions.length > 0 && (
-              <div className="mt-4 rounded-2xl border border-[#dcd8c6] bg-card p-4">
-                <p className="eyebrow text-[9px] text-olive">Combina com seu pedido</p>
-                <ul className="mt-2 space-y-2">
-                  {suggestions.map((p) => (
-                    <li key={p.id} className="flex items-center justify-between gap-3 text-sm">
-                      <span className="min-w-0 truncate">
-                        {p.name} <span className="text-xs text-[#6b7266]">· {money(p.priceCents)}</span>
-                      </span>
-                      <button onClick={() => onSuggest(p)} className="shrink-0 rounded-full bg-dark px-3 py-1 text-xs font-medium text-cream">
-                        + Adicionar
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            <div className="mt-4 flex justify-between rounded-2xl bg-sage p-5 font-display text-lg font-semibold">
-              <span>Subtotal</span>
-              <span>{money(subtotal)}</span>
-            </div>
-            <button className="btn-lime mt-5 w-full" disabled={empty} onClick={() => setStep('checkout')}>
-              Continuar →
-            </button>
-            <button onClick={() => setStep(null)} className="mt-3 self-center text-xs font-semibold text-olive underline-offset-4 hover:underline">
-              Adicionar mais itens
-            </button>
-          </>
+          <div className="mt-5">{review}</div>
         ) : (
           <>
             <button onClick={() => setStep('review')} className="mt-5 self-start text-xs font-semibold text-olive underline">

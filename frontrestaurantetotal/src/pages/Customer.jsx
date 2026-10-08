@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import CartSummary from '../components/CartSummary'
 import CheckoutDrawer from '../components/Checkout'
 import OptionsSheet from '../components/OptionsSheet'
 import { Footer, Spinner, Stepper, Topbar, useToast } from '../components/ui'
@@ -67,6 +68,8 @@ export default function Customer({ mode }) {
   const [cart, setCart] = useState(() => load(cartKey, {}).lines || {}) // { key: {productId, optionIds, quantity} }
   const [drawer, setDrawer] = useState(null) // null | 'review' | 'checkout'
   const [choosing, setChoosing] = useState(null) // produto com adicionais sendo configurado
+  const [editing, setEditing] = useState(null) // linha da sacola sendo editada (abre as opções preenchidas)
+  const [coupon, setCoupon] = useState(null) // { code, discountCents }, validado para o subtotal atual
   const [calling, setCalling] = useState(false)
   const [recent] = useState(() => myOrders(slug))
   const bill = myBill(slug)
@@ -182,6 +185,32 @@ export default function Customer({ mode }) {
     }))
   }
 
+  /** Troca uma linha da sacola pela versão editada (se ficar igual a outra linha, as duas se somam). */
+  const replaceLine = (oldKey, productId, optionIds, quantity) =>
+    setCart((c) => {
+      const next = { ...c }
+      delete next[oldKey]
+      const key = lineKey(productId, optionIds)
+      next[key] = { productId, optionIds, quantity: Math.min(50, (next[key]?.quantity || 0) + quantity) }
+      return next
+    })
+
+  // Cupom vale para o subtotal em que foi validado: mudou a sacola, a pessoa aplica de novo.
+  useEffect(() => setCoupon(null), [subtotal])
+
+  async function applyCoupon(code) {
+    const c = await tapi('/coupons/check', { method: 'POST', body: { code, subtotalCents: subtotal } })
+    setCoupon(c)
+    showToast(`Cupom ${c.code} aplicado: − ${money(c.discountCents)}`)
+  }
+
+  const clearCart = () => confirm('Tirar todos os itens da sacola?') && setCart({})
+
+  const editLine = (line) => {
+    setEditing(line)
+    setChoosing(byId[line.productId])
+  }
+
   const onAdd = (p) => {
     if (p.optionGroups.length) setChoosing(p)
     else {
@@ -223,6 +252,28 @@ export default function Customer({ mode }) {
   const billHere = !deliveryLink && bill && (!table || bill.table === table) ? bill : null
   const offers = [menu.deliveryEnabled && 'delivery', menu.pickupEnabled && 'retirada'].filter(Boolean)
   const takeoutLabel = menu.deliveryEnabled ? (menu.pickupEnabled ? 'Delivery e retirada' : 'Delivery') : 'Retirada no balcão'
+
+  /** Sacola: na lateral (computador) ou na gaveta do pedido (celular). */
+  const bag = (inDrawer) => (
+    <CartSummary
+      menu={menu}
+      title={inDrawer ? null : menu.name}
+      table={atTable ? seat.table.label : null}
+      lines={lines}
+      products={byId}
+      subtotal={subtotal}
+      coupon={coupon}
+      onApplyCoupon={applyCoupon}
+      onRemoveCoupon={() => setCoupon(null)}
+      onQty={setLineQty}
+      onEdit={editLine}
+      onClear={clearCart}
+      onAddMore={() => (inDrawer ? setDrawer(null) : document.getElementById('cardapio')?.scrollIntoView({ behavior: 'smooth' }))}
+      onContinue={() => setDrawer('checkout')}
+      suggestions={suggestions}
+      onSuggest={onAdd}
+    />
+  )
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -411,58 +462,7 @@ export default function Customer({ mode }) {
                 )}
               </div>
 
-              <aside className="flex flex-col gap-4 lg:sticky lg:top-24">
-                {!atTable && (menu.pickupEnabled || menu.deliveryEnabled) && (
-                  <div className="hidden rounded-2xl border border-[#e2dccf] bg-card p-6 text-sm lg:block">
-                    <h3 className="font-serif text-2xl">{takeoutLabel}</h3>
-                    <ul className="mt-3 space-y-2 text-xs text-[#6b6458]">
-                      {menu.pickupEnabled && (
-                        <li className="flex gap-2.5">
-                          <Icon name="bag" className="size-4 text-olive" /> Retirada no balcão · pronto em ~{menu.prepTimeMin} min
-                        </li>
-                      )}
-                      {menu.deliveryEnabled && (
-                        <li className="flex gap-2.5">
-                          <Icon name="scooter" className="size-4 text-olive" /> Delivery · ~{menu.deliveryTimeMin} min · taxa {money(menu.deliveryFeeCents)}
-                          {menu.freeDeliveryAboveCents > 0 && ` (grátis acima de ${money(menu.freeDeliveryAboveCents)})`}
-                        </li>
-                      )}
-                      {menu.deliveryEnabled && menu.minDeliveryCents > 0 && <li>Pedido mínimo para entrega: {money(menu.minDeliveryCents)}</li>}
-                      {menu.deliveryEnabled && menu.deliveryArea && <li>Atendemos: {menu.deliveryArea}</li>}
-                    </ul>
-                  </div>
-                )}
-
-                <div className="hidden rounded-2xl bg-dark p-6 text-ink shadow-[0_30px_60px_-30px_rgba(0,0,0,.5)] lg:block">
-                  <h3 className="font-serif text-2xl">Seu pedido</h3>
-                  {count === 0 ? (
-                    <p className="mt-3 text-xs leading-relaxed text-muted">Tudo começa com uma boa escolha. Adicione itens ao pedido.</p>
-                  ) : (
-                    <ul className="mt-3 divide-y divide-line border-b border-line text-xs">
-                      {lines.map((l) => (
-                        <li key={l.key} className="flex justify-between gap-3 py-2">
-                          <span className="min-w-0">
-                            {l.quantity}× {l.name}
-                            {l.details && <span className="block truncate text-muted">{l.details}</span>}
-                          </span>
-                          <span className="shrink-0">{money(l.unit * l.quantity)}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  <div className="mt-4 flex justify-between font-display text-lg font-semibold">
-                    <span className="text-base">Subtotal</span>
-                    <span>{money(subtotal)}</span>
-                  </div>
-                  <button
-                    className="btn-lime mt-5 w-full disabled:bg-panel disabled:text-muted disabled:opacity-100 disabled:shadow-none"
-                    disabled={count === 0}
-                    onClick={() => setDrawer('review')}
-                  >
-                    Ver pedido · {units} {units === 1 ? 'item' : 'itens'}
-                  </button>
-                </div>
-              </aside>
+              <aside className="hidden lg:sticky lg:top-24 lg:block">{bag(false)}</aside>
             </div>
           </div>
         </section>
@@ -496,11 +496,21 @@ export default function Customer({ mode }) {
       {choosing && (
         <OptionsSheet
           product={choosing}
-          onClose={() => setChoosing(null)}
-          onAdd={(optionIds, quantity) => {
-            addLine(choosing.id, optionIds, quantity)
-            showToast(`${quantity}× ${choosing.name} no pedido.`)
+          initial={editing && { optionIds: editing.optionIds, quantity: editing.quantity }}
+          onClose={() => {
             setChoosing(null)
+            setEditing(null)
+          }}
+          onAdd={(optionIds, quantity) => {
+            if (editing) {
+              replaceLine(editing.key, choosing.id, optionIds, quantity)
+              showToast(`${choosing.name} atualizado na sacola.`)
+            } else {
+              addLine(choosing.id, optionIds, quantity)
+              showToast(`${quantity}× ${choosing.name} no pedido.`)
+            }
+            setChoosing(null)
+            setEditing(null)
           }}
         />
       )}
@@ -513,10 +523,10 @@ export default function Customer({ mode }) {
           tapi={tapi}
           table={atTable ? seat.table : null}
           lines={lines}
-          setLineQty={setLineQty}
           subtotal={subtotal}
-          suggestions={suggestions}
-          onSuggest={onAdd}
+          review={bag(true)}
+          coupon={coupon}
+          setCoupon={setCoupon}
           sessionToken={billHere?.token}
           onDone={(order) => {
             rememberOrder(slug, order)
