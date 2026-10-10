@@ -1,6 +1,8 @@
-"""Sobe a API inteira contra um banco SQLite próprio dos testes (tests/test.db), recriado a cada execução.
+"""Sobe a API inteira contra um PostgreSQL próprio dos testes, recriado a cada execução pelas migrações.
 
-Rodar:  .venv\\Scripts\\python -m pytest
+Rodar:  docker compose up -d   (na raiz do projeto, uma vez)
+        .venv\\Scripts\\python -m pytest
+Outro banco: TEST_DATABASE_URL=postgresql://... (no GitHub Actions é o serviço postgres do workflow).
 """
 import os
 import subprocess
@@ -10,10 +12,10 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-TEST_DB = ROOT / "tests" / "test.db"
+TEST_DB = os.getenv("TEST_DATABASE_URL", "postgresql://movitech:movitech@localhost:5433/restaurante_test")
 
 # Antes de importar o app: o cliente Prisma lê DATABASE_URL na importação, e o .env não sobrescreve o que já existe.
-os.environ["DATABASE_URL"] = f"file:{TEST_DB.as_posix()}"
+os.environ["DATABASE_URL"] = TEST_DB
 os.environ["JWT_SECRET"] = "segredo-dos-testes-com-32-bytes-ou-mais"
 os.environ["PYTHONUTF8"] = "1"
 for var in ("PLATFORM_ADMIN_PASSWORD", "ADMIN_PASSWORD", "WHATSAPP_ACCESS_TOKEN"):
@@ -29,9 +31,8 @@ def _run(*args: str) -> None:
 
 @pytest.fixture(scope="session")
 def client():
-    for suffix in ("", "-journal", "-wal", "-shm"):
-        Path(f"{TEST_DB}{suffix}").unlink(missing_ok=True)
-    _run(sys.executable, "-m", "prisma", "db", "push", "--skip-generate", "--accept-data-loss")
+    # Apaga tudo e aplica as migrações do zero: os testes também provam que prisma/migrations monta o banco certo.
+    _run(sys.executable, "-m", "prisma", "migrate", "reset", "--force", "--skip-seed", "--skip-generate")
     _run(sys.executable, "seed.py")  # plataforma admin/admin123 + cantina-da-nonna (admin/admin123)
 
     from fastapi.testclient import TestClient

@@ -27,15 +27,10 @@ $env:ADMIN_PASSWORD = $adminPassword
 $env:PLATFORM_ADMIN_PASSWORD = $platformPassword
 $env:PATH = "$PSScriptRoot\.venv\Scripts;$env:PATH"
 
-# Cópia temporária do schema com provider PostgreSQL (o local continua SQLite).
-$neonSchema = 'prisma\schema.neon.prisma'
-$schema = (Get-Content prisma\schema.prisma -Raw -Encoding UTF8) -replace 'provider = "sqlite"', 'provider = "postgresql"'
-[IO.File]::WriteAllText("$PSScriptRoot\$neonSchema", $schema)  # UTF-8 sem BOM
-
 try {
-    Write-Host "`n> Criando tabelas no Neon..." -ForegroundColor Green
-    prisma db push --schema $neonSchema
-    if ($LASTEXITCODE) { throw 'prisma db push falhou.' }
+    Write-Host "`n> Criando tabelas no Neon (migracoes)..." -ForegroundColor Green
+    prisma migrate deploy
+    if ($LASTEXITCODE) { throw 'prisma migrate deploy falhou.' }
 
     Write-Host "`n> Populando cardapio, mesas e admin..." -ForegroundColor Green
     python seed.py
@@ -44,9 +39,5 @@ try {
     Write-Host "`nPronto! Veja as tabelas em Neon -> Tables." -ForegroundColor Green
 }
 finally {
-    Remove-Item $neonSchema -ErrorAction SilentlyContinue
     Remove-Item Env:DATABASE_URL, Env:ADMIN_PASSWORD, Env:PLATFORM_ADMIN_PASSWORD -ErrorAction SilentlyContinue
-    # Volta o cliente Prisma local para SQLite, para o sistema no PC continuar funcionando.
-    Write-Host "`n> Restaurando o cliente Prisma local (SQLite)..." -ForegroundColor DarkGray
-    prisma generate | Out-Null
 }

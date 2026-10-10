@@ -11,6 +11,7 @@ Variáveis opcionais:
 """
 import asyncio
 import os
+from urllib.parse import urlsplit
 
 from dotenv import load_dotenv
 
@@ -21,7 +22,13 @@ from app.db import db  # noqa: E402
 from app.starter import create_starter_content  # noqa: E402
 
 
-LOCAL = os.getenv("DATABASE_URL", "").startswith("file:")  # SQLite = PC de desenvolvimento
+def _is_local(url: str) -> bool:
+    """Banco no próprio PC (Postgres do docker-compose) ou SQLite antigo: aceita a senha padrão de desenvolvimento."""
+    host = urlsplit(url).hostname or ""
+    return url.startswith("file:") or host in ("localhost", "127.0.0.1", "::1")
+
+
+LOCAL = _is_local(os.getenv("DATABASE_URL", ""))
 
 
 def password_from(env: str) -> str | None:

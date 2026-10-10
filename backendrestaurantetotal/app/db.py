@@ -17,7 +17,8 @@ def _postgres_url() -> str | None:
     parts = urlsplit(url)
     query = dict(parse_qsl(parts.query))
     query.pop("channel_binding", None)
-    query.setdefault("sslmode", "require")
+    if parts.hostname not in ("localhost", "127.0.0.1", "::1"):  # o Postgres do docker-compose não tem SSL
+        query.setdefault("sslmode", "require")
     query.setdefault("connect_timeout", "30")  # segundos esperando o banco acordar
     query.setdefault("pool_timeout", "30")  # segundos esperando uma conexão livre
     return urlunsplit(parts._replace(query=urlencode(query)))

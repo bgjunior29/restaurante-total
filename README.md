@@ -4,19 +4,21 @@ Multi-sistema para restaurantes, construído sobre a estrutura do **Bar Total** 
 painel em tempo real, plataforma) e com as integrações do **sistema integrado de delivery** (WhatsApp, cupons,
 CEP, estoque, avaliações e camada de inteligência em Python).
 
-**Stack:** React + Vite + Tailwind CSS · Python (FastAPI) · Prisma (prisma-client-py) · SQLite (local) / PostgreSQL (produção)
+**Stack:** React + Vite + Tailwind CSS · Python (FastAPI) · Prisma (prisma-client-py) · PostgreSQL 17 (Docker no PC, Neon em produção) com migrações versionadas
 
 ## Rodando
 
-Primeira vez:
+Primeira vez (precisa do Docker Desktop aberto):
 
 ```bash
+docker compose up -d              # PostgreSQL local (bancos restaurante e restaurante_test)
 cd backendrestaurantetotal
 python -m venv .venv
 .venv\Scripts\pip install -r requirements.txt
 copy .env.example .env
 set PYTHONUTF8=1
-.venv\Scripts\prisma db push      # cria o banco e gera o client Prisma
+.venv\Scripts\prisma migrate deploy   # cria as tabelas pelas migrações
+.venv\Scripts\python -m prisma generate   # gera o client Prisma (com .venv\Scripts no PATH)
 .venv\Scripts\python seed.py      # login da plataforma + restaurante de exemplo (cantina-da-nonna)
 cd ../frontrestaurantetotal
 npm install
@@ -118,9 +120,21 @@ cd backendrestaurantetotal
 .venv\Scripts\python -m pytest
 ```
 
-Sobem a API inteira contra um SQLite próprio (`tests/test.db`, recriado a cada execução) e cobrem: isolamento entre restaurantes,
+Sobem a API inteira contra o Postgres `restaurante_test` do `docker compose`, recriado pelas migrações a cada execução, e cobrem: isolamento entre restaurantes,
 preço calculado no servidor, limite de login e de pedidos, upload de fotos e restaurante suspenso.
 O GitHub roda os testes e o build do site a cada push (`.github/workflows/testes.yml`).
+
+## Mudando o banco (migrações)
+
+A estrutura do banco é versionada em `backendrestaurantetotal/prisma/migrations`. Nunca use `prisma db push` na produção.
+
+1. Altere `prisma/schema.prisma`.
+2. Gere a migração: `.venv\Scripts\prisma migrate dev --name o-que-mudou` (aplica no Postgres local e cria a pasta da migração).
+3. Confira o `migration.sql` gerado. Renomear ou apagar coluna perde dados: escreva a migração na mão quando for o caso.
+4. Faça o commit da pasta junto com o schema. No deploy, o Render roda `prisma migrate deploy`, que só aplica o que é novo.
+
+O banco de produção foi criado antes das migrações; no primeiro deploy com elas, o `render-start.sh` registra a `0_init`
+como já aplicada (sem tocar nos dados) e daí em diante segue só pelas migrações.
 
 ## Backup e restauração
 

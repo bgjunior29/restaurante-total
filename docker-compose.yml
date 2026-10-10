@@ -1,0 +1,26 @@
+# Banco de desenvolvimento: o mesmo PostgreSQL 17 da produção (Neon), rodando no seu PC.
+# Subir:  docker compose up -d      Parar:  docker compose stop      Apagar tudo:  docker compose down -v
+# Cria dois bancos: "restaurante" (o sistema no PC) e "restaurante_test" (os testes, recriado a cada execução).
+# Usuário e senha valem só para este banco local; não são os da produção.
+services:
+  db:
+    image: postgres:17
+    container_name: movitech-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: movitech
+      POSTGRES_PASSWORD: movitech
+      POSTGRES_DB: restaurante
+    ports:
+      - "5433:5432" # 5433 para não brigar com outro Postgres que já esteja na 5432
+    volumes:
+      - movitech-db:/var/lib/postgresql/data
+      - ./backendrestaurantetotal/prisma/dev-init.sql:/docker-entrypoint-initdb.d/dev-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U movitech -d restaurante"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  movitech-db:
