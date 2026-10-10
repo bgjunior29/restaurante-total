@@ -4,8 +4,8 @@ import Icon from "../components/Icon";
 import { Footer, Topbar } from "../components/ui";
 import { slugify } from "../lib/format";
 
-// Ajuste antes de publicar: número de vendas (DDI + DDD + número, só dígitos).
-export const WHATSAPP_VENDAS = "5500000000000";
+// Número de vendas (DDI + DDD + número, só dígitos).
+export const WHATSAPP_VENDAS = "5511968363530";
 export const whatsapp = (text) =>
   `https://wa.me/${WHATSAPP_VENDAS}?text=${encodeURIComponent(text)}`;
 const ZAP = whatsapp("Oi! Vi o site da Movitech e quero conversar sobre um sistema para o meu negócio.");
