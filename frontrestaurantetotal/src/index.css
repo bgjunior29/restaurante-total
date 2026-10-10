@@ -141,6 +141,12 @@ button:disabled {
   }
 }
 
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @keyframes flash {
   from {
     box-shadow: 0 0 0 3px var(--color-lime);

@@ -4,61 +4,27 @@ import Icon from "../components/Icon";
 import { Footer, Topbar } from "../components/ui";
 import { slugify } from "../lib/format";
 
-// O que a Movitech entrega.
-const SOLUTIONS = [
-  [
-    "layers",
-    "SaaS e multi-sistemas",
-    "Sistemas por assinatura que atendem várias empresas ao mesmo tempo, cada uma com os seus dados, a sua equipe e a sua marca.",
-  ],
-  [
-    "link",
-    "Links",
-    "Páginas e links prontos para divulgar no Instagram, no WhatsApp e no Google: cardápio, catálogo, pedidos e agendamentos.",
-  ],
-  [
-    "smartphone",
-    "Apps",
-    "Aplicativos que abrem direto no celular, sem baixar nada, com painel para a equipe e para o dono do negócio.",
-  ],
-];
+// Ajuste antes de publicar: número de vendas (DDI + DDD + número, só dígitos).
+export const WHATSAPP_VENDAS = "5500000000000";
+export const whatsapp = (text) =>
+  `https://wa.me/${WHATSAPP_VENDAS}?text=${encodeURIComponent(text)}`;
+const ZAP = whatsapp("Oi! Vi o site da Movitech e quero conversar sobre um sistema para o meu negócio.");
 
-// Sistema para restaurantes, a primeira solução da Movitech em produção.
-const FEATURES = [
-  [
-    "utensils",
-    "QR code na mesa",
-    "O cliente pede pelo celular e cada rodada entra na conta da mesa, sem esperar o garçom.",
-  ],
-  [
-    "receipt",
-    "Conta e taxa de serviço",
-    "Divisão por pessoa, pedido de conta e chamado do garçom com um toque.",
-  ],
-  [
-    "clock",
-    "Tela da cozinha",
-    "Fila por estação, com o tempo de cada pedido e alerta de atraso.",
-  ],
-  [
-    "scooter",
-    "Delivery e retirada",
-    "CEP automático, taxa de entrega, pedido mínimo, troco e cupons.",
-  ],
-  [
-    "chat",
-    "WhatsApp",
-    "O cliente acompanha cada etapa do pedido, com mensagem pronta ou envio automático.",
-  ],
-  [
-    "star",
-    "Inteligência",
-    "Horário de pico, previsão do dia, combos que vendem juntos e estoque baixo.",
-  ],
+// Formas de pagamento aceitas nos sistemas Movitech (faixa rolando abaixo do topo).
+const PAYMENTS = ["Pix", "Visa", "Mastercard", "Elo", "American Express", "Dinheiro"];
+
+// Diferenciais da Movitech, em lista com check.
+const DIFERENCIAIS = [
+  ["SaaS e multi-sistemas", "várias empresas, cada uma com seus dados, equipe e marca."],
+  ["Links prontos", "cardápio, catálogo, pedidos e agendamentos para o Instagram, WhatsApp e Google."],
+  ["Apps sem download", "abrem direto no celular, com painel para a equipe e para o dono."],
+  ["Sem comissão por pedido", "o cliente compra direto de você."],
+  ["Inteligência do negócio", "horário de pico, previsão do dia e estoque baixo."],
+  ["Suporte contínuo", "acompanhamento de perto, do primeiro acesso em diante."],
 ];
 
 /** Prévia ilustrativa do painel: mostra o produto sem depender de dados reais. */
-function PanelPreview() {
+export function PanelPreview() {
   const orders = [
     [
       "Mesa 07",
@@ -133,130 +99,170 @@ function PanelPreview() {
   );
 }
 
-/** Página inicial da Movitech: apresenta a plataforma e leva ao restaurante (pelo endereço) ou à plataforma. */
+/** Página inicial da Movitech, no formato de página de negócio: topo em tela cheia, faixa de pagamento,
+ *  apresentação, diferenciais, onde atende e chamada final para conversar. */
 export default function Landing() {
   const navigate = useNavigate();
   const [slug, setSlug] = useState("");
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-black">
       <Topbar>
-        <a
-          href="#solucoes"
-          className="hidden text-[13px] text-muted transition hover:text-ink sm:inline"
-        >
-          Soluções
+        <a href="#diferenciais" className="hidden text-[13px] text-muted transition hover:text-ink sm:inline">
+          Diferenciais
         </a>
         <Link to="/plataforma" className="btn-outline">
           Entrar
         </Link>
       </Topbar>
 
-      <main className="flex-1 overflow-x-clip">
-        <section className="mx-auto grid w-full max-w-[1280px] items-center gap-16 px-[clamp(16px,5.7vw,96px)] pt-16 pb-20 lg:grid-cols-[1.05fr_.95fr] lg:pt-24">
-          <div>
-            <p className="eyebrow flex items-center gap-3 text-lime">
-              <span className="h-px w-8 bg-lime/60" />
-              Movitech · SaaS, links e apps
-            </p>
-            <h1 className="mt-7 font-serif text-[clamp(46px,6.4vw,96px)] leading-[.95]">
-              Sistemas que movem
-              <br />
-              <em className="text-lime">o seu negócio.</em>
+      <main className="flex flex-1 flex-col gap-3 overflow-x-clip p-3 sm:gap-4 sm:p-4">
+        {/* Topo em tela cheia */}
+        <section className="relative flex min-h-[min(calc(100svh-100px),820px)] overflow-hidden rounded-2xl bg-dark p-8 md:p-12">
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_10%,color-mix(in_srgb,var(--color-lime)_28%,transparent),transparent_55%),radial-gradient(ellipse_at_0%_100%,color-mix(in_srgb,var(--color-olive)_30%,transparent),transparent_60%)]"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 opacity-[.07] [background-image:linear-gradient(var(--color-ink)_1px,transparent_1px),linear-gradient(90deg,var(--color-ink)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:linear-gradient(to_bottom,black,transparent)]"
+          />
+          <div className="relative z-10 flex max-w-2xl flex-col gap-6">
+            <p className="text-lg font-medium text-ink/90">Sistemas · SaaS, links e apps</p>
+            <h1 className="max-w-xl text-6xl leading-none font-black tracking-tight md:text-8xl">
+              Movi<span className="text-lime">tech</span>
             </h1>
-            <p className="mt-7 max-w-[520px] text-[16px] leading-[1.7] text-ink/65">
-              A Movitech é uma plataforma para solução de sistemas e
-              multi-sistemas: SaaS, links e apps com a sua marca. A primeira
-              solução já está rodando em restaurantes, do QR da mesa ao
-              delivery.
+            <p className="mt-auto max-w-xl text-lg leading-relaxed text-ink/80">
+              Sistemas que movem o seu negócio, sem achismo. Soluções sob medida, com a sua marca, do QR da mesa ao delivery.
             </p>
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div className="flex flex-wrap items-center gap-2">
               <a
-                href="#solucoes"
-                className="btn-lime inline-flex items-center gap-2"
+                href={ZAP}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center rounded-xl bg-ink px-6 py-4 font-semibold text-dark transition hover:brightness-95"
               >
-                Conheça as soluções <Icon name="arrow" className="size-4 rotate-90" />
+                Falar com especialista
               </a>
-              <Link to="/plataforma" className="btn-outline py-3">
-                Entrar na plataforma
-              </Link>
+              <a href="#apresentacao" aria-label="Rolar para baixo" className="px-3 text-2xl text-ink/70 hover:text-ink">
+                <Icon name="arrow" className="size-6 rotate-90" />
+              </a>
             </div>
-            <form
-              className="mt-12 max-w-md"
-              onSubmit={(e) => {
-                e.preventDefault();
-                const s = slugify(slug);
-                if (s) navigate(`/r/${s}`);
-              }}
-            >
-              <label className="label" htmlFor="slug">
-                Já é cliente? Abra o seu restaurante
-              </label>
-              <div className="flex gap-2">
-                <div className="flex min-w-0 flex-1 items-center rounded-lg border border-line bg-white/[0.03] pl-4 transition focus-within:border-lime/60 focus-within:ring-4 focus-within:ring-lime/10">
-                  <span className="text-sm text-muted">/r/</span>
-                  <input
-                    id="slug"
-                    className="min-w-0 flex-1 bg-transparent px-1 py-3 text-ink outline-none placeholder:text-muted/50"
-                    placeholder="nome-do-restaurante"
-                    autoCapitalize="none"
-                    value={slug}
-                    onChange={(e) => setSlug(e.target.value)}
-                  />
-                </div>
-                <button className="btn-outline px-5">Abrir</button>
-              </div>
-            </form>
+          </div>
+        </section>
+
+        {/* Faixa de pagamento */}
+        <section aria-label="Pagamento seguro" className="flex items-center gap-4 overflow-hidden px-4 py-8 sm:px-12">
+          <span className="flex shrink-0 items-center gap-2 rounded-full border border-lime/30 px-4 py-2 text-xs font-semibold text-lime">
+            <Icon name="check" className="size-4" /> Pagamento seguro
+          </span>
+          <div className="min-w-0 flex-1 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+            <ul aria-hidden className="flex w-max animate-[marquee_28s_linear_infinite] gap-3">
+              {[...PAYMENTS, ...PAYMENTS, ...PAYMENTS, ...PAYMENTS].map((p, i) => (
+                <li key={i} className="rounded-lg border border-line bg-dark px-4 py-2 text-sm font-semibold whitespace-nowrap text-ink/80">
+                  {p}
+                </li>
+              ))}
+            </ul>
+            <p className="sr-only">Aceitamos {PAYMENTS.join(", ")}.</p>
+          </div>
+        </section>
+
+        {/* Apresentação */}
+        <section id="apresentacao" className="grid scroll-mt-24 grid-cols-1 items-center gap-8 rounded-2xl bg-dark p-8 md:grid-cols-2 md:p-12">
+          <div className="flex flex-col gap-6">
+            <h2 className="text-5xl leading-none font-black md:text-7xl">Excelência em sistemas</h2>
+            <p className="max-w-2xl text-xl leading-relaxed text-muted">
+              Uma plataforma para solução de sistemas e multi-sistemas. A primeira já está rodando em restaurantes: salão, cozinha e delivery numa operação só.
+            </p>
+            <p className="text-2xl font-black">
+              Movi<span className="text-lime">tech</span>
+            </p>
           </div>
           <PanelPreview />
         </section>
 
-        <section id="solucoes" className="mx-auto max-w-[1280px] scroll-mt-24 px-[clamp(16px,5.7vw,96px)] pt-12 pb-12">
-          <p className="eyebrow flex items-center gap-3 text-lime">
-            <span className="h-px w-8 bg-lime/60" />
-            Soluções
-          </p>
-          <h2 className="mt-5 max-w-2xl font-serif text-[clamp(34px,4vw,56px)] leading-[1.02]">
-            Um sistema para cada negócio,{" "}
-            <em className="text-lime">uma plataforma para todos.</em>
-          </h2>
-          <ul className="mt-14 grid gap-4 md:grid-cols-3">
-            {SOLUTIONS.map(([icon, title, text]) => (
-              <li key={title} className="rounded-2xl border border-line bg-dark/60 p-8">
-                <span className="flex size-11 items-center justify-center rounded-xl bg-lime/10 text-lime">
-                  <Icon name={icon} className="size-5" />
-                </span>
-                <p className="mt-6 font-serif text-2xl">{title}</p>
-                <p className="mt-2 text-sm leading-relaxed text-ink/60">{text}</p>
-              </li>
-            ))}
-          </ul>
+        {/* Diferenciais */}
+        <section id="diferenciais" className="scroll-mt-24 rounded-2xl bg-dark px-8 py-16 md:px-12 md:py-24">
+          <div className="flex flex-col gap-6">
+            <p className="text-sm font-bold tracking-widest text-muted uppercase">Por que a Movitech</p>
+            <h2 className="text-4xl leading-tight font-black">Nossos diferenciais</h2>
+            <ul className="flex flex-col gap-4">
+              {DIFERENCIAIS.map(([title, text]) => (
+                <li key={title} className="flex items-start gap-3 text-xl leading-relaxed md:text-2xl">
+                  <Icon name="check" className="mt-1.5 size-6 shrink-0 text-lime" />
+                  <span>
+                    <span className="font-bold">{title}</span> <span className="text-ink/60">— {text}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
 
-        <section className="mx-auto max-w-[1280px] px-[clamp(16px,5.7vw,96px)] py-24">
-          <p className="eyebrow flex items-center gap-3 text-lime">
-            <span className="h-px w-8 bg-lime/60" />
-            Em produção · Movitech Restaurantes
-          </p>
-          <h2 className="mt-5 max-w-2xl font-serif text-[clamp(34px,4vw,56px)] leading-[1.02]">
-            Salão, cozinha e delivery{" "}
-            <em className="text-lime">numa operação só.</em>
-          </h2>
-          <ul className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-line bg-line/70 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map(([icon, title, text]) => (
-              <li key={title} className="bg-green p-8 transition hover:bg-dark">
-                <span className="flex size-10 items-center justify-center rounded-full border border-lime/30 text-lime">
-                  <Icon name={icon} className="size-[18px]" />
-                </span>
-                <p className="mt-6 font-serif text-2xl">{title}</p>
-                <p className="mt-2 text-sm leading-relaxed text-ink/60">
-                  {text}
-                </p>
-              </li>
-            ))}
-          </ul>
+        {/* Onde atende + acesso do cliente */}
+        <section className="grid grid-cols-1 gap-8 px-8 py-16 md:grid-cols-2 md:px-12 md:py-24">
+          <div className="flex flex-col justify-center gap-4">
+            <p className="text-sm font-bold tracking-widest text-muted uppercase">Onde atendemos</p>
+            <h2 className="text-4xl leading-tight font-black">Todo o Brasil, 100% online</h2>
+            <p className="text-lg leading-relaxed text-muted">
+              Os sistemas rodam na nuvem e abrem em qualquer celular, tablet ou computador. Implantação e suporte a distância.
+            </p>
+            <Link to="/restaurantes" className="inline-flex items-center gap-2 font-semibold text-lime hover:underline">
+              Conheça o sistema para restaurantes <Icon name="arrow" className="size-4" />
+            </Link>
+          </div>
+          <form
+            className="flex flex-col justify-center gap-3 rounded-2xl border border-line bg-dark p-8"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const s = slugify(slug);
+              if (s) navigate(`/r/${s}`);
+            }}
+          >
+            <span className="flex size-11 items-center justify-center rounded-xl bg-lime/10 text-lime">
+              <Icon name="pin" className="size-5" />
+            </span>
+            <label className="text-lg font-bold" htmlFor="slug">
+              Já é cliente? Abra o seu restaurante
+            </label>
+            <div className="flex gap-2">
+              <div className="flex min-w-0 flex-1 items-center rounded-lg border border-line bg-white/[0.03] pl-4 transition focus-within:border-lime/60 focus-within:ring-4 focus-within:ring-lime/10">
+                <span className="text-sm text-muted">/r/</span>
+                <input
+                  id="slug"
+                  className="min-w-0 flex-1 bg-transparent px-1 py-3 text-ink outline-none placeholder:text-muted/50"
+                  placeholder="nome-do-restaurante"
+                  autoCapitalize="none"
+                  value={slug}
+                  onChange={(e) => setSlug(e.target.value)}
+                />
+              </div>
+              <button className="btn-outline px-5">Abrir</button>
+            </div>
+          </form>
         </section>
 
+        {/* Chamada final */}
+        <section className="flex flex-col gap-10 rounded-2xl bg-lime p-8 text-dark md:p-12">
+          <div className="flex items-start justify-between gap-6">
+            <h2 className="text-5xl leading-none font-black md:text-8xl">Entre em contato</h2>
+            <Icon name="chat" className="size-12 shrink-0 md:size-16" />
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <p className="max-w-md text-lg leading-relaxed text-dark/75">
+              Conte o que o seu negócio precisa. A gente responde pelo WhatsApp.
+            </p>
+            <a
+              href={ZAP}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-dark px-6 py-4 font-semibold text-ink transition hover:brightness-125"
+            >
+              Iniciar conversa <Icon name="arrow" className="size-4" />
+            </a>
+          </div>
+        </section>
       </main>
       <Footer />
     </div>

@@ -17,6 +17,7 @@ const Terms = lazy(() => import('./pages/Legal').then((m) => ({ default: m.Terms
 const Privacy = lazy(() => import('./pages/Legal').then((m) => ({ default: m.Privacy })))
 const RestaurantTerms = lazy(() => import('./pages/Legal').then((m) => ({ default: m.RestaurantTerms })))
 const RestaurantPrivacy = lazy(() => import('./pages/Legal').then((m) => ({ default: m.RestaurantPrivacy })))
+const Restaurantes = lazy(() => import('./pages/Restaurantes'))
 const Login = lazy(() => import('./pages/Login'))
 const Panel = lazy(() => import('./pages/Panel'))
 const Platform = lazy(() => import('./pages/platform/Platform'))
@@ -54,6 +55,7 @@ export default function App() {
     <Suspense fallback={<Spinner />}>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/restaurantes" element={<Restaurantes />} />
         <Route path="/termos" element={<Terms />} />
         <Route path="/privacidade" element={<Privacy />} />
 
