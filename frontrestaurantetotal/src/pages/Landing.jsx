@@ -5,7 +5,7 @@ import { Footer, Topbar } from "../components/ui";
 import { slugify } from "../lib/format";
 
 // Número de vendas (DDI + DDD + número, só dígitos).
-export const WHATSAPP_VENDAS = "5511968363530";
+export const WHATSAPP_VENDAS = "5511964452878";
 export const whatsapp = (text) =>
   `https://wa.me/${WHATSAPP_VENDAS}?text=${encodeURIComponent(text)}`;
 const ZAP = whatsapp("Oi! Vi o site da Movitech e quero conversar sobre um sistema para o meu negócio.");
