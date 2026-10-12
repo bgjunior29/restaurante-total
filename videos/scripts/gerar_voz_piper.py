@@ -77,6 +77,9 @@ for nome, roteiro in ROTEIROS.items():
         w.setframerate(sr)
         w.writeframes(bytes(pcm))
     subprocess.run(f'npx remotion ffmpeg -y -v error -i public/voz/{nome}.wav -codec:a libmp3lame -q:a 3 public/voz/{nome}.mp3', shell=True, cwd=RAIZ, check=True)
+    mp3 = RAIZ / "public" / "voz" / f"{nome}.mp3"
+    if not mp3.exists() or mp3.stat().st_mtime < wav.stat().st_mtime:
+        raise SystemExit(f"falha ao converter {wav.name} para mp3 (o ffmpeg rodou?)")
     wav.unlink()
     duracao = round(t + 0.6, 2)
     (RAIZ / "src" / "voz" / f"{nome}.json").write_text(json.dumps({"duracao": duracao, "legendas": legendas, "cenas": cenas, "voz": "piper-faber"}, ensure_ascii=False, indent=1), encoding="utf-8")

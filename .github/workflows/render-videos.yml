@@ -35,6 +35,33 @@ jobs:
 
       - run: npm ci
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: ffmpeg do sistema (para checar o áudio)
+        run: sudo apt-get install -y -q ffmpeg
+
+      # Thalita (voz feminina, edge-tts). Se o serviço recusar, usa o Piper (voz masculina, local).
+      - name: Narração
+        run: |
+          pip install -q edge-tts
+          if python scripts/gerar_voz.py nicho-; then
+            echo "VOZ=thalita" >> "$GITHUB_ENV"
+          else
+            echo "edge-tts recusou; usando Piper"
+            pip install -q piper-tts
+            mkdir -p models
+            base=https://huggingface.co/rhasspy/piper-voices/resolve/main/pt/pt_BR/faber/medium
+            curl -sL -o models/pt_BR-faber-medium.onnx "$base/pt_BR-faber-medium.onnx"
+            curl -sL -o models/pt_BR-faber-medium.onnx.json "$base/pt_BR-faber-medium.onnx.json"
+            python scripts/gerar_voz_piper.py nicho-
+            echo "VOZ=piper" >> "$GITHUB_ENV"
+          fi
+
+      - name: Conferir que a narração tem som
+        run: python scripts/checar_audio.py public/voz/nicho-*.mp3
+
       # O cardápio real (cardapio.json) não vai para o git; os vídeos de nicho não usam, mas o Root importa.
       - name: Cardápio vazio para o bundle
         run: test -f src/cardapio.json || echo '{"dishes":[],"colors":{}}' > src/cardapio.json
@@ -53,6 +80,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898733+github-actions[bot]@users.noreply.github.com"
-          git add -f renders/*.mp4
-          git commit -m "Vídeos de nicho renderizados pelo GitHub Actions [skip ci]"
+          git add -f renders/*.mp4 public/voz src/voz
+          git commit -m "Vídeos de nicho renderizados pelo GitHub Actions (voz: $VOZ) [skip ci]"
           git push
