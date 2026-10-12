@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Movitech · Posts do Instagram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=block" rel="stylesheet" />
+<style>
+  /* Identidade Movitech: a mesma do site (preto quente + champanhe, Instrument Serif + Inter). */
+  :root {
+    --bg: #0f0e0c; --bg2: #171613; --panel: #1f1d19; --line: #2e2b26;
+    --ink: #f2efe8; --muted: #9a958b; --gold: #d4b483; --olive: #8a7350;
+    --cream: #f5f1ea; --card: #fffdf9; --dark: #141310; --brown: #7a7266;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #2a2824; font-family: Inter, system-ui, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+  body.single { background: var(--bg); }
+  .gallery { padding: 48px; display: grid; gap: 56px; }
+  .gallery h2 { font: 600 20px Inter; color: #ddd; margin-bottom: 14px; }
+  .gallery h2 small { font-weight: 400; color: #999; margin-left: 10px; }
+  .row { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 8px; }
+  .thumb { flex: none; zoom: .3; }
+  .thumb.story { zoom: .24; }
+
+  .slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; background: var(--bg); padding: 96px 96px 230px; display: flex; flex-direction: column; }
+  .slide.story { height: 1920px; padding: 220px 96px 420px; }
+  .slide.light { background: var(--cream); color: var(--dark); }
+  .glow::before { content: ""; position: absolute; inset: -20% -20% auto; height: 70%; background: radial-gradient(ellipse at 50% 0%, rgba(212,180,131,.16), transparent 65%); pointer-events: none; }
+
+  .serif { font-family: 'Instrument Serif', serif; font-weight: 400; letter-spacing: -.015em; }
+  em { font-style: italic; color: var(--gold); }
+  .light em { color: var(--olive); }
+  .eyebrow { display: flex; align-items: center; gap: 22px; font: 500 22px Inter; letter-spacing: .24em; text-transform: uppercase; color: var(--gold); }
+  .eyebrow::before { content: ""; width: 64px; height: 2px; background: currentColor; opacity: .6; }
+  .light .eyebrow { color: var(--olive); }
+  .tag { align-self: flex-start; font: 500 20px Inter; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); border: 1.5px solid var(--line); border-radius: 999px; padding: 12px 24px; }
+  .light .tag { color: var(--brown); border-color: #ddd6c8; }
+
+  .h1 { font-size: 132px; line-height: .95; margin-top: 56px; }
+  .h2 { font-size: 92px; line-height: 1; margin-top: 44px; }
+  .h3 { font-size: 100px; line-height: 1; margin-top: 40px; }
+  .body { font-size: 38px; line-height: 1.5; color: rgba(242,239,232,.68); margin-top: 40px; max-width: 860px; }
+  .light .body { color: #5b554b; }
+  .big-num { font-size: 260px; line-height: .9; color: var(--gold); }
+  .list { list-style: none; margin-top: 56px; display: grid; gap: 0; }
+  .list li { display: flex; align-items: baseline; gap: 32px; font-size: 40px; padding: 30px 0; border-top: 1.5px solid var(--line); }
+  .list li:last-child { border-bottom: 1.5px solid var(--line); }
+  .list li span { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 48px; color: var(--gold); min-width: 70px; }
+  .list li small { display: block; font-size: 28px; color: var(--muted); margin-top: 6px; }
+  .quote { font-size: 104px; line-height: 1.02; font-style: italic; margin-top: 70px; }
+  .stack { margin-top: auto; margin-bottom: 64px; }
+  .center { text-align: center; align-items: center; justify-content: center; }
+  .center .eyebrow { justify-content: center; }
+  .center .eyebrow::after { content: ""; width: 64px; height: 2px; background: currentColor; opacity: .6; }
+  .mid { margin-top: auto; margin-bottom: auto; }
+  .push { flex: 1; }
+  .center .footer { text-align: left; }
+  /* Capa: texto ancorado embaixo, com uma marca d'água do M no alto. */
+  .cover { justify-content: flex-end; padding-bottom: 250px; }
+  .story.cover { padding-bottom: 520px; }
+  .cover .h1 { font-size: 150px; }
+  .watermark { position: absolute; top: -120px; right: -160px; width: 760px; height: 760px; opacity: .07; pointer-events: none; }
+
+  .phase { display: flex; align-items: center; gap: 20px; }
+  .phase b { font: 600 22px Inter; letter-spacing: .2em; text-transform: uppercase; color: var(--dark); background: var(--gold); padding: 10px 20px; border-radius: 8px; }
+  .phase.after b { background: transparent; color: var(--gold); border: 1.5px solid var(--gold); }
+  .light .phase b { background: var(--dark); color: var(--cream); }
+
+  .footer { position: absolute; left: 96px; right: 96px; bottom: 64px; display: flex; align-items: center; justify-content: space-between; font-size: 24px; color: var(--muted); }
+  .story .footer { bottom: 180px; }
+  .light .footer { color: var(--brown); }
+  .brand { display: flex; align-items: center; gap: 18px; }
+  .brand b { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 34px; color: var(--ink); }
+  .light .brand b { color: var(--dark); }
+  .brand small { display: block; font-size: 17px; letter-spacing: .22em; text-transform: uppercase; margin-top: 2px; }
+  .swipe { display: flex; align-items: center; gap: 14px; letter-spacing: .14em; text-transform: uppercase; font-size: 20px; }
+  .count { font-variant-numeric: tabular-nums; letter-spacing: .14em; }
+
+  .cta-box { margin-top: 64px; border: 1.5px solid var(--line); border-radius: 28px; padding: 44px 48px; background: linear-gradient(180deg, rgba(255,255,255,.035), transparent); }
+  .cta-line { display: flex; align-items: center; gap: 24px; font-size: 40px; padding: 18px 0; }
+  .cta-line svg { width: 44px; height: 44px; color: var(--gold); flex: none; }
+  .btn { display: inline-flex; align-items: center; gap: 18px; margin-top: 56px; background: var(--gold); color: var(--dark); font: 600 36px Inter; padding: 30px 44px; border-radius: 18px; box-shadow: 0 20px 50px -20px rgba(212,180,131,.7); }
+
+  .menu-card { margin: 64px auto 0; width: 760px; background: var(--cream); color: var(--dark); border-radius: 10px; padding: 14px; transform: rotate(-1.5deg); box-shadow: 0 60px 120px -40px rgba(0,0,0,.9); }
+  .menu-card > div { border: 1.5px solid rgba(138,115,80,.35); border-radius: 6px; padding: 50px 56px; }
+  .menu-card .title { text-align: center; font-size: 76px; font-style: italic; margin-top: 8px; }
+  .menu-card .rule { width: 90px; height: 2px; background: rgba(138,115,80,.45); margin: 22px auto 34px; }
+  .menu-card .item { display: flex; align-items: baseline; gap: 14px; font-size: 38px; padding: 12px 0; }
+  .menu-card .dots { flex: 1; border-bottom: 2px dotted rgba(138,115,80,.45); margin-bottom: 10px; }
+  .menu-card .price { font: 500 28px Inter; }
+
+  .ticket { margin-top: 56px; display: grid; gap: 20px; }
+  .ticket div { display: flex; justify-content: space-between; align-items: center; border: 1.5px solid var(--line); background: rgba(31,29,25,.6); border-radius: 22px; padding: 30px 36px; font-size: 34px; }
+  .ticket .serif { font-size: 50px; }
+  .badge { font: 500 24px Inter; padding: 8px 18px; border-radius: 10px; }
+  .b-amber { color: #fde68a; background: rgba(253,230,138,.07); box-shadow: inset 0 0 0 1.5px rgba(253,230,138,.28); }
+  .b-red { color: #fca5a5; background: rgba(248,113,113,.08); box-shadow: inset 0 0 0 1.5px rgba(248,113,113,.4); }
+  .b-green { color: #a7f3d0; background: rgba(110,231,183,.08); box-shadow: inset 0 0 0 1.5px rgba(110,231,183,.3); }
+  .bars { display: flex; align-items: flex-end; gap: 22px; height: 360px; margin-top: 70px; padding-bottom: 6px; border-bottom: 1.5px solid var(--line); }
+  .bars i { flex: 1; background: rgba(212,180,131,.35); border-radius: 8px 8px 0 0; }
+  .bars i.peak { background: var(--gold); }
+  .bars-label { display: flex; justify-content: space-between; font-size: 24px; color: var(--muted); margin-top: 16px; }
+  .sticker-space { margin-top: 70px; height: 300px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const M = '<svg viewBox="0 0 48 48" width="56" height="56"><circle cx="24" cy="24" r="23" fill="#141310" stroke="rgba(212,180,131,.5)"/><path d="M14.5 32.5v-17l9.5 11 9.5-11v17" fill="none" stroke="#d4b483" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+const ICON = {
+  chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>',
+  link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>',
+  pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0ZM12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg>',
+  arrow: '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>',
+}
+const WATERMARK = '<svg class="watermark" viewBox="0 0 48 48"><circle cx="24" cy="24" r="23" fill="none" stroke="#d4b483" stroke-width=".4"/><path d="M14.5 32.5v-17l9.5 11 9.5-11v17" fill="none" stroke="#d4b483" stroke-width=".9" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+const WHATS = '(11) 96445-2878'
+const SITE = 'movitechsistemas.com.br'
+
+const ILUSTRATIVA = '<span class="tag">Situação ilustrativa</span><div class="push"></div>'
+const phase = (label, after = false) => `<div class="phase${after ? ' after' : ''}"><b>${label}</b></div>`
+const cta = (title, line) => `
+  <p class="eyebrow">Movitech Sistemas</p>
+  <h2 class="serif h2">${title}</h2>
+  ${line ? `<p class="body">${line}</p>` : ''}
+  <div class="push"></div>
+  <div class="cta-box">
+    <div class="cta-line">${ICON.chat}<span>WhatsApp <b>${WHATS}</b></span></div>
+    <div class="cta-line">${ICON.link}<span>${SITE}</span></div>
+    <div class="cta-line">${ICON.pin}<span>Barueri e região</span></div>
+  </div>`
+
+// Cada post: id, título (só para a galeria), formato e lâminas. Lâmina = { html, light?, glow?, center? }
+const POSTS = [
+  {
+    id: '01-apresentacao', name: 'Apresentação do John', slides: [
+      { glow: 1, html: `<p class="eyebrow">Prazer</p>
+        <h1 class="serif h1">Eu sou o John.<br><em>Da Movitech, aqui de Barueri.</em></h1>
+        <p class="body">E eu faço uma coisa só: tecnologia para restaurante funcionar melhor.</p>` },
+      { html: `<p class="eyebrow">O que eu faço</p>
+        <h2 class="serif h2">Um sistema só para <em>salão, cozinha e delivery.</em></h2>
+        <ul class="list">
+          <li><span>01</span><div>QR code na mesa<small>O cliente pede pelo celular</small></div></li>
+          <li><span>02</span><div>Tela da cozinha<small>Nenhuma comanda perdida</small></div></li>
+          <li><span>03</span><div>Delivery próprio<small>Sem comissão por pedido</small></div></li>
+          <li><span>04</span><div>Relatórios<small>Quanto vende, quando lota, o que sai</small></div></li>
+        </ul>` },
+      { light: 1, html: `<p class="eyebrow">Como eu trabalho</p>
+        <h2 class="serif h2">Eu não vendo <em>pacote pronto.</em></h2>
+        <p class="body">Primeiro eu olho o seu restaurante, o seu Google e o seu Instagram. Depois te digo, com sinceridade, o que realmente faz diferença.</p>
+        <div class="push"></div>
+        <p class="serif quote">“De perto, para quem está perto.”</p>` },
+      { glow: 1, html: cta('Tem restaurante <em>aqui na região?</em>', 'Me chama que eu passo aí e te mostro o sistema funcionando.') },
+    ],
+  },
+  {
+    id: '02-manifesto', name: 'Manifesto', slides: [
+      { glow: 1, center: 1, html: `<div class="mid"><p class="eyebrow">Manifesto</p>
+        <h1 class="serif h1" style="font-size:150px">Restaurante<br><em>não é planilha.</em></h1></div>` },
+      { html: `<div class="push"></div><h2 class="serif h1">É fogo alto às <em>oito da noite.</em></h2>
+        <p class="body" style="font-size:44px">Mesa pedindo a conta, telefone tocando e pedido saindo, tudo ao mesmo tempo.</p>` },
+      { html: `<p class="eyebrow">Quem toca um restaurante</p>
+        <div class="push"></div>
+        <ul class="list" style="margin-top:0">
+          <li><span>—</span><div>não tem tempo para sistema complicado.</div></li>
+          <li><span>—</span><div>não tem margem para dar uma fatia de cada pedido para aplicativo.</div></li>
+          <li><span>—</span><div>não merece perder cliente por uma comanda que caiu atrás do fogão.</div></li>
+        </ul>` },
+      { light: 1, html: `<p class="eyebrow">Em que a gente acredita</p>
+        <div class="push"></div>
+        <h2 class="serif h1" style="font-size:112px">O restaurante do bairro pode ter a tecnologia <em>das grandes redes.</em></h2>
+        <p class="body">Sem contrato de gente grande. Sem central de atendimento. Sem letra miúda.</p>` },
+      { glow: 1, html: `<div class="push"></div><ul class="list" style="margin-top:0">
+          <li><span>01</span><div>O cliente pede pela mesa.</div></li>
+          <li><span>02</span><div>A cozinha vê na hora.</div></li>
+          <li><span>03</span><div>A conta fecha sozinha.</div></li>
+        </ul>
+        <h2 class="serif h2" style="margin-top:70px">E o delivery <em>volta a ser seu.</em></h2>` },
+      { glow: 1, html: cta('Tecnologia de restaurante, <em>feita aqui do lado.</em>') },
+    ],
+  },
+  {
+    id: '03-comissao', name: 'Comissão (Márcia, pizzaria)', slides: [
+      { glow: 1, html: `<p class="eyebrow">Delivery</p>
+        <h1 class="serif h1">Quanto do seu delivery <em>fica no aplicativo?</em></h1>
+        <p class="body">A história da Márcia pode ser a sua. Arraste para o lado.</p>` },
+      { html: `${ILUSTRATIVA}${phase('Antes')}
+        <h2 class="serif h3">Sexta-feira, <em>120 pedidos.</em></h2>
+        <p class="body">No domingo, a Márcia soma o extrato do aplicativo e percebe quanto do faturamento da pizzaria ficou em comissão e taxa.</p>` },
+      { html: `${ILUSTRATIVA}${phase('A virada')}
+        <h2 class="serif h3">Um link de pedido <em>dela mesma.</em></h2>
+        <p class="body">No Instagram, no WhatsApp e num panfleto dentro da caixa da pizza, com um cupom para o primeiro pedido direto.</p>` },
+      { html: `${ILUSTRATIVA}${phase('Depois', true)}
+        <h2 class="serif h3">O cliente fiel <em>parou de pagar pedágio.</em></h2>
+        <p class="body">Quem já conhecia a pizzaria passou a pedir direto. O aplicativo continua trazendo cliente novo.</p>` },
+      { light: 1, center: 1, html: `<div class="mid"><p class="eyebrow">A moral</p>
+        <p class="serif quote">“O aplicativo é ótimo para te apresentar. Não precisa ficar com uma parte de cada pedido <em>para sempre.</em>”</p></div>` },
+      { glow: 1, html: cta('Faça a conta da <em>sua comissão.</em>', `A calculadora está em ${SITE}. Ou me chama que eu faço com você.`) },
+    ],
+  },
+  {
+    id: '04-salao', name: 'Salão (Rafael, bar)', slides: [
+      { glow: 1, html: `<p class="eyebrow">Salão</p>
+        <h1 class="serif h1">Ninguém deixa de pedir mais uma <em>porque o garçom sumiu.</em></h1>
+        <p class="body">Ou deixa? Arraste para o lado.</p>` },
+      { html: `${ILUSTRATIVA}${phase('Antes')}
+        <h2 class="serif h3">Sábado à noite. <em>Três garçons para vinte mesas.</em></h2>
+        <p class="body">O cliente levanta a mão, espera e desiste da segunda rodada.</p>` },
+      { html: `${ILUSTRATIVA}${phase('A virada')}
+        <h2 class="serif h3">QR code <em>em cada mesa.</em></h2>
+        <p class="body">O cliente do Rafael pede a cerveja pelo celular, e a rodada entra direto na conta da mesa.</p>` },
+      { html: `${ILUSTRATIVA}${phase('Depois', true)}
+        <h2 class="serif h3">O garçom só leva. <em>A conta fecha no celular.</em></h2>
+        <p class="body">A segunda rodada sai sem ninguém esperar, e a conta dividida fecha sem confusão.</p>` },
+      { glow: 1, html: cta('Quer ver o QR da mesa <em>funcionando?</em>', 'Eu levo a demonstração até o seu restaurante.') },
+    ],
+  },
+  {
+    id: '05-cozinha', name: 'Cozinha (Seu Antônio)', slides: [
+      { glow: 1, html: `<p class="eyebrow">Cozinha</p>
+        <h1 class="serif h1">Quem cozinha bem <em>não pode perder ponto por papel.</em></h1>` },
+      { html: `${ILUSTRATIVA}${phase('Antes')}
+        <h2 class="serif h3">A comanda caiu <em>atrás do fogão.</em></h2>
+        <p class="body">No pico, a mesa 7 esperou 40 minutos por um prato que ninguém começou. Seu Antônio cozinha há 20 anos e nunca tinha errado o ponto.</p>` },
+      { html: `${ILUSTRATIVA}${phase('A virada')}
+        <h2 class="serif h3">Uma tela <em>no lugar do espeto.</em></h2>
+        <div class="ticket">
+          <div><span class="serif">Mesa 07</span><span class="badge b-red">23 min</span></div>
+          <div><span class="serif">Delivery</span><span class="badge b-amber">14 min</span></div>
+          <div><span class="serif">Mesa 12</span><span class="badge b-green">Pronto</span></div>
+        </div>` },
+      { html: `${ILUSTRATIVA}${phase('Depois', true)}
+        <h2 class="serif h3">Nada se perde. <em>Ele vê na hora o que está atrasando.</em></h2>
+        <p class="body">Cada pedido aparece com cronômetro: fica amarelo e depois vermelho quando passa do tempo.</p>` },
+      { glow: 1, html: cta('Chega de <em>comanda de papel.</em>', 'A tela da cozinha roda em qualquer tablet ou TV.') },
+    ],
+  },
+  {
+    id: '06-gestao', name: 'Gestão (Juliana, bistrô)', slides: [
+      { glow: 1, html: `<p class="eyebrow">Gestão</p>
+        <h1 class="serif h1">Saiba hoje quanto vai <em>vender amanhã.</em></h1>` },
+      { html: `${ILUSTRATIVA}${phase('Antes')}
+        <h2 class="serif h3">Compra no <em>“acho”.</em></h2>
+        <p class="body">Toda segunda a Juliana faz as compras do bistrô. Sobra salmão, falta picanha, e a equipe está completa no horário vazio.</p>` },
+      { html: `${ILUSTRATIVA}${phase('A virada')}
+        <h2 class="serif h3">Os números <em>na palma da mão.</em></h2>
+        <div class="bars"><i style="height:22%"></i><i style="height:30%"></i><i style="height:45%"></i><i style="height:62%"></i><i class="peak" style="height:100%"></i><i style="height:84%"></i><i style="height:40%"></i></div>
+        <div class="bars-label"><span>18h</span><span>Pico às 22h</span><span>24h</span></div>` },
+      { html: `${ILUSTRATIVA}${phase('Depois', true)}
+        <h2 class="serif h3">Compra pelo que vende. <em>Escala pelo pico.</em></h2>
+        <p class="body">Previsão do dia, horário de pico, o que mais vende e o que está parado, calculados com os pedidos de verdade.</p>` },
+      { glow: 1, html: cta('Quer ver os números <em>do seu restaurante?</em>') },
+    ],
+  },
+  {
+    id: '07-stories-comissao', name: 'Stories · comissão', story: true, slides: [
+      { glow: 1, html: `<p class="eyebrow">Pergunta rápida</p>
+        <h1 class="serif h1">Você sabe quanto pagou de comissão <em>no último mês?</em></h1>
+` },
+      { html: `<p class="eyebrow">Faça a conta</p>
+        <h1 class="serif h1">Em muitos planos, comissão + taxa <em>passam de 20%</em> de cada pedido.</h1>
+        <p class="body">Confira o percentual no seu contrato ou no extrato do aplicativo.</p>` },
+      { light: 1, center: 1, html: `<div class="mid"><p class="serif quote" style="font-size:120px">Cliente que já te conhece <em>não precisa do aplicativo</em> para te achar.</p></div>` },
+      { glow: 1, html: `<p class="eyebrow">A saída</p>
+        <h1 class="serif h1" style="font-size:112px">Delivery próprio, <em>sem comissão por pedido.</em></h1>
+        <div class="menu-card"><div>
+          <p class="eyebrow" style="justify-content:center;color:#8a7350;font-size:18px">Seu restaurante</p>
+          <p class="serif title">Menu</p><div class="rule"></div>
+          <div class="item"><span class="serif">Pizza Margherita</span><span class="dots"></span><span class="price">R$ 59,90</span></div>
+          <div class="item"><span class="serif">Calabresa</span><span class="dots"></span><span class="price">R$ 54,90</span></div>
+          <div class="item"><span class="serif">Quatro Queijos</span><span class="dots"></span><span class="price">R$ 64,90</span></div>
+        </div></div>` },
+      { glow: 1, html: `${cta('Quer que eu calcule <em>a sua economia?</em>', 'Me manda o nome do seu restaurante.')}` },
+    ],
+  },
+]
+
+const footer = (post, i) => `
+  <div class="footer">
+    <div class="brand">${M}<div><b>Movitech</b><small>Sistemas · Barueri</small></div></div>
+    ${post.story ? '' : i < post.slides.length - 1
+      ? `<div class="swipe"><span class="count">${String(i + 1).padStart(2, '0')} / ${String(post.slides.length).padStart(2, '0')}</span>${ICON.arrow}</div>`
+      : `<div class="swipe count">${String(i + 1).padStart(2, '0')} / ${String(post.slides.length).padStart(2, '0')}</div>`}
+  </div>`
+
+const slideHtml = (post, s, i) =>
+  `<section class="slide${post.story ? ' story' : ''}${s.light ? ' light' : ''}${s.glow ? ' glow' : ''}${s.center ? ' center' : ''}${i === 0 && !s.center ? ' cover' : ''}">${i === 0 && !s.center ? WATERMARK : ''}${s.html}${footer(post, i)}</section>`
+
+// ?slide=03-comissao/2 mostra só aquela lâmina, no tamanho real (usado para exportar o PNG).
+const only = new URLSearchParams(location.search).get('slide')
+const root = document.getElementById('root')
+if (only) {
+  const [id, n] = only.split('/')
+  const post = POSTS.find((p) => p.id === id)
+  document.body.classList.add('single')
+  root.innerHTML = slideHtml(post, post.slides[Number(n) - 1], Number(n) - 1)
+} else {
+  root.className = 'gallery'
+  root.innerHTML = POSTS.map((p) => `<div><h2>${p.name}<small>${p.id} · ${p.slides.length} ${p.story ? 'stories' : 'lâminas'}</small></h2>
+    <div class="row">${p.slides.map((s, i) => `<div class="thumb${p.story ? ' story' : ''}">${slideHtml(p, s, i)}</div>`).join('')}</div></div>`).join('')
+}
+window.POSTS = POSTS.map((p) => ({ id: p.id, n: p.slides.length, story: !!p.story }))
+</script>
+</body>
+</html>
