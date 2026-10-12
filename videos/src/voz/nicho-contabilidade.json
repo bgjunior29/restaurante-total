@@ -1,0 +1,375 @@
+{
+ "duracao": 20.89,
+ "legendas": [
+  {
+   "de": 0.2,
+   "ate": 2.299,
+   "texto": "Seu escritório passa confiança na internet?",
+   "palavras": [
+    {
+     "de": 0.2,
+     "ate": 0.414,
+     "t": "Seu"
+    },
+    {
+     "de": 0.414,
+     "ate": 0.928,
+     "t": "escritório"
+    },
+    {
+     "de": 0.928,
+     "ate": 1.228,
+     "t": "passa"
+    },
+    {
+     "de": 1.228,
+     "ate": 1.699,
+     "t": "confiança"
+    },
+    {
+     "de": 1.699,
+     "ate": 1.871,
+     "t": "na"
+    },
+    {
+     "de": 1.871,
+     "ate": 2.299,
+     "t": "internet"
+    }
+   ]
+  },
+  {
+   "de": 2.809,
+   "ate": 3.724,
+   "texto": "Site sem cadeado,",
+   "palavras": [
+    {
+     "de": 2.809,
+     "ate": 3.084,
+     "t": "Site"
+    },
+    {
+     "de": 3.084,
+     "ate": 3.312,
+     "t": "sem"
+    },
+    {
+     "de": 3.312,
+     "ate": 3.724,
+     "t": "cadeado"
+    }
+   ]
+  },
+  {
+   "de": 4.034,
+   "ate": 4.891,
+   "texto": "visual antigo",
+   "palavras": [
+    {
+     "de": 4.034,
+     "ate": 4.462,
+     "t": "visual"
+    },
+    {
+     "de": 4.462,
+     "ate": 4.891,
+     "t": "antigo"
+    }
+   ]
+  },
+  {
+   "de": 5.401,
+   "ate": 6.606,
+   "texto": "e formulário que não chega.",
+   "palavras": [
+    {
+     "de": 5.401,
+     "ate": 5.514,
+     "t": "e"
+    },
+    {
+     "de": 5.514,
+     "ate": 5.966,
+     "t": "formulário"
+    },
+    {
+     "de": 5.966,
+     "ate": 6.154,
+     "t": "que"
+    },
+    {
+     "de": 6.154,
+     "ate": 6.342,
+     "t": "não"
+    },
+    {
+     "de": 6.342,
+     "ate": 6.606,
+     "t": "chega"
+    }
+   ]
+  },
+  {
+   "de": 7.116,
+   "ate": 9.761,
+   "texto": "A Movitech cria um site profissional e seguro,",
+   "palavras": [
+    {
+     "de": 7.116,
+     "ate": 7.263,
+     "t": "A"
+    },
+    {
+     "de": 7.263,
+     "ate": 7.753,
+     "t": "Movitech"
+    },
+    {
+     "de": 7.753,
+     "ate": 8.047,
+     "t": "cria"
+    },
+    {
+     "de": 8.047,
+     "ate": 8.242,
+     "t": "um"
+    },
+    {
+     "de": 8.242,
+     "ate": 8.536,
+     "t": "site"
+    },
+    {
+     "de": 8.536,
+     "ate": 9.222,
+     "t": "profissional"
+    },
+    {
+     "de": 9.222,
+     "ate": 9.369,
+     "t": "e"
+    },
+    {
+     "de": 9.369,
+     "ate": 9.761,
+     "t": "seguro"
+    }
+   ]
+  },
+  {
+   "de": 10.071,
+   "ate": 11.137,
+   "texto": "com pedido de orçamento",
+   "palavras": [
+    {
+     "de": 10.071,
+     "ate": 10.261,
+     "t": "com"
+    },
+    {
+     "de": 10.261,
+     "ate": 10.566,
+     "t": "pedido"
+    },
+    {
+     "de": 10.566,
+     "ate": 10.718,
+     "t": "de"
+    },
+    {
+     "de": 10.718,
+     "ate": 11.137,
+     "t": "orçamento"
+    }
+   ]
+  },
+  {
+   "de": 11.647,
+   "ate": 12.759,
+   "texto": "e WhatsApp em um toque.",
+   "palavras": [
+    {
+     "de": 11.647,
+     "ate": 11.766,
+     "t": "e"
+    },
+    {
+     "de": 11.766,
+     "ate": 12.163,
+     "t": "WhatsApp"
+    },
+    {
+     "de": 12.163,
+     "ate": 12.322,
+     "t": "em"
+    },
+    {
+     "de": 12.322,
+     "ate": 12.481,
+     "t": "um"
+    },
+    {
+     "de": 12.481,
+     "ate": 12.759,
+     "t": "toque"
+    }
+   ]
+  },
+  {
+   "de": 13.269,
+   "ate": 14.973,
+   "texto": "Quem procura contador encontra você",
+   "palavras": [
+    {
+     "de": 13.269,
+     "ate": 13.518,
+     "t": "Quem"
+    },
+    {
+     "de": 13.518,
+     "ate": 13.892,
+     "t": "procura"
+    },
+    {
+     "de": 13.892,
+     "ate": 14.308,
+     "t": "contador"
+    },
+    {
+     "de": 14.308,
+     "ate": 14.724,
+     "t": "encontra"
+    },
+    {
+     "de": 14.724,
+     "ate": 14.973,
+     "t": "você"
+    }
+   ]
+  },
+  {
+   "de": 15.483,
+   "ate": 16.688,
+   "texto": "e já manda a mensagem.",
+   "palavras": [
+    {
+     "de": 15.483,
+     "ate": 15.617,
+     "t": "e"
+    },
+    {
+     "de": 15.617,
+     "ate": 15.796,
+     "t": "já"
+    },
+    {
+     "de": 15.796,
+     "ate": 16.108,
+     "t": "manda"
+    },
+    {
+     "de": 16.108,
+     "ate": 16.242,
+     "t": "a"
+    },
+    {
+     "de": 16.242,
+     "ate": 16.688,
+     "t": "mensagem"
+    }
+   ]
+  },
+  {
+   "de": 17.198,
+   "ate": 18.218,
+   "texto": "Chama a Movi no WhatsApp",
+   "palavras": [
+    {
+     "de": 17.198,
+     "ate": 17.436,
+     "t": "Chama"
+    },
+    {
+     "de": 17.436,
+     "ate": 17.538,
+     "t": "a"
+    },
+    {
+     "de": 17.538,
+     "ate": 17.742,
+     "t": "Movi"
+    },
+    {
+     "de": 17.742,
+     "ate": 17.878,
+     "t": "no"
+    },
+    {
+     "de": 17.878,
+     "ate": 18.218,
+     "t": "WhatsApp"
+    }
+   ]
+  },
+  {
+   "de": 18.728,
+   "ate": 19.828,
+   "texto": "e peça o seu orçamento.",
+   "palavras": [
+    {
+     "de": 18.728,
+     "ate": 18.846,
+     "t": "e"
+    },
+    {
+     "de": 18.846,
+     "ate": 19.082,
+     "t": "peça"
+    },
+    {
+     "de": 19.082,
+     "ate": 19.2,
+     "t": "o"
+    },
+    {
+     "de": 19.2,
+     "ate": 19.396,
+     "t": "seu"
+    },
+    {
+     "de": 19.396,
+     "ate": 19.828,
+     "t": "orçamento"
+    }
+   ]
+  }
+ ],
+ "cenas": [
+  {
+   "cena": "abertura",
+   "de": 0.2,
+   "ate": 2.299
+  },
+  {
+   "cena": "problema",
+   "de": 2.809,
+   "ate": 6.606
+  },
+  {
+   "cena": "solucao",
+   "de": 7.116,
+   "ate": 12.759
+  },
+  {
+   "cena": "beneficio",
+   "de": 13.269,
+   "ate": 16.688
+  },
+  {
+   "cena": "cta",
+   "de": 17.198,
+   "ate": 19.828
+  }
+ ],
+ "voz": "piper-faber"
+}

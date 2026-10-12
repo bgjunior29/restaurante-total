@@ -1,0 +1,410 @@
+{
+ "duracao": 22.16,
+ "legendas": [
+  {
+   "de": 0.2,
+   "ate": 2.647,
+   "texto": "Sua oficina ainda marca revisão só por telefone?",
+   "palavras": [
+    {
+     "de": 0.2,
+     "ate": 0.419,
+     "t": "Sua"
+    },
+    {
+     "de": 0.419,
+     "ate": 0.812,
+     "t": "oficina"
+    },
+    {
+     "de": 0.812,
+     "ate": 1.118,
+     "t": "ainda"
+    },
+    {
+     "de": 1.118,
+     "ate": 1.424,
+     "t": "marca"
+    },
+    {
+     "de": 1.424,
+     "ate": 1.817,
+     "t": "revisão"
+    },
+    {
+     "de": 1.817,
+     "ate": 1.992,
+     "t": "só"
+    },
+    {
+     "de": 1.992,
+     "ate": 2.21,
+     "t": "por"
+    },
+    {
+     "de": 2.21,
+     "ate": 2.647,
+     "t": "telefone"
+    }
+   ]
+  },
+  {
+   "de": 3.157,
+   "ate": 4.595,
+   "texto": "Telefone que ninguém atende,",
+   "palavras": [
+    {
+     "de": 3.157,
+     "ate": 3.607,
+     "t": "Telefone"
+    },
+    {
+     "de": 3.607,
+     "ate": 3.831,
+     "t": "que"
+    },
+    {
+     "de": 3.831,
+     "ate": 4.235,
+     "t": "ninguém"
+    },
+    {
+     "de": 4.235,
+     "ate": 4.595,
+     "t": "atende"
+    }
+   ]
+  },
+  {
+   "de": 4.905,
+   "ate": 6.423,
+   "texto": "cliente sem saber o horário livre",
+   "palavras": [
+    {
+     "de": 4.905,
+     "ate": 5.246,
+     "t": "cliente"
+    },
+    {
+     "de": 5.246,
+     "ate": 5.436,
+     "t": "sem"
+    },
+    {
+     "de": 5.436,
+     "ate": 5.702,
+     "t": "saber"
+    },
+    {
+     "de": 5.702,
+     "ate": 5.816,
+     "t": "o"
+    },
+    {
+     "de": 5.816,
+     "ate": 6.158,
+     "t": "horário"
+    },
+    {
+     "de": 6.158,
+     "ate": 6.423,
+     "t": "livre"
+    }
+   ]
+  },
+  {
+   "de": 6.933,
+   "ate": 8.371,
+   "texto": "e nenhum site com o seu nome.",
+   "palavras": [
+    {
+     "de": 6.933,
+     "ate": 7.053,
+     "t": "e"
+    },
+    {
+     "de": 7.053,
+     "ate": 7.373,
+     "t": "nenhum"
+    },
+    {
+     "de": 7.373,
+     "ate": 7.612,
+     "t": "site"
+    },
+    {
+     "de": 7.612,
+     "ate": 7.812,
+     "t": "com"
+    },
+    {
+     "de": 7.812,
+     "ate": 7.932,
+     "t": "o"
+    },
+    {
+     "de": 7.932,
+     "ate": 8.131,
+     "t": "seu"
+    },
+    {
+     "de": 8.131,
+     "ate": 8.371,
+     "t": "nome"
+    }
+   ]
+  },
+  {
+   "de": 8.881,
+   "ate": 11.375,
+   "texto": "A Movitech faz um site com agendamento de revisão",
+   "palavras": [
+    {
+     "de": 8.881,
+     "ate": 9.008,
+     "t": "A"
+    },
+    {
+     "de": 9.008,
+     "ate": 9.43,
+     "t": "Movitech"
+    },
+    {
+     "de": 9.43,
+     "ate": 9.642,
+     "t": "faz"
+    },
+    {
+     "de": 9.642,
+     "ate": 9.811,
+     "t": "um"
+    },
+    {
+     "de": 9.811,
+     "ate": 10.064,
+     "t": "site"
+    },
+    {
+     "de": 10.064,
+     "ate": 10.276,
+     "t": "com"
+    },
+    {
+     "de": 10.276,
+     "ate": 10.825,
+     "t": "agendamento"
+    },
+    {
+     "de": 10.825,
+     "ate": 10.994,
+     "t": "de"
+    },
+    {
+     "de": 10.994,
+     "ate": 11.375,
+     "t": "revisão"
+    }
+   ]
+  },
+  {
+   "de": 11.885,
+   "ate": 12.95,
+   "texto": "e pedido de orçamento",
+   "palavras": [
+    {
+     "de": 11.885,
+     "ate": 12.008,
+     "t": "e"
+    },
+    {
+     "de": 12.008,
+     "ate": 12.336,
+     "t": "pedido"
+    },
+    {
+     "de": 12.336,
+     "ate": 12.499,
+     "t": "de"
+    },
+    {
+     "de": 12.499,
+     "ate": 12.95,
+     "t": "orçamento"
+    }
+   ]
+  },
+  {
+   "de": 13.46,
+   "ate": 14.097,
+   "texto": "pelo WhatsApp.",
+   "palavras": [
+    {
+     "de": 13.46,
+     "ate": 13.699,
+     "t": "pelo"
+    },
+    {
+     "de": 13.699,
+     "ate": 14.097,
+     "t": "WhatsApp"
+    }
+   ]
+  },
+  {
+   "de": 14.607,
+   "ate": 16.172,
+   "texto": "O cliente agenda pelo celular",
+   "palavras": [
+    {
+     "de": 14.607,
+     "ate": 14.741,
+     "t": "O"
+    },
+    {
+     "de": 14.741,
+     "ate": 15.143,
+     "t": "cliente"
+    },
+    {
+     "de": 15.143,
+     "ate": 15.501,
+     "t": "agenda"
+    },
+    {
+     "de": 15.501,
+     "ate": 15.769,
+     "t": "pelo"
+    },
+    {
+     "de": 15.769,
+     "ate": 16.172,
+     "t": "celular"
+    }
+   ]
+  },
+  {
+   "de": 16.682,
+   "ate": 17.852,
+   "texto": "e chega na hora certa.",
+   "palavras": [
+    {
+     "de": 16.682,
+     "ate": 16.812,
+     "t": "e"
+    },
+    {
+     "de": 16.812,
+     "ate": 17.115,
+     "t": "chega"
+    },
+    {
+     "de": 17.115,
+     "ate": 17.289,
+     "t": "na"
+    },
+    {
+     "de": 17.289,
+     "ate": 17.549,
+     "t": "hora"
+    },
+    {
+     "de": 17.549,
+     "ate": 17.852,
+     "t": "certa"
+    }
+   ]
+  },
+  {
+   "de": 18.362,
+   "ate": 19.428,
+   "texto": "Chama a Movi no WhatsApp",
+   "palavras": [
+    {
+     "de": 18.362,
+     "ate": 18.611,
+     "t": "Chama"
+    },
+    {
+     "de": 18.611,
+     "ate": 18.717,
+     "t": "a"
+    },
+    {
+     "de": 18.717,
+     "ate": 18.93,
+     "t": "Movi"
+    },
+    {
+     "de": 18.93,
+     "ate": 19.073,
+     "t": "no"
+    },
+    {
+     "de": 19.073,
+     "ate": 19.428,
+     "t": "WhatsApp"
+    }
+   ]
+  },
+  {
+   "de": 19.938,
+   "ate": 21.097,
+   "texto": "e peça o seu orçamento.",
+   "palavras": [
+    {
+     "de": 19.938,
+     "ate": 20.062,
+     "t": "e"
+    },
+    {
+     "de": 20.062,
+     "ate": 20.31,
+     "t": "peça"
+    },
+    {
+     "de": 20.31,
+     "ate": 20.434,
+     "t": "o"
+    },
+    {
+     "de": 20.434,
+     "ate": 20.641,
+     "t": "seu"
+    },
+    {
+     "de": 20.641,
+     "ate": 21.097,
+     "t": "orçamento"
+    }
+   ]
+  }
+ ],
+ "cenas": [
+  {
+   "cena": "abertura",
+   "de": 0.2,
+   "ate": 2.647
+  },
+  {
+   "cena": "problema",
+   "de": 3.157,
+   "ate": 8.371
+  },
+  {
+   "cena": "solucao",
+   "de": 8.881,
+   "ate": 14.097
+  },
+  {
+   "cena": "beneficio",
+   "de": 14.607,
+   "ate": 17.852
+  },
+  {
+   "cena": "cta",
+   "de": 18.362,
+   "ate": 21.097
+  }
+ ],
+ "voz": "piper-faber"
+}

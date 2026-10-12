@@ -1,0 +1,405 @@
+{
+ "duracao": 21.96,
+ "legendas": [
+  {
+   "de": 0.2,
+   "ate": 2.775,
+   "texto": "Sua autoescola aparece bem pra quem procura a CNH?",
+   "palavras": [
+    {
+     "de": 0.2,
+     "ate": 0.418,
+     "t": "Sua"
+    },
+    {
+     "de": 0.418,
+     "ate": 0.942,
+     "t": "autoescola"
+    },
+    {
+     "de": 0.942,
+     "ate": 1.335,
+     "t": "aparece"
+    },
+    {
+     "de": 1.335,
+     "ate": 1.553,
+     "t": "bem"
+    },
+    {
+     "de": 1.553,
+     "ate": 1.771,
+     "t": "pra"
+    },
+    {
+     "de": 1.771,
+     "ate": 2.033,
+     "t": "quem"
+    },
+    {
+     "de": 2.033,
+     "ate": 2.426,
+     "t": "procura"
+    },
+    {
+     "de": 2.426,
+     "ate": 2.557,
+     "t": "a"
+    },
+    {
+     "de": 2.557,
+     "ate": 2.775,
+     "t": "CNH"
+    }
+   ]
+  },
+  {
+   "de": 3.285,
+   "ate": 3.933,
+   "texto": "Site antigo,",
+   "palavras": [
+    {
+     "de": 3.285,
+     "ate": 3.563,
+     "t": "Site"
+    },
+    {
+     "de": 3.563,
+     "ate": 3.933,
+     "t": "antigo"
+    }
+   ]
+  },
+  {
+   "de": 4.243,
+   "ate": 5.808,
+   "texto": "botão de WhatsApp que não funciona",
+   "palavras": [
+    {
+     "de": 4.243,
+     "ate": 4.51,
+     "t": "botão"
+    },
+    {
+     "de": 4.51,
+     "ate": 4.663,
+     "t": "de"
+    },
+    {
+     "de": 4.663,
+     "ate": 5.045,
+     "t": "WhatsApp"
+    },
+    {
+     "de": 5.045,
+     "ate": 5.235,
+     "t": "que"
+    },
+    {
+     "de": 5.235,
+     "ate": 5.426,
+     "t": "não"
+    },
+    {
+     "de": 5.426,
+     "ate": 5.808,
+     "t": "funciona"
+    }
+   ]
+  },
+  {
+   "de": 6.318,
+   "ate": 7.686,
+   "texto": "e matrícula só pessoalmente.",
+   "palavras": [
+    {
+     "de": 6.318,
+     "ate": 6.446,
+     "t": "e"
+    },
+    {
+     "de": 6.446,
+     "ate": 6.916,
+     "t": "matrícula"
+    },
+    {
+     "de": 6.916,
+     "ate": 7.087,
+     "t": "só"
+    },
+    {
+     "de": 7.087,
+     "ate": 7.686,
+     "t": "pessoalmente"
+    }
+   ]
+  },
+  {
+   "de": 8.196,
+   "ate": 9.97,
+   "texto": "A Movitech cria um site rápido,",
+   "palavras": [
+    {
+     "de": 8.196,
+     "ate": 8.34,
+     "t": "A"
+    },
+    {
+     "de": 8.34,
+     "ate": 8.819,
+     "t": "Movitech"
+    },
+    {
+     "de": 8.819,
+     "ate": 9.107,
+     "t": "cria"
+    },
+    {
+     "de": 9.107,
+     "ate": 9.299,
+     "t": "um"
+    },
+    {
+     "de": 9.299,
+     "ate": 9.586,
+     "t": "site"
+    },
+    {
+     "de": 9.586,
+     "ate": 9.97,
+     "t": "rápido"
+    }
+   ]
+  },
+  {
+   "de": 10.28,
+   "ate": 11.38,
+   "texto": "com pré-matrícula online",
+   "palavras": [
+    {
+     "de": 10.28,
+     "ate": 10.47,
+     "t": "com"
+    },
+    {
+     "de": 10.47,
+     "ate": 10.659,
+     "t": "pré"
+    },
+    {
+     "de": 10.659,
+     "ate": 11.077,
+     "t": "matrícula"
+    },
+    {
+     "de": 11.077,
+     "ate": 11.38,
+     "t": "online"
+    }
+   ]
+  },
+  {
+   "de": 11.89,
+   "ate": 13.026,
+   "texto": "e WhatsApp em um toque.",
+   "palavras": [
+    {
+     "de": 11.89,
+     "ate": 12.012,
+     "t": "e"
+    },
+    {
+     "de": 12.012,
+     "ate": 12.418,
+     "t": "WhatsApp"
+    },
+    {
+     "de": 12.418,
+     "ate": 12.58,
+     "t": "em"
+    },
+    {
+     "de": 12.58,
+     "ate": 12.742,
+     "t": "um"
+    },
+    {
+     "de": 12.742,
+     "ate": 13.026,
+     "t": "toque"
+    }
+   ]
+  },
+  {
+   "de": 13.536,
+   "ate": 15.333,
+   "texto": "O aluno se inscreve pelo celular",
+   "palavras": [
+    {
+     "de": 13.536,
+     "ate": 13.674,
+     "t": "O"
+    },
+    {
+     "de": 13.674,
+     "ate": 13.997,
+     "t": "aluno"
+    },
+    {
+     "de": 13.997,
+     "ate": 14.181,
+     "t": "se"
+    },
+    {
+     "de": 14.181,
+     "ate": 14.642,
+     "t": "inscreve"
+    },
+    {
+     "de": 14.642,
+     "ate": 14.918,
+     "t": "pelo"
+    },
+    {
+     "de": 14.918,
+     "ate": 15.333,
+     "t": "celular"
+    }
+   ]
+  },
+  {
+   "de": 15.843,
+   "ate": 17.571,
+   "texto": "e você recebe o contato na hora.",
+   "palavras": [
+    {
+     "de": 15.843,
+     "ate": 15.976,
+     "t": "e"
+    },
+    {
+     "de": 15.976,
+     "ate": 16.242,
+     "t": "você"
+    },
+    {
+     "de": 16.242,
+     "ate": 16.596,
+     "t": "recebe"
+    },
+    {
+     "de": 16.596,
+     "ate": 16.729,
+     "t": "o"
+    },
+    {
+     "de": 16.729,
+     "ate": 17.128,
+     "t": "contato"
+    },
+    {
+     "de": 17.128,
+     "ate": 17.305,
+     "t": "na"
+    },
+    {
+     "de": 17.305,
+     "ate": 17.571,
+     "t": "hora"
+    }
+   ]
+  },
+  {
+   "de": 18.081,
+   "ate": 19.158,
+   "texto": "Chama a Movi no WhatsApp",
+   "palavras": [
+    {
+     "de": 18.081,
+     "ate": 18.332,
+     "t": "Chama"
+    },
+    {
+     "de": 18.332,
+     "ate": 18.44,
+     "t": "a"
+    },
+    {
+     "de": 18.44,
+     "ate": 18.655,
+     "t": "Movi"
+    },
+    {
+     "de": 18.655,
+     "ate": 18.799,
+     "t": "no"
+    },
+    {
+     "de": 18.799,
+     "ate": 19.158,
+     "t": "WhatsApp"
+    }
+   ]
+  },
+  {
+   "de": 19.668,
+   "ate": 20.897,
+   "texto": "e peça o seu orçamento.",
+   "palavras": [
+    {
+     "de": 19.668,
+     "ate": 19.8,
+     "t": "e"
+    },
+    {
+     "de": 19.8,
+     "ate": 20.063,
+     "t": "peça"
+    },
+    {
+     "de": 20.063,
+     "ate": 20.195,
+     "t": "o"
+    },
+    {
+     "de": 20.195,
+     "ate": 20.414,
+     "t": "seu"
+    },
+    {
+     "de": 20.414,
+     "ate": 20.897,
+     "t": "orçamento"
+    }
+   ]
+  }
+ ],
+ "cenas": [
+  {
+   "cena": "abertura",
+   "de": 0.2,
+   "ate": 2.775
+  },
+  {
+   "cena": "problema",
+   "de": 3.285,
+   "ate": 7.686
+  },
+  {
+   "cena": "solucao",
+   "de": 8.196,
+   "ate": 13.026
+  },
+  {
+   "cena": "beneficio",
+   "de": 13.536,
+   "ate": 17.571
+  },
+  {
+   "cena": "cta",
+   "de": 18.081,
+   "ate": 20.897
+  }
+ ],
+ "voz": "piper-faber"
+}

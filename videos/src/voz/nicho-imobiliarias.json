@@ -1,0 +1,400 @@
+{
+ "duracao": 20.8,
+ "legendas": [
+  {
+   "de": 0.2,
+   "ate": 1.811,
+   "texto": "Seu site de imóveis demora pra abrir?",
+   "palavras": [
+    {
+     "de": 0.2,
+     "ate": 0.383,
+     "t": "Seu"
+    },
+    {
+     "de": 0.383,
+     "ate": 0.603,
+     "t": "site"
+    },
+    {
+     "de": 0.603,
+     "ate": 0.749,
+     "t": "de"
+    },
+    {
+     "de": 0.749,
+     "ate": 1.079,
+     "t": "imóveis"
+    },
+    {
+     "de": 1.079,
+     "ate": 1.372,
+     "t": "demora"
+    },
+    {
+     "de": 1.372,
+     "ate": 1.555,
+     "t": "pra"
+    },
+    {
+     "de": 1.555,
+     "ate": 1.811,
+     "t": "abrir"
+    }
+   ]
+  },
+  {
+   "de": 2.321,
+   "ate": 3.132,
+   "texto": "Página lenta,",
+   "palavras": [
+    {
+     "de": 2.321,
+     "ate": 2.754,
+     "t": "Página"
+    },
+    {
+     "de": 2.754,
+     "ate": 3.132,
+     "t": "lenta"
+    }
+   ]
+  },
+  {
+   "de": 3.442,
+   "ate": 4.426,
+   "texto": "foto que não carrega",
+   "palavras": [
+    {
+     "de": 3.442,
+     "ate": 3.678,
+     "t": "foto"
+    },
+    {
+     "de": 3.678,
+     "ate": 3.875,
+     "t": "que"
+    },
+    {
+     "de": 3.875,
+     "ate": 4.072,
+     "t": "não"
+    },
+    {
+     "de": 4.072,
+     "ate": 4.426,
+     "t": "carrega"
+    }
+   ]
+  },
+  {
+   "de": 4.936,
+   "ate": 7.07,
+   "texto": "e nenhum jeito fácil de falar com o corretor.",
+   "palavras": [
+    {
+     "de": 4.936,
+     "ate": 5.055,
+     "t": "e"
+    },
+    {
+     "de": 5.055,
+     "ate": 5.371,
+     "t": "nenhum"
+    },
+    {
+     "de": 5.371,
+     "ate": 5.648,
+     "t": "jeito"
+    },
+    {
+     "de": 5.648,
+     "ate": 5.924,
+     "t": "fácil"
+    },
+    {
+     "de": 5.924,
+     "ate": 6.082,
+     "t": "de"
+    },
+    {
+     "de": 6.082,
+     "ate": 6.359,
+     "t": "falar"
+    },
+    {
+     "de": 6.359,
+     "ate": 6.557,
+     "t": "com"
+    },
+    {
+     "de": 6.557,
+     "ate": 6.675,
+     "t": "o"
+    },
+    {
+     "de": 6.675,
+     "ate": 7.07,
+     "t": "corretor"
+    }
+   ]
+  },
+  {
+   "de": 7.58,
+   "ate": 9.656,
+   "texto": "A Movitech faz um site de imóveis rápido,",
+   "palavras": [
+    {
+     "de": 7.58,
+     "ate": 7.708,
+     "t": "A"
+    },
+    {
+     "de": 7.708,
+     "ate": 8.131,
+     "t": "Movitech"
+    },
+    {
+     "de": 8.131,
+     "ate": 8.343,
+     "t": "faz"
+    },
+    {
+     "de": 8.343,
+     "ate": 8.512,
+     "t": "um"
+    },
+    {
+     "de": 8.512,
+     "ate": 8.767,
+     "t": "site"
+    },
+    {
+     "de": 8.767,
+     "ate": 8.936,
+     "t": "de"
+    },
+    {
+     "de": 8.936,
+     "ate": 9.317,
+     "t": "imóveis"
+    },
+    {
+     "de": 9.317,
+     "ate": 9.656,
+     "t": "rápido"
+    }
+   ]
+  },
+  {
+   "de": 9.966,
+   "ate": 11.102,
+   "texto": "com busca, fotos",
+   "palavras": [
+    {
+     "de": 9.966,
+     "ate": 10.265,
+     "t": "com"
+    },
+    {
+     "de": 10.265,
+     "ate": 10.683,
+     "t": "busca"
+    },
+    {
+     "de": 10.683,
+     "ate": 11.102,
+     "t": "fotos"
+    }
+   ]
+  },
+  {
+   "de": 11.612,
+   "ate": 13.026,
+   "texto": "e WhatsApp direto do corretor.",
+   "palavras": [
+    {
+     "de": 11.612,
+     "ate": 11.733,
+     "t": "e"
+    },
+    {
+     "de": 11.733,
+     "ate": 12.137,
+     "t": "WhatsApp"
+    },
+    {
+     "de": 12.137,
+     "ate": 12.46,
+     "t": "direto"
+    },
+    {
+     "de": 12.46,
+     "ate": 12.622,
+     "t": "do"
+    },
+    {
+     "de": 12.622,
+     "ate": 13.026,
+     "t": "corretor"
+    }
+   ]
+  },
+  {
+   "de": 13.536,
+   "ate": 14.985,
+   "texto": "O interessado acha o imóvel",
+   "palavras": [
+    {
+     "de": 13.536,
+     "ate": 13.668,
+     "t": "O"
+    },
+    {
+     "de": 13.668,
+     "ate": 14.238,
+     "t": "interessado"
+    },
+    {
+     "de": 14.238,
+     "ate": 14.502,
+     "t": "acha"
+    },
+    {
+     "de": 14.502,
+     "ate": 14.634,
+     "t": "o"
+    },
+    {
+     "de": 14.634,
+     "ate": 14.985,
+     "t": "imóvel"
+    }
+   ]
+  },
+  {
+   "de": 15.495,
+   "ate": 16.526,
+   "texto": "e chama você na hora.",
+   "palavras": [
+    {
+     "de": 15.495,
+     "ate": 15.614,
+     "t": "e"
+    },
+    {
+     "de": 15.614,
+     "ate": 15.891,
+     "t": "chama"
+    },
+    {
+     "de": 15.891,
+     "ate": 16.129,
+     "t": "você"
+    },
+    {
+     "de": 16.129,
+     "ate": 16.288,
+     "t": "na"
+    },
+    {
+     "de": 16.288,
+     "ate": 16.526,
+     "t": "hora"
+    }
+   ]
+  },
+  {
+   "de": 17.036,
+   "ate": 18.067,
+   "texto": "Chama a Movi no WhatsApp",
+   "palavras": [
+    {
+     "de": 17.036,
+     "ate": 17.276,
+     "t": "Chama"
+    },
+    {
+     "de": 17.276,
+     "ate": 17.38,
+     "t": "a"
+    },
+    {
+     "de": 17.38,
+     "ate": 17.586,
+     "t": "Movi"
+    },
+    {
+     "de": 17.586,
+     "ate": 17.723,
+     "t": "no"
+    },
+    {
+     "de": 17.723,
+     "ate": 18.067,
+     "t": "WhatsApp"
+    }
+   ]
+  },
+  {
+   "de": 18.577,
+   "ate": 19.736,
+   "texto": "e peça o seu orçamento.",
+   "palavras": [
+    {
+     "de": 18.577,
+     "ate": 18.701,
+     "t": "e"
+    },
+    {
+     "de": 18.701,
+     "ate": 18.949,
+     "t": "peça"
+    },
+    {
+     "de": 18.949,
+     "ate": 19.073,
+     "t": "o"
+    },
+    {
+     "de": 19.073,
+     "ate": 19.28,
+     "t": "seu"
+    },
+    {
+     "de": 19.28,
+     "ate": 19.736,
+     "t": "orçamento"
+    }
+   ]
+  }
+ ],
+ "cenas": [
+  {
+   "cena": "abertura",
+   "de": 0.2,
+   "ate": 1.811
+  },
+  {
+   "cena": "problema",
+   "de": 2.321,
+   "ate": 7.07
+  },
+  {
+   "cena": "solucao",
+   "de": 7.58,
+   "ate": 13.026
+  },
+  {
+   "cena": "beneficio",
+   "de": 13.536,
+   "ate": 16.526
+  },
+  {
+   "cena": "cta",
+   "de": 17.036,
+   "ate": 19.736
+  }
+ ],
+ "voz": "piper-faber"
+}

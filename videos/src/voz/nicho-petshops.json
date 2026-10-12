@@ -1,0 +1,425 @@
+{
+ "duracao": 22.79,
+ "legendas": [
+  {
+   "de": 0.2,
+   "ate": 1.904,
+   "texto": "Seu pet shop atende tudo pelo direct?",
+   "palavras": [
+    {
+     "de": 0.2,
+     "ate": 0.394,
+     "t": "Seu"
+    },
+    {
+     "de": 0.394,
+     "ate": 0.587,
+     "t": "pet"
+    },
+    {
+     "de": 0.587,
+     "ate": 0.82,
+     "t": "shop"
+    },
+    {
+     "de": 0.82,
+     "ate": 1.13,
+     "t": "atende"
+    },
+    {
+     "de": 1.13,
+     "ate": 1.362,
+     "t": "tudo"
+    },
+    {
+     "de": 1.362,
+     "ate": 1.594,
+     "t": "pelo"
+    },
+    {
+     "de": 1.594,
+     "ate": 1.904,
+     "t": "direct"
+    }
+   ]
+  },
+  {
+   "de": 2.414,
+   "ate": 3.747,
+   "texto": "Cliente perguntando preço,",
+   "palavras": [
+    {
+     "de": 2.414,
+     "ate": 2.828,
+     "t": "Cliente"
+    },
+    {
+     "de": 2.828,
+     "ate": 3.426,
+     "t": "perguntando"
+    },
+    {
+     "de": 3.426,
+     "ate": 3.747,
+     "t": "preço"
+    }
+   ]
+  },
+  {
+   "de": 4.057,
+   "ate": 5.576,
+   "texto": "banho e tosa marcado no papel",
+   "palavras": [
+    {
+     "de": 4.057,
+     "ate": 4.353,
+     "t": "banho"
+    },
+    {
+     "de": 4.353,
+     "ate": 4.479,
+     "t": "e"
+    },
+    {
+     "de": 4.479,
+     "ate": 4.732,
+     "t": "tosa"
+    },
+    {
+     "de": 4.732,
+     "ate": 5.112,
+     "t": "marcado"
+    },
+    {
+     "de": 5.112,
+     "ate": 5.281,
+     "t": "no"
+    },
+    {
+     "de": 5.281,
+     "ate": 5.576,
+     "t": "papel"
+    }
+   ]
+  },
+  {
+   "de": 6.086,
+   "ate": 7.442,
+   "texto": "e nenhum catálogo online.",
+   "palavras": [
+    {
+     "de": 6.086,
+     "ate": 6.226,
+     "t": "e"
+    },
+    {
+     "de": 6.226,
+     "ate": 6.6,
+     "t": "nenhum"
+    },
+    {
+     "de": 6.6,
+     "ate": 7.068,
+     "t": "catálogo"
+    },
+    {
+     "de": 7.068,
+     "ate": 7.442,
+     "t": "online"
+    }
+   ]
+  },
+  {
+   "de": 7.952,
+   "ate": 10.446,
+   "texto": "Com a Movitech, você tem um catálogo com preços,",
+   "palavras": [
+    {
+     "de": 7.952,
+     "ate": 8.175,
+     "t": "Com"
+    },
+    {
+     "de": 8.175,
+     "ate": 8.308,
+     "t": "a"
+    },
+    {
+     "de": 8.308,
+     "ate": 8.754,
+     "t": "Movitech"
+    },
+    {
+     "de": 8.754,
+     "ate": 9.021,
+     "t": "você"
+    },
+    {
+     "de": 9.021,
+     "ate": 9.243,
+     "t": "tem"
+    },
+    {
+     "de": 9.243,
+     "ate": 9.422,
+     "t": "um"
+    },
+    {
+     "de": 9.422,
+     "ate": 9.867,
+     "t": "catálogo"
+    },
+    {
+     "de": 9.867,
+     "ate": 10.09,
+     "t": "com"
+    },
+    {
+     "de": 10.09,
+     "ate": 10.446,
+     "t": "preços"
+    }
+   ]
+  },
+  {
+   "de": 10.756,
+   "ate": 11.903,
+   "texto": "agenda de banho e tosa",
+   "palavras": [
+    {
+     "de": 10.756,
+     "ate": 11.084,
+     "t": "agenda"
+    },
+    {
+     "de": 11.084,
+     "ate": 11.247,
+     "t": "de"
+    },
+    {
+     "de": 11.247,
+     "ate": 11.534,
+     "t": "banho"
+    },
+    {
+     "de": 11.534,
+     "ate": 11.657,
+     "t": "e"
+    },
+    {
+     "de": 11.657,
+     "ate": 11.903,
+     "t": "tosa"
+    }
+   ]
+  },
+  {
+   "de": 12.413,
+   "ate": 13.595,
+   "texto": "e pedido pelo WhatsApp.",
+   "palavras": [
+    {
+     "de": 12.413,
+     "ate": 12.544,
+     "t": "e"
+    },
+    {
+     "de": 12.544,
+     "ate": 12.894,
+     "t": "pedido"
+    },
+    {
+     "de": 12.894,
+     "ate": 13.157,
+     "t": "pelo"
+    },
+    {
+     "de": 13.157,
+     "ate": 13.595,
+     "t": "WhatsApp"
+    }
+   ]
+  },
+  {
+   "de": 14.105,
+   "ate": 16.517,
+   "texto": "O cliente vê, escolhe e pede pelo celular,",
+   "palavras": [
+    {
+     "de": 14.105,
+     "ate": 14.253,
+     "t": "O"
+    },
+    {
+     "de": 14.253,
+     "ate": 14.696,
+     "t": "cliente"
+    },
+    {
+     "de": 14.696,
+     "ate": 14.893,
+     "t": "vê"
+    },
+    {
+     "de": 14.893,
+     "ate": 15.336,
+     "t": "escolhe"
+    },
+    {
+     "de": 15.336,
+     "ate": 15.483,
+     "t": "e"
+    },
+    {
+     "de": 15.483,
+     "ate": 15.779,
+     "t": "pede"
+    },
+    {
+     "de": 15.779,
+     "ate": 16.074,
+     "t": "pelo"
+    },
+    {
+     "de": 16.074,
+     "ate": 16.517,
+     "t": "celular"
+    }
+   ]
+  },
+  {
+   "de": 16.827,
+   "ate": 18.474,
+   "texto": "sem você parar o que está fazendo.",
+   "palavras": [
+    {
+     "de": 16.827,
+     "ate": 17.028,
+     "t": "sem"
+    },
+    {
+     "de": 17.028,
+     "ate": 17.269,
+     "t": "você"
+    },
+    {
+     "de": 17.269,
+     "ate": 17.55,
+     "t": "parar"
+    },
+    {
+     "de": 17.55,
+     "ate": 17.671,
+     "t": "o"
+    },
+    {
+     "de": 17.671,
+     "ate": 17.871,
+     "t": "que"
+    },
+    {
+     "de": 17.871,
+     "ate": 18.112,
+     "t": "está"
+    },
+    {
+     "de": 18.112,
+     "ate": 18.474,
+     "t": "fazendo"
+    }
+   ]
+  },
+  {
+   "de": 18.984,
+   "ate": 20.015,
+   "texto": "Chama a Movi no WhatsApp",
+   "palavras": [
+    {
+     "de": 18.984,
+     "ate": 19.224,
+     "t": "Chama"
+    },
+    {
+     "de": 19.224,
+     "ate": 19.327,
+     "t": "a"
+    },
+    {
+     "de": 19.327,
+     "ate": 19.534,
+     "t": "Movi"
+    },
+    {
+     "de": 19.534,
+     "ate": 19.671,
+     "t": "no"
+    },
+    {
+     "de": 19.671,
+     "ate": 20.015,
+     "t": "WhatsApp"
+    }
+   ]
+  },
+  {
+   "de": 20.525,
+   "ate": 21.73,
+   "texto": "e peça o seu orçamento.",
+   "palavras": [
+    {
+     "de": 20.525,
+     "ate": 20.654,
+     "t": "e"
+    },
+    {
+     "de": 20.654,
+     "ate": 20.912,
+     "t": "peça"
+    },
+    {
+     "de": 20.912,
+     "ate": 21.041,
+     "t": "o"
+    },
+    {
+     "de": 21.041,
+     "ate": 21.256,
+     "t": "seu"
+    },
+    {
+     "de": 21.256,
+     "ate": 21.73,
+     "t": "orçamento"
+    }
+   ]
+  }
+ ],
+ "cenas": [
+  {
+   "cena": "abertura",
+   "de": 0.2,
+   "ate": 1.904
+  },
+  {
+   "cena": "problema",
+   "de": 2.414,
+   "ate": 7.442
+  },
+  {
+   "cena": "solucao",
+   "de": 7.952,
+   "ate": 13.595
+  },
+  {
+   "cena": "beneficio",
+   "de": 14.105,
+   "ate": 18.474
+  },
+  {
+   "cena": "cta",
+   "de": 18.984,
+   "ate": 21.73
+  }
+ ],
+ "voz": "piper-faber"
+}

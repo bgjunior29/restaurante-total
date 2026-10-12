@@ -4,3 +4,4 @@ out/
 public/pratos/
 public/logo.*
 src/cardapio.json
+models/

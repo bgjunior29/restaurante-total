@@ -18,3 +18,39 @@ Preços, fotos, cores do tema, frete e Instagram vêm do sistema: mudou no card�
 
 Sem música (para não ter problema de direitos autorais): adicione uma do próprio Instagram/TikTok ao postar.
 Licença do Remotion: grátis para pessoas e empresas pequenas; confira https://remotion.dev/license antes de usar numa empresa maior.
+
+## Anúncio "comissão" da Movitech (1080×1920, ~16 s)
+
+```
+npm run anuncio      # gera out/anuncio-comissao.mp4
+```
+
+Gancho com a comissão do app subindo → pedidos perdendo 23% → cardápio próprio no celular (3 primeiros pratos do
+`cardapio.json`) → R$ 199/mês e chamada para o WhatsApp. Valores do exemplo e preço ficam no topo de `src/AnuncioComissao.jsx`.
+Usa os pratos e o logo do Point Arena: peça autorização ao restaurante antes de veicular.
+
+## Vídeos da Movi (avatar + voz + legenda)
+
+A Movi é a apresentadora ilustrada da Movitech (`src/movi/Movi.jsx`): pisca, balança a cabeça e mexe a boca
+conforme o volume da narração. A voz é neural (pt-BR, Thalita) via `edge-tts`, e as legendas acendem palavra por palavra.
+
+```
+python -m pip install edge-tts      # só na primeira vez
+python scripts/gerar_voz.py         # roteiros → public/voz/*.mp3 + src/voz/*.json (tempo de cada palavra)
+npx remotion render src/index.jsx MoviAnuncioNegocios out/movi-anuncio-negocios.mp4
+npx remotion render src/index.jsx MoviAnuncioRestaurantes out/movi-anuncio-restaurantes.mp4
+npx remotion render src/index.jsx MoviApresentacao out/movi-apresentacao.mp4
+```
+
+Para mudar uma fala, edite `ROTEIROS` em `scripts/gerar_voz.py`, gere a voz de novo e renderize.
+As cenas de cada vídeo ficam em `src/movi/MoviVideos.jsx` (chave = nome da cena no roteiro).
+
+### Versão motion graphics (flat)
+
+Mesma narração, visual plano: cores sólidas por cena com transição de círculo, ícones vetoriais, infográficos e a Movi plana (`src/mg/MG.jsx`).
+
+```
+npx remotion render src/index.jsx MGAnuncioNegocios out/movi-mg-anuncio-negocios.mp4
+npx remotion render src/index.jsx MGAnuncioRestaurantes out/movi-mg-anuncio-restaurantes.mp4
+npx remotion render src/index.jsx MGApresentacao out/movi-mg-apresentacao.mp4
+```
