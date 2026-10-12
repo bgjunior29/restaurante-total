@@ -46,7 +46,11 @@ jobs:
       - name: Narração
         run: |
           pip install -q edge-tts
-          if python scripts/gerar_voz.py nicho-; then
+          # Narração da Thalita já commitada (gerada no PC)? Usa ela e não gera de novo.
+          if python -c "import json,glob,sys; fs=glob.glob('src/voz/nicho-*.json'); sys.exit(0 if fs and all('voz' not in json.load(open(f,encoding='utf-8')) and not json.load(open(f,encoding='utf-8')).get('provisorio') for f in fs) else 1)"; then
+            echo "VOZ=thalita" >> "$GITHUB_ENV"
+            echo "usando a narração da Thalita que veio no commit"
+          elif python scripts/gerar_voz.py nicho-; then
             echo "VOZ=thalita" >> "$GITHUB_ENV"
           else
             echo "edge-tts recusou; usando Piper"
