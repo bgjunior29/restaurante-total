@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import Icon from "../components/Icon";
-import { Footer, Topbar } from "../components/ui";
-import { PanelPreview, whatsapp } from "./Landing";
+import { Topbar } from "../components/ui";
+import { PanelPreview, SiteFooter, whatsapp } from "./Landing";
 
-// Ajuste antes de publicar: restaurante de demonstração (o WhatsApp de vendas fica em Landing.jsx).
+// Restaurante de demonstração (o WhatsApp de vendas fica em Landing.jsx).
+// Sem preço na página: cada restaurante recebe um orçamento sob medida depois do diagnóstico.
 const DEMO = "/r/point-arena";
-const PRECO = "R$ 199";
 
 const ZAP_DEMO = whatsapp(
   "Oi! Vi a página da Movitech e quero ver o sistema funcionando no meu restaurante.",
@@ -83,7 +83,7 @@ const FEATURES = [
 ];
 
 const COMPARE = [
-  ["Custo", "% sobre cada pedido", `${PRECO}/mês fixo`],
+  ["Custo", "% sobre cada pedido", "Sem comissão por pedido"],
   ["Dados do cliente", "Ficam no aplicativo", "Ficam com você"],
   ["Marca", "A do aplicativo", "A sua"],
   ["Cupons e promoções", "Regras do aplicativo", "Você decide"],
@@ -100,6 +100,10 @@ const INCLUDED = [
 ];
 
 const FAQ = [
+  [
+    "Quanto custa?",
+    "Depende do que o seu restaurante precisa: salão, delivery, quantas telas de cozinha. A gente faz um diagnóstico gratuito e manda um orçamento sob medida, sem compromisso.",
+  ],
   [
     "Preciso de computador ou equipamento especial?",
     "Não. Funciona no navegador de qualquer celular, tablet ou computador.",
@@ -183,7 +187,7 @@ export default function Restaurantes() {
             <p className="mt-7 max-w-[600px] text-[16px] leading-[1.7] text-ink/65">
               Seu cliente pede pelo QR code da mesa ou pelo seu link de
               delivery, o pedido cai direto na cozinha e você acompanha tudo em
-              tempo real. Por {PRECO}/mês, preço fixo.
+              tempo real. Orçamento sob medida, sem compromisso.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <ZapButton />
@@ -195,7 +199,7 @@ export default function Restaurantes() {
               {[
                 "Sem aplicativo para baixar",
                 "Funciona no celular",
-                "Preço fixo",
+                "Orçamento sob medida",
               ].map((t) => (
                 <span key={t} className="flex items-center gap-1.5">
                   <Icon name="check" className="size-3.5 text-lime" /> {t}
@@ -290,8 +294,8 @@ export default function Restaurantes() {
                 <strong className="text-ink">23% de comissão</strong> deixa{" "}
                 <strong className="text-ink">R$ 4.600</strong> lá. Se só 1 em
                 cada 5 pedidos passar para o seu link próprio, a economia já é
-                de <strong className="text-lime">R$ 920 por mês</strong>: mais
-                de 4 vezes o valor da Movitech.
+                de <strong className="text-lime">R$ 920 por mês</strong> que
+                voltam para o seu caixa.
               </p>
               <p className="mt-4 max-w-[520px] text-[13px] leading-relaxed text-muted">
                 Exemplo ilustrativo. A comissão varia conforme o aplicativo e o
@@ -324,13 +328,15 @@ export default function Restaurantes() {
           </div>
         </section>
 
-        {/* Preço */}
+        {/* Orçamento */}
         <section className={`${wrap} py-16`}>
           <div className="mx-auto max-w-xl rounded-3xl border border-lime/30 bg-dark/70 p-10 text-center shadow-[0_50px_100px_-50px_color-mix(in_srgb,var(--color-lime)_45%,transparent)]">
-            <p className="eyebrow text-lime">Um preço. Tudo incluso.</p>
-            <p className="mt-6 font-serif text-[clamp(56px,8vw,88px)] leading-none">
-              {PRECO}
-              <span className="font-sans text-lg text-muted">/mês</span>
+            <p className="eyebrow text-lime">Orçamento sob medida</p>
+            <p className="mt-6 font-serif text-[clamp(40px,6vw,64px)] leading-[1.02]">
+              Só o que o seu restaurante <em className="text-lime">precisa.</em>
+            </p>
+            <p className="mx-auto mt-5 max-w-sm text-sm leading-relaxed text-ink/60">
+              Primeiro a gente olha como o seu restaurante funciona hoje. Depois você recebe a proposta, sem compromisso.
             </p>
             <ul className="mx-auto mt-8 grid max-w-sm gap-3 text-left text-sm">
               {INCLUDED.map((t) => (
@@ -340,7 +346,7 @@ export default function Restaurantes() {
                 </li>
               ))}
             </ul>
-            <ZapButton className="mt-9">Começar agora</ZapButton>
+            <ZapButton className="mt-9">Pedir meu orçamento</ZapButton>
           </div>
         </section>
 
@@ -376,7 +382,7 @@ export default function Restaurantes() {
           <ZapButton className="mt-9">Falar no WhatsApp</ZapButton>
         </section>
       </main>
-      <Footer />
+      <SiteFooter />
     </div>
   );
 }
