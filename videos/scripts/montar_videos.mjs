@@ -103,6 +103,20 @@ const VIDEOS = {
     ],
   },
 
+  'movitech-comissao': {
+    voz: 'anuncio-comissao', rotulo: 'para restaurantes',
+    cenas: [
+      { cena: 'abertura', tipo: 'pergunta', icone: 'moto', destaque: 'leva restaurante?' },
+      { cena: 'conta', tipo: 'conta', linha1: 'R$ 20 mil', linha2: '× *23%*', valor: 4600, nota: 'de comissão, todo mês' },
+      { cena: 'ano', tipo: 'comissao', destaque: 'mês. ano,', rotuloContador: 'EM UM ANO', mes: 55200, intervalo: 0.9,
+        pedidos: [['#2381', 'R$ 74,90', '− R$ 17,23'], ['#2382', 'R$ 129,00', '− R$ 29,67'], ['#2383', 'R$ 58,50', '− R$ 13,46']] },
+      { cena: 'solucao', tipo: 'celular', titulo: 'Seu <em>próprio</em> cardápio', tamTitulo: 90, tela: CARDAPIO,
+        recursos: [{ txt: 'Cardápio online', palavra: 'cardápio' }, { txt: 'Pix', palavra: 'Pix' }, { txt: 'Cupons', palavra: 'cupons' }, { txt: 'Tela da cozinha', palavra: 'tela' }] },
+      { cena: 'semcomissao', tipo: 'frase', texto: 'Preço fixo. | *Sem* *comissão.*', sub: 'Salão · Cozinha · Delivery', etiquetas: ['−23%', '−R$ 4.600', '−23%', '−R$ 55 mil'] },
+      { cena: 'cta', tipo: 'cta' },
+    ],
+  },
+
   'movitech-negocios': {
     voz: 'anuncio-negocios', rotulo: 'para empresas',
     cenas: [

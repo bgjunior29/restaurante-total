@@ -75,6 +75,7 @@
     oficina: '<path d="M14.6 3.4a5 5 0 0 0-5.9 6.4L3 15.5 5.5 18l1 2.5 2-.5 5.7-5.7a5 5 0 0 0 6.4-5.9l-3 3-3-.8-.8-3z"/>',
     contabil: '<path d="M6 2.5h8l5 5v14H6z"/><path d="M14 2.5v5h5"/><path d="M9 17v-3M12.5 17v-6M16 17v-4.5"/>',
     pet: '<path d="M12 12.5c-3 0-5.5 3.4-5.5 5.6 0 1.9 2 2.6 5.5 2.6s5.5-.7 5.5-2.6c0-2.2-2.5-5.6-5.5-5.6z"/><circle cx="5.5" cy="10" r="1.9"/><circle cx="9.3" cy="5.4" r="1.9"/><circle cx="14.7" cy="5.4" r="1.9"/><circle cx="18.5" cy="10" r="1.9"/>',
+    moto: '<circle cx="5.5" cy="17" r="3"/><circle cx="18.5" cy="17" r="3"/><path d="M8.5 17h6.5l2.5-6H13l-2 3.5H5.5"/><path d="M15.5 11 14 6.5h-2.5"/><path d="M3 8.5h6v4H3z"/>',
     lupa: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5.5 5.5"/><path d="M7.5 10.5h6"/>',
   }
   const LOGO = '<svg viewBox="0 0 48 48"><circle class="lc" cx="24" cy="24" r="23" fill="#141310" stroke="#d4b483" stroke-opacity=".5"/><path class="lm" d="M14.5 32.5v-17l9.5 11 9.5-11v17" fill="none" stroke="#d4b483" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'
@@ -222,7 +223,7 @@
     const lin = [...tel.querySelectorAll('.lin')]
     const titulo = el(`<div class="serif" style="left:80px;top:250px;width:920px;font-size:${cfg.tamTitulo || 96}px;line-height:1">${cfg.titulo || 'Com a <em>Movitech</em>:'}</div>`, box)
     const rs = cfg.recursos, ts = tempos(nome, rs)
-    const y0 = rs.length === 2 ? 940 : 880, dy = rs.length === 2 ? 260 : 205
+    const y0 = { 2: 940, 3: 880, 4: 800 }[rs.length] || 880, dy = { 2: 260, 3: 205, 4: 175 }[rs.length] || 205
     const chips = rs.map((it, i) => {
       const esq = i % 2 === 0
       const n = el(`<div class="flex" style="${esq ? 'left' : 'right'}:56px;top:${y0 + i * dy}px;height:116px;padding:0 40px 0 30px;border-radius:58px;background:#141310;border:2px solid #d4b483;box-shadow:0 30px 60px rgba(0,0,0,.5);display:flex;align-items:center;gap:22px;white-space:nowrap;font:700 44px/1 var(--sans)">
@@ -350,15 +351,15 @@
         <div style="left:34px;top:76px;font:800 50px/1 var(--sans)">Novo pedido</div>
         <div class="val" style="right:34px;top:40px;font:800 50px/1 var(--sans)">${pd[1]}</div>
         <div class="tag" style="right:30px;top:100px;padding:8px 16px;border-radius:12px;background:#e2786a;color:#141310;font:800 30px/1 var(--sans)">${pd[2]}</div></div>`, box)
-      const de = t0 + 0.35 + i * 0.75
+      const de = t0 + 0.35 + i * (cfg.intervalo || 0.75)
       som('pop', de, 0.18); som('glitch', de + 0.35, 0.1)
       return { n, val: n.querySelector('.val'), tag: n.querySelector('.tag'), de }
     })
     const cont = el(`<div style="left:90px;top:1330px;width:900px;height:150px">
-      <div style="left:0;top:0;font:600 30px/1 var(--sans);color:#9a958b;letter-spacing:.06em">COMISSÃO NO MÊS</div>
+      <div style="left:0;top:0;font:600 30px/1 var(--sans);color:#9a958b;letter-spacing:.06em">${cfg.rotuloContador || 'COMISSÃO NO MÊS'}</div>
       <div class="num" style="left:0;top:46px;font:800 92px/1 var(--sans);color:#e2786a">R$ 0</div></div>`, box)
     const num = cont.querySelector('.num')
-    const alvo = cfg.mes || 4600
+    const alvo = cfg.mes || 4600, passoNum = alvo > 20000 ? 100 : 50
     return (t) => {
       ps.forEach(({ n, de }) => revela(n, t, de, 0.32))
       cards.forEach(({ n, val, tag, de }) => {
@@ -370,7 +371,7 @@
       })
       const c = outQ(p(t, t0 + 0.5, fim(nome) - 0.2))
       css(cont, { opacity: p(t, t0 + 0.3, t0 + 0.6) })
-      num.textContent = 'R$ ' + (Math.round((c * alvo) / 50) * 50).toLocaleString('pt-BR')
+      num.textContent = 'R$ ' + (Math.round((c * alvo) / passoNum) * passoNum).toLocaleString('pt-BR')
     }
   }
 
@@ -410,6 +411,30 @@
         css(ic, { background: ok > 0.5 ? '#d4b483' : '#e2786a' })
         ic.textContent = ok > 0.5 ? '✓' : '!'
       })
+    }
+  }
+
+  // Conta: valor × porcentagem = número vermelho grande (cada linha entra numa fala da cena).
+  TIPOS.conta = (box, cfg, nome) => {
+    const fs = falas(nome), tA = fs[0].de, tB = (fs[1] || fs[0]).de
+    el(`<div class="eyebrow" style="left:0;top:330px;width:1080px;text-align:center">${cfg.titulo || 'A conta do aplicativo'}</div>`, box)
+    const l1 = el('<div class="serif" style="left:0;top:470px;width:1080px;text-align:center;font-size:150px;line-height:1"></div>', box)
+    const p1 = frase(l1, cfg.linha1)
+    const l2 = el('<div class="serif" style="left:0;top:650px;width:1080px;text-align:center;font-size:150px;line-height:1"></div>', box)
+    const p2 = frase(l2, cfg.linha2)
+    const traco = el('<div style="left:190px;top:860px;width:700px;height:4px;background:#2e2b26;transform-origin:50% 50%"></div>', box)
+    const num = el('<div style="left:0;top:920px;width:1080px;text-align:center;font:800 190px/1 var(--sans);color:#e2786a;letter-spacing:-.03em">−R$ 0</div>', box)
+    const nota = el(`<div style="left:0;top:1160px;width:1080px;text-align:center;font:600 40px/1 var(--sans);color:#9a958b">${cfg.nota || ''}</div>`, box)
+    som('glitch', tB + 1.2, 0.14)
+    return (t) => {
+      p1.forEach((n, i) => revela(n, t, tA + i * 0.1))
+      p2.forEach((n, i) => revela(n, t, tA + 0.6 + i * 0.1))
+      css(traco, { transform: `scaleX(${outQ(p(t, tB - 0.2, tB + 0.3))})` })
+      const c = outQ(p(t, tB, tB + 1.2))
+      num.textContent = '−R$ ' + (Math.round((c * cfg.valor) / 50) * 50).toLocaleString('pt-BR')
+      const tremor = p(t, tB + 1.2, tB + 1.25) * (1 - p(t, tB + 1.25, tB + 1.6))
+      css(num, { opacity: p(t, tB - 0.1, tB + 0.1), transform: `translateX(${Math.sin(t * 90) * 14 * tremor}px) scale(${1 + tremor * 0.04})` })
+      css(nota, { opacity: p(t, tB + 1.2, tB + 1.6) })
     }
   }
 

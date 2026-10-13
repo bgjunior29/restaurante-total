@@ -82,6 +82,15 @@ ROTEIROS = {
         ("semcomissao", ["Sem comissão por pedido."]),
         ("cta", ["Chama a Movi no WhatsApp", "e peça o seu orçamento."]),
     ],
+    "anuncio-comissao": [
+        ("abertura", ["Quanto o aplicativo de entrega leva do seu restaurante?"]),
+        ("conta", [("Com vinte mil reais em pedidos,", "Com R$ 20 mil em pedidos,"),
+                   ("são quatro mil e seiscentos reais de comissão por mês.", "são R$ 4.600 de comissão por mês.")]),
+        ("ano", ["Todo pedido, todo mês.", ("Em um ano, passa de cinquenta e cinco mil reais.", "Em um ano, passa de R$ 55 mil.")]),
+        ("solucao", ["Com a Movitech, você tem o seu próprio cardápio online,", "com Pix, cupons", "e tela da cozinha."]),
+        ("semcomissao", ["Preço fixo.", "Sem comissão por pedido."]),
+        ("cta", ["Chama a Movi no WhatsApp", "e peça o seu orçamento."]),
+    ],
     "apresentacao": [
         ("abertura", ["Oi! Eu sou a Movi,", "e vou te apresentar a Movitech, de Barueri.",
                       "A gente cria sistemas, sites e aplicativos", "que fazem o seu negócio vender mais", "e trabalhar menos."]),
