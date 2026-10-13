@@ -35,6 +35,8 @@ def mixar(faixas, duracao):
     for f in faixas:
         s = carregar_audio(f["src"]) * f.get("vol", 1)
         ini = int(f.get("at", 0) * SR)
+        if f.get("loop") and len(s) and ini + len(s) < n:  # trilha mais curta que o vídeo: repete
+            s = np.tile(s, ((n - ini) // len(s) + 1, 1))
         if "ate" in f:
             s = s[: max(0, int(f["ate"] * SR) - ini)].copy()
             fade = int(f.get("fade", 0) * SR)
