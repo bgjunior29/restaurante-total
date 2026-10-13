@@ -1,0 +1,26 @@
+@font-face { font-family: 'Instrument Serif'; font-style: normal; src: url(fonts/InstrumentSerif-Regular.woff2) format('woff2'); }
+@font-face { font-family: 'Instrument Serif'; font-style: italic; src: url(fonts/InstrumentSerif-Italic.woff2) format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 400 800; src: url(fonts/Inter.woff2) format('woff2'); }
+
+:root {
+  --bg: #0f0e0c; --bg2: #171613; --panel: #1f1d19; --line: #2e2b26;
+  --ink: #f2efe8; --muted: #9a958b; --gold: #d4b483; --gold2: #8a7350;
+  --cream: #f5f1ea; --paper: #ece8df; --loss: #e2786a; --zap: #25d366;
+  --serif: 'Instrument Serif', 'Times New Roman', serif;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
+#palco {
+  position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden;
+  background: var(--bg); color: var(--ink); font-family: var(--sans); transform-origin: 0 0;
+}
+#palco * { position: absolute; }
+#palco span, #palco b, #palco i, #palco em { position: relative; }
+.serif { font-family: var(--serif); font-weight: 400; letter-spacing: -0.01em; }
+.eyebrow { font: 600 30px/1 var(--sans); letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+.mask { overflow: hidden; display: inline-block; vertical-align: top; padding: 0 .04em .12em; margin-bottom: -.12em; }
+.mask > span { display: inline-block; }
+em { font-style: italic; color: var(--gold); }
+svg { overflow: visible; }
+#palco .flex > *, #palco .flex svg { position: relative; flex: none; }
