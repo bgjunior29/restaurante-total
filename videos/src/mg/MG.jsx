@@ -14,7 +14,7 @@ export const { fontFamily: font } = loadBricolage('normal', { weights: ['500', '
 
 export const P = { ink: '#15132b', cream: '#fff6e5', gold: '#ffc145', goldDark: '#e9a21f', coral: '#ff5a5f', teal: '#2ec4b6', violet: '#6c5ce7', mint: '#7ff0c8', white: '#ffffff', zap: '#25d366' }
 export const WHATS = '(11) 96445-2878'
-export const SITE = 'movitechsistemas.com.br'
+export const SITE = 'frontrestaurantetotal.vercel.app'
 export const FPS = 30
 export const EASE = Easing.bezier(0.65, 0, 0.35, 1)
 export const clamp = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }

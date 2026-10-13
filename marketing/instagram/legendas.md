@@ -5,8 +5,8 @@ As imagens prontas estão em `png/`, uma pasta por post e lâminas na ordem (`01
 
 Para mudar um texto: edite `posts.html` (abra no navegador para ver todos os posts) e rode `bash exportar.sh` nesta pasta.
 
-> ⚠️ **Antes de postar:** confira se o site **movitechsistemas.com.br** está abrindo. Ele não respondeu no teste de 12/10/2026.
-> Se ainda não estiver no ar, troque `SITE` em `posts.html` por `frontrestaurantetotal.vercel.app/restaurantes` e exporte de novo.
+> O site nos posts é **frontrestaurantetotal.vercel.app** (o domínio movitechsistemas.com.br ainda não foi contratado).
+> Quando contratar, troque `SITE` em `posts.html` e rode `bash exportar.sh`.
 > As histórias da Márcia, do Rafael, do Seu Antônio e da Juliana são **situações ilustrativas**, e as lâminas já dizem isso. Não apresente como cliente real.
 
 ## Ordem sugerida (2 a 3 posts por semana)

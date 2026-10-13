@@ -22,7 +22,7 @@ const C = {
   gold: '#f0c46b', amber: '#e2a74a', coral: '#ff6f61', mint: '#7ff0c8', violet: '#8b6cff', zap: '#25d366',
 }
 const WHATS = '(11) 96445-2878'
-const SITE = 'movitechsistemas.com.br'
+const SITE = 'frontrestaurantetotal.vercel.app'
 const FPS = 30
 
 export const VOZES = { apresentacao: vozApresentacao, negocios: vozNegocios, restaurantes: vozRestaurantes }
