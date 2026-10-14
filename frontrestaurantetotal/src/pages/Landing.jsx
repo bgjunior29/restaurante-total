@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
 import { LogoMark } from "../components/ui";
 import { slugify } from "../lib/format";
+import { useLandingFx } from "../lib/landingFx";
 
 // Número de vendas (DDI + DDD + número, só dígitos).
 export const WHATSAPP_VENDAS = "5511964452878";
@@ -106,9 +107,9 @@ const FAQ = [
   ["Posso continuar nos aplicativos de delivery?", "Pode. O ideal é usar o aplicativo para ser descoberto e o seu link próprio, sem comissão, para quem já é seu cliente."],
 ];
 
-function Eyebrow({ children, className = "text-lime" }) {
+function Eyebrow({ children, className = "text-lime", ...rest }) {
   return (
-    <p className={`eyebrow flex items-center gap-3 ${className}`}>
+    <p {...rest} className={`eyebrow flex items-center gap-3 ${className}`}>
       <span className="h-px w-8 bg-current opacity-60" />
       {children}
     </p>
@@ -379,46 +380,95 @@ function KitchenPreview() {
 }
 
 /** Página inicial da Movitech: quem somos, as três frentes, o sistema para restaurantes, como trabalhamos e contato. */
-export default function Landing() {
+/** "Já é cliente?": fica num componente próprio para que digitar não renderize a página toda de novo. */
+function SlugForm() {
   const navigate = useNavigate();
   const [slug, setSlug] = useState("");
+  return (
+    <form
+      className="rounded-2xl border border-line bg-green/70 p-6"
+      onSubmit={(e) => {
+        e.preventDefault();
+        const s = slugify(slug);
+        if (s) navigate(`/r/${s}`);
+      }}
+    >
+      <label className="text-sm font-medium" htmlFor="slug">
+        Já é cliente? Abra o seu restaurante
+      </label>
+      <div className="mt-3 flex gap-2">
+        <div className="flex min-w-0 flex-1 items-center rounded-lg border border-line bg-white/[0.03] pl-4 transition focus-within:border-lime/60 focus-within:ring-4 focus-within:ring-lime/10">
+          <span className="text-sm text-muted">/r/</span>
+          <input
+            id="slug"
+            className="min-w-0 flex-1 bg-transparent px-1 py-3 text-ink outline-none placeholder:text-muted/50"
+            placeholder="nome-do-restaurante"
+            autoCapitalize="none"
+            value={slug}
+            onChange={(e) => setSlug(e.target.value)}
+          />
+        </div>
+        <button className="btn-outline px-5">Abrir</button>
+      </div>
+    </form>
+  );
+}
+
+export default function Landing() {
+  const rootRef = useRef(null);
+  const canvasRef = useRef(null);
+  const cursorRef = useRef(null);
+  const dotRef = useRef(null);
+  const progressRef = useRef(null);
+  const has3D = useLandingFx({ rootRef, canvasRef, cursorRef, dotRef, progressRef });
 
   useEffect(() => {
     document.title = "Movitech Sistemas · Sistemas, sites e apps para o seu negócio";
   }, []);
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div ref={rootRef} className="landing-3d flex min-h-screen flex-col">
+      {/* Cena 3D fixa atrás da página, barra de progresso, cursor e granulado */}
+      {has3D && <canvas ref={canvasRef} aria-hidden className="pointer-events-none fixed inset-0 z-0 h-full w-full opacity-0" />}
+      <div aria-hidden className="landing-grain" />
+      <div ref={progressRef} aria-hidden className="fixed top-0 left-0 z-50 h-0.5 w-full origin-left scale-x-0 bg-lime" />
+      <div ref={cursorRef} aria-hidden className="landing-cursor" />
+      <div ref={dotRef} aria-hidden className="landing-cursor-dot" />
+
       <SiteHeader />
 
-      <main className="flex-1 overflow-x-clip">
+      <main className="relative z-[1] flex-1 overflow-x-clip">
         {/* Capa */}
         <section className="relative">
-          <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_75%_10%,color-mix(in_srgb,var(--color-lime)_14%,transparent),transparent_70%)]" />
+          {!has3D && (
+            <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_75%_10%,color-mix(in_srgb,var(--color-lime)_14%,transparent),transparent_70%)]" />
+          )}
           <div
             aria-hidden
             className="absolute inset-0 opacity-[.05] [background-image:linear-gradient(var(--color-ink)_1px,transparent_1px),linear-gradient(90deg,var(--color-ink)_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]"
           />
           <div className={`${wrap} relative grid items-center gap-16 pt-16 pb-24 lg:min-h-[min(calc(100svh-76px),860px)] lg:grid-cols-[1.1fr_.9fr] lg:pt-10`}>
             <div>
-              <Eyebrow>Movitech Sistemas · Barueri</Eyebrow>
-              <h1 className="mt-7 font-serif text-[clamp(48px,7vw,108px)] leading-[.93]">
+              {/* No celular o logo 3D aparece em cima do título */}
+              {has3D && <div aria-hidden className="h-[34svh] lg:hidden" />}
+              <Eyebrow data-hero-in>Movitech Sistemas · Barueri</Eyebrow>
+              <h1 data-split="hero" className="mt-7 font-serif text-[clamp(48px,7vw,108px)] leading-[.93]">
                 Tecnologia que move o seu negócio.{" "}
                 <em className="text-lime">Feita aqui do lado.</em>
               </h1>
-              <p className="mt-8 max-w-[560px] text-[17px] leading-[1.7] text-ink/65">
+              <p data-hero-in className="mt-8 max-w-[560px] text-[17px] leading-[1.7] text-ink/65">
                 Sistemas, sites e apps para negócios locais venderem mais e trabalharem menos. Começamos pelo que mais pesa:
                 restaurantes, com salão, cozinha e delivery numa operação só, sem comissão por pedido.
               </p>
-              <div className="mt-10 flex flex-wrap gap-3">
-                <a href={ZAP_DIAGNOSTICO} target="_blank" rel="noreferrer" className="btn-lime inline-flex items-center gap-2 px-6 py-3.5">
+              <div data-hero-in className="mt-10 flex flex-wrap gap-3">
+                <a data-magnetic href={ZAP_DIAGNOSTICO} target="_blank" rel="noreferrer" className="btn-lime inline-flex items-center gap-2 px-6 py-3.5">
                   Quero o diagnóstico gratuito <Icon name="arrow" className="size-4" />
                 </a>
-                <Link to="/restaurantes" className="btn-outline inline-flex items-center px-6 py-3.5">
+                <Link data-magnetic to="/restaurantes" className="btn-outline inline-flex items-center px-6 py-3.5 backdrop-blur">
                   Sistema para restaurantes
                 </Link>
               </div>
-              <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-[13px] text-muted">
+              <ul data-hero-in className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-[13px] text-muted">
                 {["Sem aplicativo para baixar", "Com a sua marca", "Suporte direto no WhatsApp"].map((t) => (
                   <li key={t} className="flex items-center gap-2">
                     <Icon name="check" className="size-4 text-lime" /> {t}
@@ -426,17 +476,21 @@ export default function Landing() {
                 ))}
               </ul>
             </div>
-            <div className="relative mx-auto w-full max-w-[520px] pb-10 lg:pb-0">
-              <PanelPreview className="mr-auto w-[84%]" />
-              <PhonePreview className="absolute -right-2 -bottom-10 hidden rotate-[4deg] sm:block lg:-right-10" />
-            </div>
+            {has3D ? (
+              <div aria-hidden className="hidden lg:block" />
+            ) : (
+              <div className="relative mx-auto w-full max-w-[520px] pb-10 lg:pb-0">
+                <PanelPreview className="mr-auto w-[84%]" />
+                <PhonePreview className="absolute -right-2 -bottom-10 hidden rotate-[4deg] sm:block lg:-right-10" />
+              </div>
+            )}
           </div>
         </section>
 
         {/* Para quem */}
-        <section aria-label="Para quem fazemos" className="border-y border-line/60 bg-dark/40 py-6">
+        <section aria-label="Para quem fazemos" className="border-y border-line/60 bg-dark/40 py-6 backdrop-blur-sm">
           <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
-            <ul aria-hidden className="flex w-max animate-[marquee_40s_linear_infinite] items-center gap-10">
+            <ul aria-hidden data-marquee className="flex w-max items-center gap-10">
               {[...SEGMENTOS, ...SEGMENTOS].map((s, i) => (
                 <li key={i} className="flex items-center gap-10 font-serif text-2xl whitespace-nowrap text-ink/45">
                   {s} <span className="size-1.5 rounded-full bg-lime/50" />
@@ -448,16 +502,17 @@ export default function Landing() {
         </section>
 
         {/* Soluções */}
-        <section id="solucoes" className={`${wrap} scroll-mt-24 py-24`}>
+        <section id="solucoes" data-scene="solucoes" className={`${wrap} scroll-mt-24 py-24`}>
           <Eyebrow>Soluções</Eyebrow>
-          <h2 className={h2}>
+          <h2 data-split className={h2}>
             Três frentes para o seu negócio <em className="text-lime">crescer na internet.</em>
           </h2>
-          <div className="mt-14 grid gap-4 lg:grid-cols-3">
+          <div data-stagger className="mt-14 grid gap-4 [perspective:1200px] lg:grid-cols-3">
             {SOLUCOES.map((s, i) => (
               <article
                 key={s.tag}
-                className={`flex flex-col rounded-3xl border p-8 transition ${i === 0 ? "border-lime/35 bg-gradient-to-b from-lime/[0.07] to-transparent" : "border-line bg-dark/50 hover:border-ink/20"}`}
+                data-tilt
+                className={`fx-glare relative flex flex-col rounded-3xl border p-8 backdrop-blur-md transition-[border-color] ${i === 0 ? "border-lime/35 bg-gradient-to-b from-lime/[0.09] to-dark/60" : "border-line bg-dark/60 hover:border-ink/20"}`}
               >
                 <div className="flex items-center justify-between">
                   <span className="flex size-11 items-center justify-center rounded-full border border-lime/30 text-lime">
@@ -490,11 +545,11 @@ export default function Landing() {
         </section>
 
         {/* Sistema para restaurantes */}
-        <section className="border-y border-line/60 bg-dark/30">
+        <section data-scene="restaurantes" className="border-y border-line/60 bg-dark/30">
           <div className={`${wrap} grid gap-16 py-24 lg:grid-cols-[.9fr_1.1fr] lg:items-center`}>
             <div>
               <Eyebrow>Movitech Restaurantes</Eyebrow>
-              <h2 className={h2}>
+              <h2 data-split className={h2}>
                 Do QR da mesa <em className="text-lime">à conta fechada.</em>
               </h2>
               <p className="mt-6 max-w-[520px] text-[16px] leading-[1.7] text-ink/65">
@@ -510,12 +565,14 @@ export default function Landing() {
                 </Link>
               </div>
             </div>
-            <KitchenPreview />
+            <div data-reveal>
+              <KitchenPreview />
+            </div>
           </div>
           <div className={`${wrap} pb-24`}>
-            <ul className="grid gap-px overflow-hidden rounded-3xl border border-line bg-line/70 sm:grid-cols-2 lg:grid-cols-3">
+            <ul data-stagger className="grid gap-px overflow-hidden rounded-3xl border border-line bg-line/70 sm:grid-cols-2 lg:grid-cols-3">
               {RESTAURANTE.map(([icon, title, text]) => (
-                <li key={title} className="bg-green p-8 transition hover:bg-dark">
+                <li key={title} data-glow className="fx-glow relative bg-green/90 p-8 backdrop-blur transition-colors hover:bg-dark/90">
                   <Icon name={icon} className="size-5 text-lime" />
                   <p className="mt-5 font-serif text-2xl">{title}</p>
                   <p className="mt-2 text-sm leading-relaxed text-ink/60">{text}</p>
@@ -526,10 +583,10 @@ export default function Landing() {
         </section>
 
         {/* Diagnóstico gratuito */}
-        <section id="diagnostico" className={`${wrap} grid scroll-mt-24 gap-16 py-24 lg:grid-cols-2 lg:items-center`}>
+        <section id="diagnostico" data-scene="diagnostico" className={`${wrap} grid scroll-mt-24 gap-16 py-24 lg:grid-cols-2 lg:items-center`}>
           <div>
             <Eyebrow>Diagnóstico gratuito</Eyebrow>
-            <h2 className={h2}>
+            <h2 data-split className={h2}>
               A gente mostra onde o seu negócio <em className="text-lime">perde cliente.</em>
             </h2>
             <p className="mt-6 max-w-[520px] text-[16px] leading-[1.7] text-ink/65">
@@ -540,9 +597,9 @@ export default function Landing() {
               <Icon name="chat" className="size-4" /> Pedir meu diagnóstico
             </a>
           </div>
-          <div className="relative">
+          <div data-reveal className="relative">
             <div aria-hidden className="absolute -inset-8 bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--color-lime)_12%,transparent),transparent)]" />
-            <div className="relative rounded-3xl border border-line bg-dark/80 p-7 shadow-[0_50px_100px_-40px_rgba(0,0,0,.9)] sm:p-9">
+            <div className="relative rounded-3xl border border-line bg-dark/70 p-7 backdrop-blur-md shadow-[0_50px_100px_-40px_rgba(0,0,0,.9)] sm:p-9">
               <div className="flex items-center justify-between">
                 <p className="font-serif text-2xl">Diagnóstico</p>
                 <span className="text-[11px] text-muted">exemplo</span>
@@ -566,15 +623,15 @@ export default function Landing() {
         </section>
 
         {/* Como trabalhamos */}
-        <section id="como-trabalhamos" className="scroll-mt-24 border-y border-line/60 bg-dark/30">
+        <section id="como-trabalhamos" data-scene="como" className="scroll-mt-24 border-y border-line/60 bg-dark/30">
           <div className={`${wrap} py-24`}>
             <Eyebrow>Como trabalhamos</Eyebrow>
-            <h2 className={h2}>
+            <h2 data-split className={h2}>
               Do primeiro contato <em className="text-lime">ao sistema no ar.</em>
             </h2>
-            <ol className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <ol data-stagger className="mt-14 grid gap-4 [perspective:1200px] md:grid-cols-2 lg:grid-cols-4">
               {PASSOS.map(([title, text], i) => (
-                <li key={title} className="relative rounded-3xl border border-line bg-green p-8">
+                <li key={title} data-tilt className="fx-glare relative rounded-3xl border border-line bg-green/70 p-8 backdrop-blur-md">
                   <span className="font-serif text-6xl text-lime italic">{String(i + 1).padStart(2, "0")}</span>
                   <p className="mt-6 font-serif text-2xl">{title}</p>
                   <p className="mt-3 text-sm leading-relaxed text-ink/60">{text}</p>
@@ -585,20 +642,20 @@ export default function Landing() {
         </section>
 
         {/* Segurança */}
-        <section className={`${wrap} py-24`}>
+        <section data-scene="seguranca" className={`${wrap} py-24`}>
           <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr] lg:items-start">
             <div>
               <Eyebrow>Segurança</Eyebrow>
-              <h2 className={h2}>
+              <h2 data-split className={h2}>
                 Seus dados <em className="text-lime">são seus.</em>
               </h2>
               <p className="mt-6 max-w-md text-[16px] leading-[1.7] text-ink/65">
                 Os seus clientes, pedidos e números ficam com você, protegidos e com cópia de segurança todos os dias.
               </p>
             </div>
-            <ul className="grid gap-4 sm:grid-cols-2">
+            <ul data-stagger className="grid gap-4 sm:grid-cols-2">
               {SEGURANCA.map(([icon, title, text]) => (
-                <li key={title} className="rounded-2xl border border-line bg-dark/50 p-6">
+                <li key={title} data-glow className="fx-glow relative rounded-2xl border border-line bg-dark/60 p-6 backdrop-blur-md">
                   <Icon name={icon} className="size-5 text-lime" />
                   <p className="mt-4 font-medium">{title}</p>
                   <p className="mt-1.5 text-sm leading-relaxed text-ink/60">{text}</p>
@@ -613,7 +670,7 @@ export default function Landing() {
           <div className={`${wrap} grid gap-14 py-24 lg:grid-cols-[1.1fr_.9fr] lg:items-center`}>
             <div>
               <Eyebrow className="text-olive">Sobre a Movitech</Eyebrow>
-              <h2 className={h2}>
+              <h2 data-split className={h2}>
                 De perto, <em className="text-olive">para quem está perto.</em>
               </h2>
               <div className="mt-7 max-w-[580px] space-y-4 text-[16px] leading-[1.75] text-[#5b554b]">
@@ -644,10 +701,10 @@ export default function Landing() {
         </section>
 
         {/* Perguntas */}
-        <section id="perguntas" className={`${wrap} grid scroll-mt-24 gap-12 py-24 lg:grid-cols-[.8fr_1.2fr]`}>
+        <section id="perguntas" data-scene="perguntas" className={`${wrap} grid scroll-mt-24 gap-12 py-24 lg:grid-cols-[.8fr_1.2fr]`}>
           <div>
             <Eyebrow>Perguntas frequentes</Eyebrow>
-            <h2 className={h2}>
+            <h2 data-split className={h2}>
               Antes de <em className="text-lime">conversar.</em>
             </h2>
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-ink/60">Não achou o que procurava? Pergunte direto no WhatsApp.</p>
@@ -666,53 +723,30 @@ export default function Landing() {
         </section>
 
         {/* Chamada final */}
-        <section className={`${wrap} pb-24`}>
-          <div className="relative overflow-hidden rounded-[32px] border border-line bg-dark px-8 py-16 sm:px-16 sm:py-20">
+        <section data-scene="final" className={`${wrap} pb-24`}>
+          <div data-reveal className="relative overflow-hidden rounded-[32px] border border-line bg-dark/70 px-8 backdrop-blur-md py-16 sm:px-16 sm:py-20">
             <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,color-mix(in_srgb,var(--color-lime)_20%,transparent),transparent_60%)]" />
             <div className="relative grid gap-12 lg:grid-cols-[1.2fr_.8fr] lg:items-end">
               <div>
-                <h2 className="max-w-2xl font-serif text-[clamp(38px,5vw,72px)] leading-[1]">
+                <h2 data-split className="max-w-2xl font-serif text-[clamp(38px,5vw,72px)] leading-[1]">
                   Vamos colocar o seu negócio <em className="text-lime">para mover?</em>
                 </h2>
                 <p className="mt-6 max-w-lg text-[16px] leading-[1.7] text-ink/65">
                   Conte o que você precisa. A gente responde pelo WhatsApp, faz o diagnóstico e te manda um orçamento sob medida.
                 </p>
-                <a href={ZAP} target="_blank" rel="noreferrer" className="btn-lime mt-9 inline-flex items-center gap-2 px-6 py-3.5">
+                <a data-magnetic href={ZAP} target="_blank" rel="noreferrer" className="btn-lime mt-9 inline-flex items-center gap-2 px-6 py-3.5">
                   <Icon name="chat" className="size-4" /> Iniciar conversa
                 </a>
               </div>
-              <form
-                className="rounded-2xl border border-line bg-green/70 p-6"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const s = slugify(slug);
-                  if (s) navigate(`/r/${s}`);
-                }}
-              >
-                <label className="text-sm font-medium" htmlFor="slug">
-                  Já é cliente? Abra o seu restaurante
-                </label>
-                <div className="mt-3 flex gap-2">
-                  <div className="flex min-w-0 flex-1 items-center rounded-lg border border-line bg-white/[0.03] pl-4 transition focus-within:border-lime/60 focus-within:ring-4 focus-within:ring-lime/10">
-                    <span className="text-sm text-muted">/r/</span>
-                    <input
-                      id="slug"
-                      className="min-w-0 flex-1 bg-transparent px-1 py-3 text-ink outline-none placeholder:text-muted/50"
-                      placeholder="nome-do-restaurante"
-                      autoCapitalize="none"
-                      value={slug}
-                      onChange={(e) => setSlug(e.target.value)}
-                    />
-                  </div>
-                  <button className="btn-outline px-5">Abrir</button>
-                </div>
-              </form>
+              <SlugForm />
             </div>
           </div>
         </section>
       </main>
 
-      <SiteFooter />
+      <div className="relative z-[1]">
+        <SiteFooter />
+      </div>
 
       {/* WhatsApp sempre à mão no celular */}
       <a
