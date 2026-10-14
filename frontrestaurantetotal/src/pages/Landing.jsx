@@ -386,7 +386,7 @@ function SlugForm() {
   const [slug, setSlug] = useState("");
   return (
     <form
-      className="rounded-2xl border border-line bg-green/70 p-6"
+      className="rounded-2xl border border-line bg-green/70 p-4 sm:p-6"
       onSubmit={(e) => {
         e.preventDefault();
         const s = slugify(slug);
@@ -734,9 +734,9 @@ export default function Landing() {
 
         {/* Chamada final */}
         <section data-scene="final" className={`${wrap} pb-24`}>
-          <div data-reveal className="relative overflow-hidden rounded-[32px] border border-line bg-dark/35 px-8 py-16 sm:px-16 sm:py-20">
+          <div data-reveal className="relative overflow-hidden rounded-[32px] border border-line bg-dark/35 px-5 py-14 sm:px-16 sm:py-20">
             <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,color-mix(in_srgb,var(--color-lime)_20%,transparent),transparent_60%)]" />
-            <div className="relative grid gap-12 lg:grid-cols-[1.2fr_.8fr] lg:items-end">
+            <div className="relative grid grid-cols-1 gap-12 lg:grid-cols-[1.2fr_.8fr] lg:items-end">
               <div>
                 <h2 data-split className="max-w-2xl font-serif text-[clamp(38px,5vw,72px)] leading-[1]">
                   Vamos colocar o seu negócio <em className="text-lime">para mover?</em>
@@ -757,7 +757,8 @@ export default function Landing() {
         </section>
       </main>
 
-      <div className="relative z-[1]">
+      {/* No celular sobra espaço no fim para o botão flutuante do WhatsApp não cobrir os links do rodapé. */}
+      <div className="relative z-[1] bg-green pb-20 sm:pb-0">
         <SiteFooter />
       </div>
 
