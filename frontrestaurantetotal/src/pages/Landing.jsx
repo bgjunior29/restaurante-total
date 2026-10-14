@@ -16,7 +16,7 @@ const ZAP_DIAGNOSTICO = whatsapp(
 const DEMO = "/r/point-arena"; // cardápio de um restaurante que já usa o sistema
 
 const wrap = "mx-auto w-full max-w-[1280px] px-[clamp(16px,5.7vw,96px)]";
-const h2 = "mt-5 max-w-3xl font-serif text-[clamp(36px,4.4vw,60px)] leading-[1.02]";
+const h2 = "mt-5 max-w-3xl font-serif text-balance text-[clamp(36px,4.4vw,60px)] leading-[1.02]";
 
 const NAV = [
   ["#solucoes", "Soluções"],
@@ -439,7 +439,7 @@ export default function Landing() {
 
       <main className="relative z-[1] flex-1 overflow-x-clip">
         {/* Capa */}
-        <section className="relative">
+        <section data-scene="hero" className="relative">
           {!has3D && (
             <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_75%_10%,color-mix(in_srgb,var(--color-lime)_14%,transparent),transparent_70%)]" />
           )}
@@ -450,9 +450,9 @@ export default function Landing() {
           <div className={`${wrap} relative grid items-center gap-16 pt-16 pb-24 lg:min-h-[min(calc(100svh-76px),860px)] lg:grid-cols-[1.1fr_.9fr] lg:pt-10`}>
             <div>
               {/* No celular o logo 3D aparece em cima do título */}
-              {has3D && <div aria-hidden className="h-[34svh] lg:hidden" />}
+              {has3D && <div aria-hidden data-anchor className="pointer-events-none mx-auto mb-8 h-[32svh] max-w-[280px] lg:hidden" />}
               <Eyebrow data-hero-in>Movitech Sistemas · Barueri</Eyebrow>
-              <h1 data-split="hero" className="mt-7 font-serif text-[clamp(48px,7vw,108px)] leading-[.93]">
+              <h1 data-split="hero" className="mt-7 font-serif text-balance text-[clamp(48px,7vw,108px)] leading-[.93]">
                 Tecnologia que move o seu negócio.{" "}
                 <em className="text-lime">Feita aqui do lado.</em>
               </h1>
@@ -477,7 +477,7 @@ export default function Landing() {
               </ul>
             </div>
             {has3D ? (
-              <div aria-hidden className="hidden lg:block" />
+              <div aria-hidden data-anchor className="pointer-events-none mx-auto hidden aspect-square w-[86%] lg:block" />
             ) : (
               <div className="relative mx-auto w-full max-w-[520px] pb-10 lg:pb-0">
                 <PanelPreview className="mr-auto w-[84%]" />
@@ -502,7 +502,8 @@ export default function Landing() {
         </section>
 
         {/* Soluções */}
-        <section id="solucoes" data-scene="solucoes" className={`${wrap} scroll-mt-24 py-24`}>
+        <section id="solucoes" data-scene="solucoes" className={`${wrap} relative scroll-mt-24 py-24`}>
+          {has3D && <div aria-hidden data-anchor data-z="-1" className="pointer-events-none absolute top-20 right-[clamp(16px,5.7vw,96px)] hidden size-[220px] lg:block" />}
           <Eyebrow>Soluções</Eyebrow>
           <h2 data-split className={h2}>
             Três frentes para o seu negócio <em className="text-lime">crescer na internet.</em>
@@ -565,8 +566,11 @@ export default function Landing() {
                 </Link>
               </div>
             </div>
-            <div data-reveal>
-              <KitchenPreview />
+            <div data-reveal className="relative">
+              {has3D && <div aria-hidden data-anchor data-z="-1" className="pointer-events-none absolute top-1/2 left-1/2 aspect-square w-[64%] -translate-x-1/2 -translate-y-1/2" />}
+              <div className="relative">
+                <KitchenPreview />
+              </div>
             </div>
           </div>
           <div className={`${wrap} pb-24`}>
@@ -598,6 +602,7 @@ export default function Landing() {
             </a>
           </div>
           <div data-reveal className="relative">
+            {has3D && <div aria-hidden data-anchor data-z="-1" data-burst="1" className="pointer-events-none absolute top-1/2 left-1/2 aspect-square w-[92%] -translate-x-1/2 -translate-y-1/2" />}
             <div aria-hidden className="absolute -inset-8 bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--color-lime)_12%,transparent),transparent)]" />
             <div className="relative rounded-3xl border border-line bg-dark/70 p-7 backdrop-blur-md shadow-[0_50px_100px_-40px_rgba(0,0,0,.9)] sm:p-9">
               <div className="flex items-center justify-between">
@@ -629,15 +634,18 @@ export default function Landing() {
             <h2 data-split className={h2}>
               Do primeiro contato <em className="text-lime">ao sistema no ar.</em>
             </h2>
-            <ol data-stagger className="mt-14 grid gap-4 [perspective:1200px] md:grid-cols-2 lg:grid-cols-4">
-              {PASSOS.map(([title, text], i) => (
-                <li key={title} data-tilt className="fx-glare relative rounded-3xl border border-line bg-green/70 p-8 backdrop-blur-md">
-                  <span className="font-serif text-6xl text-lime italic">{String(i + 1).padStart(2, "0")}</span>
-                  <p className="mt-6 font-serif text-2xl">{title}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-ink/60">{text}</p>
-                </li>
-              ))}
-            </ol>
+            <div className="relative mt-14">
+              {has3D && <div aria-hidden data-anchor data-z="-2" className="pointer-events-none absolute top-1/2 left-1/2 hidden aspect-square w-[34%] -translate-x-1/2 -translate-y-1/2 lg:block" />}
+              <ol data-stagger className="relative grid gap-4 [perspective:1200px] md:grid-cols-2 lg:grid-cols-4">
+                {PASSOS.map(([title, text], i) => (
+                  <li key={title} data-tilt className="fx-glare relative rounded-3xl border border-line bg-green/70 p-8 backdrop-blur-md">
+                    <span className="font-serif text-6xl text-lime italic">{String(i + 1).padStart(2, "0")}</span>
+                    <p className="mt-6 font-serif text-2xl">{title}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-ink/60">{text}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
         </section>
 
@@ -652,6 +660,7 @@ export default function Landing() {
               <p className="mt-6 max-w-md text-[16px] leading-[1.7] text-ink/65">
                 Os seus clientes, pedidos e números ficam com você, protegidos e com cópia de segurança todos os dias.
               </p>
+              {has3D && <div aria-hidden data-anchor className="pointer-events-none mt-12 hidden aspect-square w-[44%] lg:block" />}
             </div>
             <ul data-stagger className="grid gap-4 sm:grid-cols-2">
               {SEGURANCA.map(([icon, title, text]) => (
@@ -708,6 +717,7 @@ export default function Landing() {
               Antes de <em className="text-lime">conversar.</em>
             </h2>
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-ink/60">Não achou o que procurava? Pergunte direto no WhatsApp.</p>
+            {has3D && <div aria-hidden data-anchor className="pointer-events-none mt-14 hidden aspect-square w-[44%] lg:block" />}
           </div>
           <div className="divide-y divide-line border-y border-line">
             {FAQ.map(([q, a]) => (
@@ -724,7 +734,7 @@ export default function Landing() {
 
         {/* Chamada final */}
         <section data-scene="final" className={`${wrap} pb-24`}>
-          <div data-reveal className="relative overflow-hidden rounded-[32px] border border-line bg-dark/70 px-8 backdrop-blur-md py-16 sm:px-16 sm:py-20">
+          <div data-reveal className="relative overflow-hidden rounded-[32px] border border-line bg-dark/35 px-8 py-16 sm:px-16 sm:py-20">
             <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,color-mix(in_srgb,var(--color-lime)_20%,transparent),transparent_60%)]" />
             <div className="relative grid gap-12 lg:grid-cols-[1.2fr_.8fr] lg:items-end">
               <div>
@@ -738,7 +748,10 @@ export default function Landing() {
                   <Icon name="chat" className="size-4" /> Iniciar conversa
                 </a>
               </div>
-              <SlugForm />
+              <div>
+                {has3D && <div aria-hidden data-anchor className="pointer-events-none mx-auto mb-10 hidden aspect-square w-[62%] lg:block" />}
+                <SlugForm />
+              </div>
             </div>
           </div>
         </section>

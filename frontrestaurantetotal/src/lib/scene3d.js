@@ -8,9 +8,13 @@ import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 
+// Raio externo do anel do logo, em unidades da cena: é o que `place` encaixa no diâmetro pedido.
+const LOGO_R = 3.17;
+const CAM_Z = 10;
+
 /**
- * Monta a cena no canvas. `state` é lido a cada quadro (posição, giro, escala, dispersão da poeira),
- * então o GSAP pode animá-lo pelo scroll. Retorna `render(t)` para o ticker e `destroy()`.
+ * Monta a cena no canvas. `state` é lido a cada quadro (posição, giro, escala, aparição, dispersão da poeira).
+ * Retorna `render(t)` para o ticker, `place()` para converter uma área da página em posição 3D e `destroy()`.
  */
 export function createScene(canvas, state, { mobile }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
@@ -26,7 +30,7 @@ export function createScene(canvas, state, { mobile }) {
   scene.environment = envTex;
 
   const camera = new THREE.PerspectiveCamera(mobile ? 50 : 38, innerWidth / innerHeight, 0.1, 100);
-  camera.position.set(0, 0, 10);
+  camera.position.set(0, 0, CAM_Z);
 
   const gold = new THREE.MeshPhysicalMaterial({ color: 0xd4b483, metalness: 1, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.15, envMapIntensity: 1.4 });
   const glass = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.08, transmission: 1, thickness: 0.6, ior: 1.45, envMapIntensity: 1.2, transparent: true });
@@ -61,7 +65,7 @@ export function createScene(canvas, state, { mobile }) {
   const orbits = new THREE.Group();
   hero.add(orbits);
   const lineMat = new THREE.MeshBasicMaterial({ color: 0xd4b483, transparent: true, opacity: 0.35 });
-  [[4.1, 1.2, 0.3], [4.8, -0.5, 1.1], [5.6, 0.7, -0.6]].forEach(([r, a, b]) => {
+  [[3.7, 1.2, 0.3], [4.1, -0.5, 1.1], [4.5, 0.7, -0.6]].forEach(([r, a, b]) => {
     const t = new THREE.Mesh(new THREE.TorusGeometry(r, 0.008, 8, 300), lineMat);
     t.rotation.set(a, b, 0);
     orbits.add(t);
@@ -70,7 +74,7 @@ export function createScene(canvas, state, { mobile }) {
   // Satélites: celular (link de delivery), QR code da mesa e comanda da cozinha.
   const phone = new THREE.Group();
   phone.add(new THREE.Mesh(new RoundedBoxGeometry(0.9, 1.8, 0.1, 6, 0.12), dark));
-  const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.78, 1.6), new THREE.MeshBasicMaterial({ color: 0xd4b483, transparent: true, opacity: 0.85 }));
+  const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.78, 1.6), new THREE.MeshBasicMaterial({ color: 0x8a7350, transparent: true, opacity: 0.7 }));
   screen.position.z = 0.051;
   phone.add(screen);
   const qr = new THREE.Group();
@@ -83,8 +87,8 @@ export function createScene(canvas, state, { mobile }) {
         c.position.set((i - 3) * 0.13, (j - 3) * 0.13, 0.05);
         qr.add(c);
       }
-  const ticket = new THREE.Mesh(new RoundedBoxGeometry(0.9, 1.3, 0.05, 4, 0.05), new THREE.MeshPhysicalMaterial({ color: 0xf5f1ea, roughness: 0.6 }));
-  const sats = [[phone, 4.6, 0, 0.35], [qr, 5.3, 2.1, -0.4], [ticket, 4.0, 4.2, 0.6]].map(([obj, r, phase, tilt]) => {
+  const ticket = new THREE.Mesh(new RoundedBoxGeometry(0.9, 1.3, 0.05, 4, 0.05), new THREE.MeshPhysicalMaterial({ color: 0x8f877a, roughness: 0.7 }));
+  const sats = [[phone, 3.9, 0, 0.3], [qr, 4.3, 2.1, -0.3], [ticket, 3.6, 4.2, 0.4]].map(([obj, r, phase, tilt]) => {
     hero.add(obj);
     return { obj, r, phase, tilt };
   });
@@ -160,25 +164,32 @@ export function createScene(canvas, state, { mobile }) {
     mouse.x += (mouse.tx - mouse.x) * 0.05;
     mouse.y += (mouse.ty - mouse.y) * 0.05;
     hero.position.set(S.x, S.y + Math.sin(t * 0.8) * 0.12, S.z);
-    hero.scale.setScalar(S.scale);
+    hero.scale.setScalar(Math.max(S.scale * S.appear, 1e-4));
+    hero.visible = S.scale * S.appear > 0.01;
     hero.rotation.y = S.rotY + mouse.x * 0.5 + Math.sin(t * 0.5) * 0.08;
     hero.rotation.x = S.rotX + mouse.y * 0.35;
     mGroup.position.z = 0.2 + Math.sin(t * 1.2) * 0.08;
     orbits.rotation.z = t * 0.06;
     orbits.rotation.y = t * 0.04;
-    ring.scale.setScalar(S.ring);
     sats.forEach((s, i) => {
       const a = t * 0.35 + s.phase;
-      s.obj.position.set(Math.cos(a) * s.r, Math.sin(a * 1.3) * 0.9 + s.tilt, Math.sin(a) * s.r * 0.55 - 0.5);
+      s.obj.position.set(Math.cos(a) * s.r, Math.sin(a * 1.3) * 0.6 + s.tilt, Math.sin(a) * s.r * 0.55 - 0.5);
       s.obj.rotation.set(Math.sin(t * 0.6 + i) * 0.4, a * 0.8, Math.cos(t * 0.5 + i) * 0.2);
     });
     dust.rotation.y = t * 0.02 + mouse.x * 0.15;
     pMat.uniforms.uTime.value = t;
     pMat.uniforms.uBurst.value = S.burst;
-    camera.position.x += (mouse.x * 0.6 - camera.position.x) * 0.04;
-    camera.position.y += (-mouse.y * 0.4 - camera.position.y) * 0.04;
-    camera.lookAt(0, 0, 0);
+    // Câmera quase parada: assim o logo fica alinhado à área da página que `place` calculou.
+    camera.position.x += (mouse.x * 0.15 - camera.position.x) * 0.04;
+    camera.position.y += (-mouse.y * 0.1 - camera.position.y) * 0.04;
+    camera.lookAt(camera.position.x, camera.position.y, 0);
     composer.render();
+  }
+
+  /** Centro (cx, cy) e diâmetro em px na tela → posição e escala para o logo ficar ali, na profundidade z. */
+  function place(cx, cy, diam, z) {
+    const worldPerPx = (2 * (CAM_Z - z) * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))) / innerHeight;
+    return { x: (cx - innerWidth / 2) * worldPerPx, y: -(cy - innerHeight / 2) * worldPerPx, scale: (diam * worldPerPx) / 2 / LOGO_R };
   }
 
   function destroy() {
@@ -194,5 +205,5 @@ export function createScene(canvas, state, { mobile }) {
     renderer.dispose();
   }
 
-  return { render, destroy };
+  return { render, place, destroy };
 }

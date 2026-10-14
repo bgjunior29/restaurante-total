@@ -17,18 +17,26 @@ function webglOk() {
   }
 }
 
-// Onde o logo 3D fica em cada seção (marcada com data-scene). Valores em unidades da cena.
-function sceneStops(desk) {
-  const PI = Math.PI;
-  return {
-    solucoes: { rotY: PI * 1.15, rotX: 0.35, x: desk ? -3.4 : 0, y: desk ? 0.2 : -1.2, z: -2, scale: 0.6 },
-    restaurantes: { rotY: PI * 2, rotX: -0.2, x: desk ? 3.6 : 0, y: 0, z: -3, scale: 0.7 },
-    diagnostico: { burst: 1, rotY: PI * 2.6, x: desk ? -3.2 : 0, z: -4, scale: 0.7, ring: 1.4 },
-    como: { burst: 0.2, rotY: PI * 3.2, rotX: 0, x: 0, y: 0, z: -7, scale: 1, ring: 1 },
-    seguranca: { burst: 0, rotY: PI * 3.6, x: desk ? -3.6 : 0, z: -3, scale: 0.7 },
-    perguntas: { rotY: PI * 4.4, x: desk ? -4 : 0, y: desk ? -1 : 0, z: -9, scale: 0.8 },
-    final: { rotY: PI * 5, x: desk ? 3.2 : 0, y: 0, z: -2, scale: 0.8 },
-  };
+// Onde o logo 3D fica: cada seção [data-scene] pode ter uma âncora [data-anchor] invisível no layout.
+// O logo se encaixa no centro e no tamanho dela (data-z = profundidade, data-burst = poeira espalhada).
+// Seção sem âncora visível (ex.: no celular): o logo recua e encolhe até sumir, sem ficar atrás do texto.
+const AMBIENT = { z: -20, burst: 0.3 };
+
+function activeSection(root) {
+  const mid = innerHeight * 0.5;
+  for (const sec of root.querySelectorAll("[data-scene]")) {
+    const r = sec.getBoundingClientRect();
+    if (r.top <= mid && r.bottom >= mid) return sec;
+  }
+  return null;
+}
+
+function visibleAnchor(sec) {
+  for (const el of sec.querySelectorAll("[data-anchor]")) {
+    const r = el.getBoundingClientRect();
+    if (r.width > 0 && r.height > 0) return { el, r };
+  }
+  return null;
 }
 
 /**
@@ -173,31 +181,56 @@ export function useLandingFx({ rootRef, canvasRef, cursorRef, dotRef, progressRe
       }
     }
 
-    // Cena 3D: carregada sob demanda e coreografada pelo scroll.
+    // Cena 3D: carregada sob demanda; o logo segue a âncora da seção que está no meio da tela.
     let alive = true;
     let scene3d = null;
     let tick = null;
     const sceneCtx = gsap.context(() => {}, root);
     if (has3D && canvasRef.current) {
-      const S = { rotY: 0, rotX: 0, x: desk ? 2.7 : 0, y: desk ? 0 : 2.35, z: 0, scale: desk ? 0.82 : 0.5, burst: 0, ring: 1 };
+      const S = { rotY: 0, rotX: 0, x: 0, y: 0, z: 0, scale: 1, appear: reduce ? 1 : 0.25, burst: 0 };
       import("./scene3d.js")
         .then(({ createScene }) => {
           if (!alive) return;
           scene3d = createScene(canvasRef.current, S, { mobile: !desk });
           const t0 = performance.now();
-          tick = () => scene3d.render((performance.now() - t0) / 1000);
+          let current = null;
+          let settle = 1;
+          let first = true;
+          let spin = 0;
+          tick = () => {
+            const sec = activeSection(root);
+            const key = sec ?? current;
+            // Ao trocar de seção: um giro completo enquanto o logo viaja até a nova âncora.
+            if (key && key !== current) {
+              if (current && !reduce) {
+                spin += Math.PI * 2;
+                gsap.to(S, { rotY: spin, duration: 1.6, ease: "power3.inOut", overwrite: "auto" });
+              }
+              current = key;
+              settle = 0;
+            }
+            const a = current ? visibleAnchor(current) : null;
+            const z = a ? +(a.el.dataset.z || 0) : AMBIENT.z;
+            const burst = a ? +(a.el.dataset.burst || 0) : AMBIENT.burst;
+            const goal = a
+              ? scene3d.place(a.r.left + a.r.width / 2, a.r.top + a.r.height / 2, Math.min(a.r.width, a.r.height), z)
+              : { ...scene3d.place(innerWidth / 2, innerHeight / 2, 0, z), scale: 0 };
+            // Parado na seção, o logo acompanha a âncora quase colado; na troca, viaja suave.
+            settle = Math.min(1, settle + 0.012);
+            const k = first ? 1 : 0.05 + settle * settle * 0.3;
+            first = false;
+            S.x += (goal.x - S.x) * k;
+            S.y += (goal.y - S.y) * k;
+            S.z += (z - S.z) * k;
+            S.scale += (goal.scale - S.scale) * k;
+            S.burst += (burst - S.burst) * 0.05;
+            scene3d.render((performance.now() - t0) / 1000);
+          };
           gsap.ticker.add(tick);
           sceneCtx.add(() => {
-            if (!reduce) gsap.from(S, { scale: 0.2, rotY: -Math.PI, duration: 2.2, ease: "expo.out" });
+            if (!reduce) gsap.fromTo(S, { appear: 0.25, rotY: -Math.PI }, { appear: 1, rotY: 0, duration: 2.2, ease: "expo.out" });
             gsap.to(canvasRef.current, { opacity: 1, duration: 1.2 });
-            const stops = sceneStops(desk);
-            root.querySelectorAll("[data-scene]").forEach((el) => {
-              const to = stops[el.dataset.scene];
-              if (!to) return;
-              gsap.to(S, { ...to, ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "top 25%", scrub: 1.2 } });
-            });
           });
-          ScrollTrigger.refresh();
         })
         .catch(() => {});
     }
