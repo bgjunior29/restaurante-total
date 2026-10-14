@@ -176,7 +176,7 @@ export function useLandingFx({ rootRef, canvasRef, cursorRef, dotRef, progressRe
           cx(e.clientX);
           cy(e.clientY);
           gsap.set(dot, { x: e.clientX, y: e.clientY });
-          cur.classList.toggle("is-hover", !!e.target.closest?.("a, button, summary, [data-tilt]"));
+          cur.classList.toggle("is-hover", !!e.target.closest?.("a, button, summary, [data-tilt]") || !!scene3d?.hovering);
         });
       }
     }
@@ -187,7 +187,9 @@ export function useLandingFx({ rootRef, canvasRef, cursorRef, dotRef, progressRe
     let tick = null;
     const sceneCtx = gsap.context(() => {}, root);
     if (has3D && canvasRef.current) {
-      const S = { rotY: 0, rotX: 0, x: 0, y: 0, z: 0, scale: 1, appear: reduce ? 1 : 0.25, burst: 0 };
+      const S = { rotY: 0, rotX: 0, x: 0, y: 0, z: 0, scale: 1, appear: reduce ? 1 : 0.25, burst: 0, draw: reduce ? 1 : 0, vel: 0 };
+      // O logo balança de leve com a velocidade do scroll.
+      lenis?.on("scroll", ({ velocity }) => (S.vel = velocity));
       import("./scene3d.js")
         .then(({ createScene }) => {
           if (!alive) return;
@@ -224,11 +226,16 @@ export function useLandingFx({ rootRef, canvasRef, cursorRef, dotRef, progressRe
             S.z += (z - S.z) * k;
             S.scale += (goal.scale - S.scale) * k;
             S.burst += (burst - S.burst) * 0.05;
+            S.vel *= 0.9;
             scene3d.render((performance.now() - t0) / 1000);
           };
           gsap.ticker.add(tick);
           sceneCtx.add(() => {
-            if (!reduce) gsap.fromTo(S, { appear: 0.25, rotY: -Math.PI }, { appear: 1, rotY: 0, duration: 2.2, ease: "expo.out" });
+            if (!reduce) {
+              gsap.fromTo(S, { appear: 0.25, rotY: -Math.PI }, { appear: 1, rotY: 0, duration: 2.2, ease: "expo.out" });
+              // O M se desenha como se fosse escrito à mão, depois do disco aparecer.
+              gsap.to(S, { draw: 1, duration: 1.6, delay: 0.5, ease: "power2.inOut" });
+            }
             gsap.to(canvasRef.current, { opacity: 1, duration: 1.2 });
           });
         })
