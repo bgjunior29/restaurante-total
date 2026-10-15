@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { Spinner } from './components/ui'
 import { AuthProvider, homeFor, useAuth } from './lib/auth'
+import { useSeo } from './lib/seo'
 import { TenantLayout, useTenant } from './lib/tenant'
 import Bill from './pages/Bill'
 import Customer from './pages/Customer'
@@ -51,6 +52,7 @@ function PlatformArea({ children }) {
 const FLOOR = ['ADMIN', 'STAFF']
 
 export default function App() {
+  useSeo()
   return (
     <Suspense fallback={<Spinner />}>
       <Routes>
