@@ -1,12 +1,12 @@
 # Anexo II · Acordo de proteção de dados (LGPD)
 
-Parte do contrato nº `[MVT-AAAA-NNN]` entre **`[Movitech]`** (MOVITECH) e **`[cliente]`** (CLIENTE).
+Parte do contrato nº `[MVT-AAAA-NNN]` entre **`[Lexmovi]`** (LEXMOVI) e **`[cliente]`** (CLIENTE).
 
 ## 1. Papéis
 
-1.1. Para os dados dos **clientes finais** (quem pede, agenda ou preenche formulário) e da **equipe** do CLIENTE, o **CLIENTE é o controlador** e a **MOVITECH é a operadora** (Lei 13.709/2018, art. 5º, VI e VII). A MOVITECH só trata esses dados para prestar o serviço contratado e seguindo as instruções do CLIENTE.
+1.1. Para os dados dos **clientes finais** (quem pede, agenda ou preenche formulário) e da **equipe** do CLIENTE, o **CLIENTE é o controlador** e a **LEXMOVI é a operadora** (Lei 13.709/2018, art. 5º, VI e VII). A LEXMOVI só trata esses dados para prestar o serviço contratado e seguindo as instruções do CLIENTE.
 
-1.2. Para os dados de contato do próprio CLIENTE (nome do responsável, e-mail, telefone, dados de cobrança), a MOVITECH é controladora e os usa só para o contrato, cobrança e comunicação comercial com ele.
+1.2. Para os dados de contato do próprio CLIENTE (nome do responsável, e-mail, telefone, dados de cobrança), a LEXMOVI é controladora e os usa só para o contrato, cobrança e comunicação comercial com ele.
 
 ## 2. Quais dados
 
@@ -20,11 +20,11 @@ Parte do contrato nº `[MVT-AAAA-NNN]` entre **`[Movitech]`** (MOVITECH) e **`[c
 
 2.2. O CLIENTE não deve cadastrar no sistema dados sensíveis (saúde, religião, biometria etc.) nem dados de crianças, a não ser que isso esteja previsto no contrato.
 
-## 3. Obrigações da MOVITECH
+## 3. Obrigações da LEXMOVI
 
 3.1. Tratar os dados só para o objeto do contrato, nunca vender nem usar para outra finalidade.
 
-3.2. Manter medidas de segurança: dados de cada cliente separados; senhas criptografadas; conexão https; bloqueio automático de tentativas de invasão; cópia de segurança diária criptografada; acesso ao banco de dados restrito à MOVITECH.
+3.2. Manter medidas de segurança: dados de cada cliente separados; senhas criptografadas; conexão https; bloqueio automático de tentativas de invasão; cópia de segurança diária criptografada; acesso ao banco de dados restrito à LEXMOVI.
 
 3.3. Garantir que quem tem acesso aos dados (sócios, funcionários, prestadores) tenha compromisso de sigilo.
 
@@ -32,7 +32,7 @@ Parte do contrato nº `[MVT-AAAA-NNN]` entre **`[Movitech]`** (MOVITECH) e **`[c
 
 3.5. Ajudar o CLIENTE, em até **5 dias úteis**, a responder pedidos de titulares (acesso, correção, exclusão, portabilidade).
 
-3.6. Encaminhar ao CLIENTE qualquer pedido de titular que chegar direto à MOVITECH.
+3.6. Encaminhar ao CLIENTE qualquer pedido de titular que chegar direto à LEXMOVI.
 
 ## 4. Suboperadores
 
@@ -49,7 +49,7 @@ Parte do contrato nº `[MVT-AAAA-NNN]` entre **`[Movitech]`** (MOVITECH) e **`[c
 
 4.2. Esses fornecedores podem guardar dados fora do Brasil. A transferência se apoia no art. 33 da LGPD (cláusulas contratuais padrão e garantias de segurança dos fornecedores).
 
-4.3. A MOVITECH avisará o CLIENTE com 30 dias de antecedência antes de trocar ou incluir suboperador que trate dados pessoais. O CLIENTE pode se opor com motivo justificado e, se não houver acordo, cancelar sem multa.
+4.3. A LEXMOVI avisará o CLIENTE com 30 dias de antecedência antes de trocar ou incluir suboperador que trate dados pessoais. O CLIENTE pode se opor com motivo justificado e, se não houver acordo, cancelar sem multa.
 
 ## 5. Obrigações do CLIENTE
 
@@ -65,14 +65,14 @@ Parte do contrato nº `[MVT-AAAA-NNN]` entre **`[Movitech]`** (MOVITECH) e **`[c
 
 6.1. O CLIENTE pode pedir a exportação dos dados em planilha em até 30 dias depois do fim do contrato.
 
-6.2. Em até **90 dias** do fim do contrato, a MOVITECH apaga os dados pessoais do CLIENTE do sistema. As cópias de segurança se apagam sozinhas no ciclo normal (até `[30]` dias depois). Ficam guardados só os dados que a lei exigir (por exemplo, registros de acesso por 6 meses, Marco Civil da Internet, art. 15) e os documentos de cobrança do próprio CLIENTE.
+6.2. Em até **90 dias** do fim do contrato, a LEXMOVI apaga os dados pessoais do CLIENTE do sistema. As cópias de segurança se apagam sozinhas no ciclo normal (até `[30]` dias depois). Ficam guardados só os dados que a lei exigir (por exemplo, registros de acesso por 6 meses, Marco Civil da Internet, art. 15) e os documentos de cobrança do próprio CLIENTE.
 
 ## 7. Encarregado
 
-Contato para assuntos de dados pessoais na MOVITECH: `[nome]`, `[e-mail]`.
+Contato para assuntos de dados pessoais na LEXMOVI: `[nome]`, `[e-mail]`.
 Contato no CLIENTE: `[nome]`, `[e-mail]`.
 
 | | |
 |---|---|
 | ____________________________________ | ____________________________________ |
-| **MOVITECH** | **CLIENTE** |
+| **LEXMOVI** | **CLIENTE** |

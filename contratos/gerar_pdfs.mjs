@@ -123,7 +123,7 @@ a { color: inherit; }
 function pagina({ titulo, corpo, arquivo, modo }) {
   const pdf = `../pdf/${arquivo}.pdf`
   const barra = modo === 'html' ? `
-<div class="barra"><b>Movitech</b>
+<div class="barra"><b>Lexmovi</b>
   <span id="estado">Clique no texto para preencher os campos amarelos.</span>
   <a href="../index.html">Todos os documentos</a>
   <a href="${pdf}" download>PDF em branco</a>
@@ -147,7 +147,7 @@ document.getElementById('baixar').onclick = () => { document.body.classList.add(
 <style>${CSS}</style></head>
 <body class="${modo}">${barra}
 <article class="folha" id="folha"${modo === 'html' ? ' contenteditable="true" spellcheck="false"' : ''}>
-<div class="topo"><span class="marca"><span class="logo">M</span>Movitech</span><span>Movitech Sistemas · Barueri/SP · (11) 96445-2878</span></div>
+<div class="topo"><span class="marca"><span class="logo">L</span>Lexmovi</span><span>Lexmovi Sistemas · Barueri/SP · (11) 96445-2878</span></div>
 ${corpo}
 </article>${script}
 </body></html>`
@@ -169,7 +169,7 @@ for (const f of DOCS) {
 
 writeFileSync(join(DIR, 'index.html'), `<!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contratos Movitech</title>
+<title>Contratos Lexmovi</title>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root { --bg:#0f0e0c; --panel:#1f1d19; --line:#2e2b26; --ink:#f2efe8; --muted:#9a958b; --gold:#d4b483; }
@@ -182,7 +182,7 @@ p { color: var(--muted); margin: 0 0 24px; }
 a.btn { color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; text-decoration: none; font-size: 13px; white-space: nowrap; }
 a.btn.principal { background: var(--gold); border-color: var(--gold); color: #141310; font-weight: 600; }
 </style></head><body><main>
-<h1>Contratos <em>Movitech</em></h1>
+<h1>Contratos <em>Lexmovi</em></h1>
 <p>Baixe o modelo em branco em PDF, ou abra para preencher no navegador e baixe o PDF já preenchido.</p>
 <div class="doc"><b>Orçamento (gerador)</b><a class="btn principal" href="orcamento.html">Abrir e baixar PDF</a></div>
 ${lista.map((d) => `<div class="doc"><b>${esc(d.titulo)}</b><a class="btn" href="html/${d.arquivo}.html">Preencher e baixar</a><a class="btn principal" href="pdf/${d.arquivo}.pdf" download>Baixar PDF</a></div>`).join('\n')}

@@ -19,7 +19,7 @@ Preços, fotos, cores do tema, frete e Instagram vêm do sistema: mudou no card�
 Sem música (para não ter problema de direitos autorais): adicione uma do próprio Instagram/TikTok ao postar.
 Licença do Remotion: grátis para pessoas e empresas pequenas; confira https://remotion.dev/license antes de usar numa empresa maior.
 
-## Anúncio "comissão" da Movitech (1080×1920, ~16 s)
+## Anúncio "comissão" da Lexmovi (1080×1920, ~16 s)
 
 ```
 npm run anuncio      # gera out/anuncio-comissao.mp4
@@ -31,7 +31,7 @@ Usa os pratos e o logo do Point Arena: peça autorização ao restaurante antes 
 
 ## Vídeos da Movi (avatar + voz + legenda)
 
-A Movi é a apresentadora ilustrada da Movitech (`src/movi/Movi.jsx`): pisca, balança a cabeça e mexe a boca
+A Movi é a apresentadora ilustrada da Lexmovi (`src/movi/Movi.jsx`): pisca, balança a cabeça e mexe a boca
 conforme o volume da narração. A voz é neural (pt-BR, Thalita) via `edge-tts`, e as legendas acendem palavra por palavra.
 
 ```

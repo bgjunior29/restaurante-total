@@ -337,7 +337,7 @@ export function NichoMG({ nicho }) {
       cenas={{
         abertura: { fundo: n.cores[0], formas: [P.gold, P.white, P.ink], Comp: () => <Gancho Icone={Icone} texto={texto} destaque={destaque} cor={P.gold} /> },
         problema: { fundo: P.ink, formas: [P.coral, P.gold, P.teal], apontar: 'right', Comp: () => <Area top={330}><Cartoes itens={n.cartoes} /></Area> },
-        solucao: { fundo: n.cores[1], formas: [P.gold, P.white], apontar: 'right', Comp: () => <Area top={220}><Revela texto="A Movitech resolve!" destaque={['resolve!']} size={96} cor={P.white} fundoDestaque={P.ink} corDestaque={P.mint} /><div style={{ height: 50 }} /><Cartoes itens={n.cartoes} virar corLabel={P.ink} /></Area> },
+        solucao: { fundo: n.cores[1], formas: [P.gold, P.white], apontar: 'right', Comp: () => <Area top={220}><Revela texto="A Lexmovi resolve!" destaque={['resolve!']} size={96} cor={P.white} fundoDestaque={P.ink} corDestaque={P.mint} /><div style={{ height: 50 }} /><Cartoes itens={n.cartoes} virar corLabel={P.ink} /></Area> },
         beneficio: { fundo: n.cores[1] === P.violet ? P.teal : P.violet, formas: [P.gold, P.mint, P.white], apontar: 'right', Comp: () => <Area top={250}>{n.beneficio()}</Area> },
         cta: { fundo: P.cream, formas: [P.coral, P.teal, P.gold], apontar: 'right', Comp: () => <Area top={230}><Cta frase="Peça seu orçamento" escala={0.95} /></Area> },
       }}

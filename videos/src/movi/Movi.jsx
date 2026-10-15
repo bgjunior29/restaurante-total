@@ -1,6 +1,6 @@
 import { interpolate, useCurrentFrame, useVideoConfig } from 'remotion'
 
-// A Movi: mascote da Movitech. Robozinha dourada com uma tela no rosto: olhos neon que piscam e olham em volta,
+// A Movi: mascote da Lexmovi. Robozinha dourada com uma tela no rosto: olhos neon que piscam e olham em volta,
 // boca de equalizador que segue as frequências da voz, antena que balança e corpo que flutua com squash & stretch.
 // viewBox 300×360. Props: spectrum (7 valores 0–1 da voz), volume (0–1), waving, pointing ('left' | 'right').
 

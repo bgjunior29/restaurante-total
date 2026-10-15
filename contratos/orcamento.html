@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Orçamento Movitech</title>
+<title>Orçamento Lexmovi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* Gerador de orçamento da Movitech. Abra no navegador, preencha à esquerda e use "Salvar PDF".
+/* Gerador de orçamento da Lexmovi. Abra no navegador, preencha à esquerda e use "Salvar PDF".
    O rascunho fica salvo só neste navegador (localStorage). Preços do catálogo são sugestões: ajuste em CATALOGO. */
 :root {
   --bg: #0f0e0c; --bg2: #171613; --panel: #1f1d19; --line: #2e2b26;
@@ -104,7 +104,7 @@ td small { display: block; color: var(--paper-muted); }
 <body>
 <div class="app">
   <aside class="form" id="form">
-    <div class="brand"><div class="logo">M</div><div><b>Movitech</b><small>Gerador de orçamento</small></div></div>
+    <div class="brand"><div class="logo">L</div><div><b>Lexmovi</b><small>Gerador de orçamento</small></div></div>
 
     <fieldset>
       <legend>Orçamento</legend>
@@ -191,9 +191,9 @@ td small { display: block; color: var(--paper-muted); }
 <div class="toast" id="toast"></div>
 
 <script>
-// ---- Dados da Movitech (os mesmos de contratos/README.md) ----
-const MOVITECH = {
-  nome: 'Movitech Sistemas',
+// ---- Dados da Lexmovi (os mesmos de contratos/README.md) ----
+const LEXMOVI = {
+  nome: 'Lexmovi Sistemas',
   doc: '[CNPJ]',
   cidade: 'Barueri/SP',
   whats: '(11) 96445-2878',
@@ -340,14 +340,14 @@ function atualizar() {
 
   $('sheet').innerHTML = `
     <div class="s-top">
-      <div class="s-brand"><div class="logo">M</div><div><b>Movitech</b><small>Sistemas · ${esc(MOVITECH.cidade)}</small></div></div>
+      <div class="s-brand"><div class="logo">L</div><div><b>Lexmovi</b><small>Sistemas · ${esc(LEXMOVI.cidade)}</small></div></div>
       <div class="s-meta"><strong>Orçamento ${esc(estado.numero)}</strong><br>Emitido em ${fmtData(estado.data)}<br>Válido até ${validoAte()}</div>
     </div>
     <h1 class="s-title">${esc(estado.titulo) || 'Proposta'} <em>para ${esc(cliente)}</em></h1>
     <p class="s-sub">Só com o que faz diferença para o seu negócio, sem pacote fechado.</p>
     <div class="s-grid">
       <div class="s-box"><h4>Cliente</h4><strong>${esc(cliente)}</strong>${dadosCliente ? '<br>' + dadosCliente : ''}</div>
-      <div class="s-box"><h4>Movitech</h4><strong>${esc(MOVITECH.nome)}</strong><br>${esc(MOVITECH.doc)}<br>${esc(MOVITECH.vendedor)} · WhatsApp ${esc(MOVITECH.whats)}<br>${esc(MOVITECH.site)}</div>
+      <div class="s-box"><h4>Lexmovi</h4><strong>${esc(LEXMOVI.nome)}</strong><br>${esc(LEXMOVI.doc)}<br>${esc(LEXMOVI.vendedor)} · WhatsApp ${esc(LEXMOVI.whats)}<br>${esc(LEXMOVI.site)}</div>
     </div>
     ${achados.length ? `<p class="s-h">O que encontramos no diagnóstico</p><ul class="s-list">${achados.map(a => `<li>${esc(a)}</li>`).join('')}</ul>` : ''}
     ${objetivos.length ? `<p class="s-h">O que vamos resolver</p><ul class="s-list">${objetivos.map(a => `<li>${esc(a)}</li>`).join('')}</ul>` : ''}
@@ -362,8 +362,8 @@ function atualizar() {
     <ul class="s-cond">${cond.map(c => `<li>${c}</li>`).join('')}</ul>
     <p class="s-h">Próximos passos</p>
     <ul class="s-cond"><li>Responda "de acordo" no WhatsApp ou assine abaixo.</li><li>Enviamos o contrato para assinatura eletrônica e combinamos a data da implantação.</li><li>Você vê tudo funcionando antes de divulgar para os seus clientes.</li></ul>
-    <div class="sign"><div>${esc(cliente)}${estado.responsavel ? ' · ' + esc(estado.responsavel) : ''}<br>De acordo em ___/___/______</div><div>${esc(MOVITECH.nome)} · ${esc(MOVITECH.vendedor)}</div></div>
-    <div class="s-foot"><span>Este orçamento não é contrato. As condições finais ficam no contrato assinado.</span><span>${esc(MOVITECH.whats)} · ${esc(MOVITECH.email)}</span></div>`;
+    <div class="sign"><div>${esc(cliente)}${estado.responsavel ? ' · ' + esc(estado.responsavel) : ''}<br>De acordo em ___/___/______</div><div>${esc(LEXMOVI.nome)} · ${esc(LEXMOVI.vendedor)}</div></div>
+    <div class="s-foot"><span>Este orçamento não é contrato. As condições finais ficam no contrato assinado.</span><span>${esc(LEXMOVI.whats)} · ${esc(LEXMOVI.email)}</span></div>`;
 }
 
 // ---- Ações ----
@@ -378,7 +378,7 @@ $('copy').onclick = async () => {
     const v = (Number(i.qtd) || 0) * (Number(i.valor) || 0);
     return `• ${i.nome}${Number(i.qtd) > 1 ? ` (${i.qtd}x)` : ''}: ${v ? brl(v) + (i.tipo === 'mensal' ? '/mês' : i.tipo === 'anual' ? '/ano' : '') : 'cortesia'}`;
   }).join('\n');
-  const txt = `Olá${estado.responsavel ? ', ' + estado.responsavel.split(' ')[0] : ''}! Segue o orçamento ${estado.numero} da Movitech para ${estado.cliente || 'vocês'}:\n\n${itens}\n\n` +
+  const txt = `Olá${estado.responsavel ? ', ' + estado.responsavel.split(' ')[0] : ''}! Segue o orçamento ${estado.numero} da Lexmovi para ${estado.cliente || 'vocês'}:\n\n${itens}\n\n` +
     (t.unico ? `Implantação/projeto: *${brl(t.unico)}* (${estado.pagamento})\n` : '') +
     (t.mensal ? `Mensalidade: *${brl(t.mensal)}*\n` : '') +
     `\nVálido até ${validoAte()}. Te mando o PDF completo aqui também. Ficou alguma dúvida?`;

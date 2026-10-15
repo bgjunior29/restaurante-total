@@ -1,4 +1,4 @@
-# Estúdio de motion graphics da Movitech
+# Estúdio de motion graphics da Lexmovi
 
 Regras para todo vídeo novo desta pasta. Os vídeos antigos (Remotion, `src/`) continuam como estão; vídeo novo segue o fluxo abaixo.
 

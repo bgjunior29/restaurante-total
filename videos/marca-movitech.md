@@ -1,12 +1,12 @@
-# Marca Movitech: referência para vídeos
+# Marca Lexmovi: referência para vídeos
 
 Fonte: site (`frontrestaurantetotal/src/index.css`, páginas Landing e Restaurantes). Atualize aqui sempre que um vídeo aprovado trouxer algo novo.
 
 ## Identidade
-- Nome: **Movitech** (Movitech Sistemas, de Barueri/SP)
+- Nome: **Lexmovi** (Lexmovi Sistemas, de Barueri/SP)
 - Site: movitechsistemas.com.br (o endereço antigo frontrestaurantetotal.vercel.app continua funcionando)
 - WhatsApp de vendas: (11) 96445-2878
-- Logo: "M" em traço champanhe dentro de um círculo escuro (`frontrestaurantetotal/public/favicon.svg`)
+- Logo: "L" em traço champanhe dentro de um círculo escuro (`frontrestaurantetotal/public/favicon.svg`)
 - Apresentadora: Movi (avatar ilustrado, `src/movi/`), voz pt-BR Thalita
 
 ## Paleta "Noir" (preto quente + champanhe)

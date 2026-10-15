@@ -35,7 +35,7 @@ async def lifespan(_: FastAPI):
     await db.disconnect()
 
 
-app = FastAPI(title="Movitech API", lifespan=lifespan)
+app = FastAPI(title="Lexmovi API", lifespan=lifespan)
 log = logging.getLogger("restaurantetotal")
 
 

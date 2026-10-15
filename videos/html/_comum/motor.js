@@ -1,4 +1,4 @@
-// Motor dos anúncios da Movitech em HTML puro (sem dependências).
+// Motor dos anúncios da Lexmovi em HTML puro (sem dependências).
 // A página define window.VIDEO (rótulo + lista de cenas, cada uma com um "tipo") e window.VOZ (tempos da narração,
 // gerados por scripts/gerar_voz.py) e carrega este arquivo. Tudo é função do tempo: window.seek(t) desenha o quadro
 // exato do instante t. Cada tipo de cena abaixo recebe a sua caixa, a configuração e o nome da cena na narração.
@@ -94,7 +94,7 @@
   el('<svg width="1080" height="1920" style="left:0;top:0;opacity:.06;mix-blend-mode:screen"><filter id="g"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0"/></filter><rect width="1080" height="1920" filter="url(#g)"/></svg>')
   const topo = el(`<div style="left:80px;top:122px;width:920px;height:60px">
     <div style="left:0;top:0;width:60px;height:60px">${LOGO}</div>
-    <div style="left:80px;top:15px;font:700 30px/1 var(--sans);letter-spacing:.02em">Movitech</div>
+    <div style="left:80px;top:15px;font:700 30px/1 var(--sans);letter-spacing:.02em">Lexmovi</div>
     <div class="eyebrow" style="right:0;top:17px;font-size:26px">${VID.rotulo || ''}</div></div>`)
 
   // ---------- tipos de cena ----------
@@ -221,7 +221,7 @@
         <div style="right:36px;top:936px;width:68px;height:68px;border-radius:50%;background:#25d366;padding:8px">${ZAP(52)}</div>
       </div></div>`, box)
     const lin = [...tel.querySelectorAll('.lin')]
-    const titulo = el(`<div class="serif" style="left:80px;top:250px;width:920px;font-size:${cfg.tamTitulo || 96}px;line-height:1">${cfg.titulo || 'Com a <em>Movitech</em>:'}</div>`, box)
+    const titulo = el(`<div class="serif" style="left:80px;top:250px;width:920px;font-size:${cfg.tamTitulo || 96}px;line-height:1">${cfg.titulo || 'Com a <em>Lexmovi</em>:'}</div>`, box)
     const rs = cfg.recursos, ts = tempos(nome, rs)
     const y0 = { 2: 940, 3: 880, 4: 800 }[rs.length] || 880, dy = { 2: 260, 3: 205, 4: 175 }[rs.length] || 205
     const chips = rs.map((it, i) => {
@@ -249,7 +249,7 @@
   TIPOS.notificacao = (box, cfg, nome) => {
     const notif = el(`<div style="left:90px;top:330px;width:900px;height:200px;border-radius:44px;background:rgba(245,241,234,.97);color:#141310;box-shadow:0 40px 90px rgba(0,0,0,.5)">
       <div style="left:30px;top:44px;width:112px;height:112px">${LOGO}</div>
-      <div style="left:170px;top:46px;font:500 26px/1 var(--sans);color:#8a7350;letter-spacing:.04em">MOVITECH · agora</div>
+      <div style="left:170px;top:46px;font:500 26px/1 var(--sans);color:#8a7350;letter-spacing:.04em">LEXMOVI · agora</div>
       <div style="left:170px;top:86px;font:800 40px/1.1 var(--sans)">${cfg.notificacao[0]}</div>
       <div style="left:170px;top:138px;font:500 30px/1 var(--sans);color:#4a463f">${cfg.notificacao[1]}</div></div>`, box)
     const ben = el('<div class="serif" style="left:80px;top:760px;width:920px;font-size:124px;line-height:1.02"></div>', box)

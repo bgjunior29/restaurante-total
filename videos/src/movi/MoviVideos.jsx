@@ -10,7 +10,7 @@ import vozNegocios from '../voz/anuncio-negocios.json'
 import vozRestaurantes from '../voz/anuncio-restaurantes.json'
 import { Movi } from './Movi'
 
-// Vídeos da Movitech apresentados pela Movi (mascote): 2 anúncios verticais e 1 apresentação horizontal.
+// Vídeos da Lexmovi apresentados pela Movi (mascote): 2 anúncios verticais e 1 apresentação horizontal.
 // Motion design: tipografia cinética, varredura de luz entre cenas, glitch, flips 3D, partículas, confete,
 // tremida de câmera nos impactos, legenda estilo TikTok e efeitos sonoros sintetizados (public/sfx).
 
@@ -533,7 +533,7 @@ export function AnuncioNegocios() {
           <Topo top={300}>
             <Kinetic texto="Oi! Eu sou a Movi" destaque={['Movi']} size={150} />
             <div style={{ height: 30 }} />
-            <Kinetic texto="da Movitech ✨" size={70} delay={14} cor={C.muted} />
+            <Kinetic texto="da Lexmovi ✨" size={70} delay={14} cor={C.muted} />
             <Faiscas at={14} x={540} y={420} />
           </Topo>
         ),
@@ -719,7 +719,7 @@ function AberturaApresentacao() {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 30 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 26 }}>
           <Logo size={120} draw={interpolate(frame, [0, 30], [0, 1], clamp)} />
-          <Kinetic texto="MOVITECH SISTEMAS" size={46} delay={18} cor={C.gold} align="left" />
+          <Kinetic texto="LEXMOVI SISTEMAS" size={46} delay={18} cor={C.gold} align="left" />
         </div>
         <Kinetic texto="Sistemas, sites e apps que fazem seu negócio vender mais." destaque={['vender', 'mais']} size={92} delay={40} align="left" maxWidth={1180} />
         <Kinetic texto="📍 Barueri · SP" size={40} delay={80} cor={C.muted} align="left" />

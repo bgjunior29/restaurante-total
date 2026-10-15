@@ -5,7 +5,7 @@ import { useTenant } from '../lib/tenant'
 
 // Quem opera a plataforma. Preencha antes de vender (e peça para um advogado revisar os textos abaixo).
 const OPERATOR = {
-  name: 'Movitech', // razão social ou seu nome completo
+  name: 'Lexmovi', // razão social ou seu nome completo
   doc: '[CNPJ ou CPF]',
   email: '[seu e-mail de contato]',
   city: '[cidade/UF]',
@@ -86,7 +86,7 @@ export function Privacy() {
       <Section title="Quem cuida dos seus dados">
         <p>
           O <strong>restaurante</strong> em que você faz o pedido é o controlador dos seus dados: ele decide como usá-los para preparar,
-          entregar e falar com você sobre o pedido. A plataforma Movitech ({OPERATOR.doc}) é a operadora: guarda e
+          entregar e falar com você sobre o pedido. A plataforma Lexmovi ({OPERATOR.doc}) é a operadora: guarda e
           processa os dados em nome do restaurante, seguindo esta política.
         </p>
       </Section>

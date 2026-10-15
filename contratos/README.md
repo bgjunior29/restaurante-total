@@ -1,8 +1,8 @@
-# Contratos · Movitech Sistemas
+# Contratos · Lexmovi Sistemas
 
-Modelos comerciais da Movitech: orçamento, contratos e anexos. Tudo que está entre `[colchetes]` é para preencher em cada cliente.
+Modelos comerciais da Lexmovi: orçamento, contratos e anexos. Tudo que está entre `[colchetes]` é para preencher em cada cliente.
 
-> **Antes de usar com cliente:** preencha os dados da Movitech (seção abaixo) e peça para um advogado revisar uma vez. Os modelos seguem o Código Civil, a LGPD e a Lei 14.063/2020 (assinatura eletrônica), mas não substituem essa revisão.
+> **Antes de usar com cliente:** preencha os dados da Lexmovi (seção abaixo) e peça para um advogado revisar uma vez. Os modelos seguem o Código Civil, a LGPD e a Lei 14.063/2020 (assinatura eletrônica), mas não substituem essa revisão.
 
 ## Fluxo comercial
 
@@ -19,18 +19,18 @@ Modelos comerciais da Movitech: orçamento, contratos e anexos. Tudo que está e
 | [orcamento.html](orcamento.html) | **Gerador de orçamento.** Abra no navegador, preencha, clique em "Salvar PDF" e mande no WhatsApp. Guarda o rascunho no próprio navegador. |
 | [01-contrato-assinatura-sistema.md](01-contrato-assinatura-sistema.md) | Cliente vai usar o **sistema por assinatura** (restaurantes e futuros sistemas). Mensalidade + implantação. |
 | [02-contrato-site-e-links.md](02-contrato-site-e-links.md) | Cliente quer **site, vitrine, link na bio ou app sem download** (projeto com entrega + manutenção opcional). |
-| [03-anexo-protecao-de-dados.md](03-anexo-protecao-de-dados.md) | **Sempre** junto do contrato 01 (e do 02 quando o site coletar dados de clientes). A Movitech é operadora, o cliente é controlador. |
+| [03-anexo-protecao-de-dados.md](03-anexo-protecao-de-dados.md) | **Sempre** junto do contrato 01 (e do 02 quando o site coletar dados de clientes). A Lexmovi é operadora, o cliente é controlador. |
 | [04-anexo-suporte-e-disponibilidade.md](04-anexo-suporte-e-disponibilidade.md) | Junto do 01 e do 02 com manutenção. Diz o que é suporte, em quanto tempo responde e o que não está incluso. |
 | [05-termo-de-aceite.md](05-termo-de-aceite.md) | No dia da entrega/implantação. É o que dispara o início da cobrança mensal e a garantia. |
 | [06-termo-de-cancelamento.md](06-termo-de-cancelamento.md) | Quando o cliente sai. Fecha valores, exportação de dados e prazo de exclusão. |
 | [07-termo-de-indicacao.md](07-termo-de-indicacao.md) | Programa de indicação: cliente ou parceiro que traz cliente novo ganha bônus. |
 | [melhorias-e-sugestoes.md](melhorias-e-sugestoes.md) | O que precisa ser corrigido (no site, no sistema e na empresa) para os contratos valerem na prática, e sugestões. |
 
-## Dados da Movitech (preencha uma vez e use em todos)
+## Dados da Lexmovi (preencha uma vez e use em todos)
 
 | Campo | Valor |
 |---|---|
-| Razão social / nome | `[Movitech Sistemas ou nome completo do titular]` |
+| Razão social / nome | `[Lexmovi Sistemas ou nome completo do titular]` |
 | CNPJ (ou CPF) | `[00.000.000/0001-00]` |
 | Endereço | `[rua, número, bairro], Barueri/SP, CEP [00000-000]` |
 | Representante | John `[sobrenome]`, `[CPF]` |

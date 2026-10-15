@@ -131,7 +131,7 @@ const VIDEOS = {
   'movitech-apresentacao': {
     voz: 'apresentacao', rotulo: 'de Barueri/SP',
     cenas: [
-      { cena: 'abertura', tipo: 'falas', logo: true, destaque: 'Movi Movitech vender mais trabalhar menos' },
+      { cena: 'abertura', tipo: 'falas', logo: true, destaque: 'Movi Lexmovi vender mais trabalhar menos' },
       { cena: 'problema', tipo: 'lista', intro: 'Negócio bom | perdendo | *cliente.*', itens: ['Site que demora', 'WhatsApp que não abre', 'Cardápio em PDF', 'Comissão em cada pedido'] },
       { cena: 'sistemas', tipo: 'celular', titulo: 'Sistemas por <em>assinatura</em>', tamTitulo: 88, tela: CARDAPIO,
         recursos: [{ txt: 'QR code na mesa', palavra: 'QR' }, { txt: 'Delivery próprio', palavra: 'delivery' }, { txt: 'Tela da cozinha', palavra: 'tela' }] },
@@ -155,7 +155,7 @@ for (const [nome, cfg] of Object.entries(VIDEOS)) {
   mkdirSync(dir, { recursive: true })
   writeFileSync(join(dir, 'index.html'), `<!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Movitech · ${nome}</title><link rel="stylesheet" href="../_comum/estilo.css"></head>
+<title>Lexmovi · ${nome}</title><link rel="stylesheet" href="../_comum/estilo.css"></head>
 <body><div id="palco"></div>
 <script>window.VIDEO = ${JSON.stringify(cfg)}
 window.VOZ = ${JSON.stringify(voz)}</script>
