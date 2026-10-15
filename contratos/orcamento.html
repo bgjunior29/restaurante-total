@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orçamento Movitech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Gerador de orçamento da Movitech. Abra no navegador, preencha à esquerda e use "Salvar PDF".
+   O rascunho fica salvo só neste navegador (localStorage). Preços do catálogo são sugestões: ajuste em CATALOGO. */
+:root {
+  --bg: #0f0e0c; --bg2: #171613; --panel: #1f1d19; --line: #2e2b26;
+  --ink: #f2efe8; --muted: #9a958b; --gold: #d4b483; --gold-d: #8a7350;
+  --paper: #f5f1ea; --paper2: #ece8df; --paper-ink: #1b1915; --paper-muted: #6b665c; --alert: #e2786a;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.5 Inter, system-ui, sans-serif; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.app { display: grid; grid-template-columns: minmax(340px, 440px) 1fr; min-height: 100vh; }
+.form { background: var(--bg2); border-right: 1px solid var(--line); padding: 20px 20px 80px; overflow-y: auto; max-height: 100vh; position: sticky; top: 0; }
+.brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.brand b { font: 26px/1 "Instrument Serif", serif; font-weight: 400; }
+.brand small { display: block; color: var(--muted); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; }
+.logo { width: 34px; height: 34px; border-radius: 50%; background: #141310; border: 1px solid var(--line); display: grid; place-items: center; color: var(--gold); font: 20px "Instrument Serif", serif; }
+fieldset { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 14px; margin: 0 0 14px; background: var(--panel); }
+legend { padding: 0 6px; color: var(--gold); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; font-weight: 600; }
+label { display: block; font-size: 12px; color: var(--muted); margin-top: 8px; }
+input, select, textarea { width: 100%; margin-top: 3px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; outline: none; }
+input:focus, select:focus, textarea:focus { border-color: var(--gold-d); }
+textarea { resize: vertical; min-height: 64px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.row3 { display: grid; grid-template-columns: 1.3fr 1.2fr .8fr; gap: 8px; }
+.item { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px 10px; margin-top: 10px; background: var(--bg2); }
+.item-head { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); }
+.btn { border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 8px 14px; cursor: pointer; }
+.btn:hover { border-color: var(--gold-d); }
+.btn.primary { background: var(--gold); color: #141310; border-color: var(--gold); font-weight: 600; }
+.btn.small { padding: 3px 10px; font-size: 12px; }
+.btn.danger { color: var(--alert); }
+.actions { position: fixed; bottom: 0; left: 0; width: min(440px, 100%); display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 20px; background: rgba(23,22,19,.95); border-top: 1px solid var(--line); z-index: 5; }
+.hint { color: var(--muted); font-size: 12px; margin: 6px 0 0; }
+.toast { position: fixed; bottom: 70px; left: 20px; background: var(--gold); color: #141310; padding: 8px 14px; border-radius: 8px; font-weight: 600; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 9; }
+.toast.on { opacity: 1; }
+
+/* ---------- Folha (o que vai para o PDF) ---------- */
+.preview { padding: 28px; display: flex; justify-content: center; }
+.sheet { width: 210mm; min-height: 297mm; background: var(--paper); color: var(--paper-ink); padding: 16mm 16mm 14mm; box-shadow: 0 20px 60px rgba(0,0,0,.5); border-radius: 4px; }
+.s-top { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #d9d2c4; padding-bottom: 10px; }
+.s-brand { display: flex; gap: 10px; align-items: center; }
+.s-brand .logo { background: #141310; color: var(--gold); }
+.s-brand b { font: 28px/1 "Instrument Serif", serif; font-weight: 400; }
+.s-brand small { display: block; font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: var(--paper-muted); margin-top: 3px; }
+.s-meta { text-align: right; font-size: 11px; color: var(--paper-muted); }
+.s-meta strong { color: var(--paper-ink); font-size: 13px; }
+.s-title { font: 40px/1.05 "Instrument Serif", serif; margin: 18px 0 4px; }
+.s-title em { color: var(--gold-d); }
+.s-sub { color: var(--paper-muted); margin: 0 0 14px; }
+.s-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.s-box { background: var(--paper2); border-radius: 8px; padding: 9px 12px; font-size: 12px; }
+.s-box h4, .s-h { margin: 0 0 4px; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold-d); font-weight: 700; }
+.s-h { margin-top: 16px; }
+.s-list { margin: 4px 0 0; padding-left: 18px; font-size: 12.5px; }
+.s-list li { margin: 2px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 4px; }
+th { text-align: left; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--paper-muted); border-bottom: 1px solid #cfc7b7; padding: 6px 4px; font-weight: 600; }
+td { border-bottom: 1px solid #e2dbcd; padding: 7px 4px; vertical-align: top; }
+td.n, th.n { text-align: right; white-space: nowrap; }
+td small { display: block; color: var(--paper-muted); }
+.tag { display: inline-block; font-size: 9.5px; padding: 1px 6px; border-radius: 99px; border: 1px solid #cfc7b7; color: var(--paper-muted); white-space: nowrap; }
+.free { color: #2f7a4a; font-weight: 600; }
+.totals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+.total { border: 1px solid #d9d2c4; border-radius: 8px; padding: 8px 12px; }
+.total span { display: block; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--paper-muted); }
+.total b { font-size: 18px; }
+.total.main { background: #141310; color: var(--paper); border-color: #141310; }
+.total.main span { color: var(--gold); }
+.s-cond { font-size: 12px; margin: 4px 0 0; padding-left: 18px; }
+.s-cond li { margin: 2px 0; }
+.sign { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 34px; font-size: 11px; color: var(--paper-muted); }
+.sign div { border-top: 1px solid #a9a191; padding-top: 5px; }
+.s-foot { margin-top: 18px; border-top: 1px solid #d9d2c4; padding-top: 8px; font-size: 10.5px; color: var(--paper-muted); display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.empty { color: var(--paper-muted); font-style: italic; }
+
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+  .form { position: static; max-height: none; border-right: 0; padding: 16px 16px 90px; }
+  .actions { width: 100%; padding: 10px 16px; }
+  .preview { padding: 16px; overflow-x: auto; justify-content: flex-start; }
+  .sheet { width: 210mm; flex: none; }
+}
+@media print {
+  @page { size: A4; margin: 0; }
+  html, body { background: #fff; }
+  .form, .actions, .toast { display: none !important; }
+  .app { display: block; }
+  .preview { padding: 0; }
+  .sheet { box-shadow: none; border-radius: 0; width: 210mm; min-height: 297mm; }
+  tr, .s-box, .total { break-inside: avoid; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="form" id="form">
+    <div class="brand"><div class="logo">M</div><div><b>Movitech</b><small>Gerador de orçamento</small></div></div>
+
+    <fieldset>
+      <legend>Orçamento</legend>
+      <div class="row3">
+        <label>Número<input id="numero"></label>
+        <label>Data<input id="data" type="date"></label>
+        <label>Validade (dias)<input id="validade" type="number" min="1"></label>
+      </div>
+      <label>Título<input id="titulo" placeholder="Cardápio digital e delivery próprio"></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Cliente</legend>
+      <label>Nome do negócio<input id="cliente" placeholder="Pizzaria Exemplo"></label>
+      <div class="row">
+        <label>Responsável<input id="responsavel"></label>
+        <label>CNPJ / CPF<input id="doc"></label>
+      </div>
+      <div class="row">
+        <label>WhatsApp<input id="whats"></label>
+        <label>Cidade<input id="cidade" placeholder="Barueri/SP"></label>
+      </div>
+      <label>E-mail<input id="email"></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Diagnóstico</legend>
+      <label>O que encontramos (um por linha)<textarea id="achados" rows="4" placeholder="Não aparece site próprio no Google&#10;Paga comissão no app em todo pedido"></textarea></label>
+      <label>O que vamos resolver (um por linha)<textarea id="objetivos" rows="3"></textarea></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Itens</legend>
+      <div class="row">
+        <select id="catalogo"></select>
+        <button class="btn" type="button" id="addCat">Adicionar</button>
+      </div>
+      <p class="hint">Valor 0 aparece como "Cortesia". Preços do catálogo são sugestões, ajuste em cada cliente.</p>
+      <div id="itens"></div>
+      <button class="btn small" type="button" id="addItem" style="margin-top:10px">+ Item em branco</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Condições</legend>
+      <div class="row">
+        <label>Desconto na implantação (%)<input id="desconto" type="number" min="0" max="100"></label>
+        <label>Prazo de entrega (dias úteis)<input id="prazo" type="number" min="1"></label>
+      </div>
+      <div class="row">
+        <label>Pagamento dos valores únicos<select id="pagamento">
+          <option>50% no aceite e 50% na entrega</option>
+          <option>100% no aceite</option>
+          <option>100% na entrega</option>
+          <option>Em 2x no Pix (aceite e 30 dias)</option>
+          <option>Em 3x no Pix (aceite, 30 e 60 dias)</option>
+        </select></label>
+        <label>Fidelidade<select id="fidelidade">
+          <option value="0">Sem fidelidade</option>
+          <option value="3">3 meses</option>
+          <option value="6">6 meses</option>
+          <option value="12">12 meses</option>
+        </select></label>
+      </div>
+      <div class="row">
+        <label>Vencimento da mensalidade<select id="vencimento">
+          <option>dia 5</option><option>dia 10</option><option>dia 15</option><option>dia 20</option><option>30 dias após o aceite</option>
+        </select></label>
+        <label>Forma de cobrança<select id="forma">
+          <option>Pix</option><option>Pix ou boleto</option><option>Boleto</option><option>Cartão (recorrente)</option>
+        </select></label>
+      </div>
+      <label>Observações (uma por linha)<textarea id="obs" rows="3"></textarea></label>
+    </fieldset>
+  </aside>
+
+  <main class="preview"><article class="sheet" id="sheet"></article></main>
+</div>
+
+<div class="actions">
+  <button class="btn primary" type="button" id="print">Salvar PDF</button>
+  <button class="btn" type="button" id="copy">Copiar p/ WhatsApp</button>
+  <button class="btn danger" type="button" id="novo">Novo orçamento</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ---- Dados da Movitech (os mesmos de contratos/README.md) ----
+const MOVITECH = {
+  nome: 'Movitech Sistemas',
+  doc: '[CNPJ]',
+  cidade: 'Barueri/SP',
+  whats: '(11) 96445-2878',
+  email: '[e-mail]',
+  site: 'movitechsistemas.com.br',
+  vendedor: 'John',
+};
+
+// ---- Catálogo: preços sugeridos (tipo: unico | mensal | anual) ----
+const CATALOGO = [
+  ['Sistema para restaurantes', 'Cardápio digital, QR na mesa, delivery e retirada sem comissão, tela da cozinha, conta da mesa, Pix, cupons, relatórios e inteligência', 'mensal', 199],
+  ['Implantação do sistema', 'Cadastro do cardápio com fotos, formas de pagamento, taxas, equipe, QR codes em PDF e treinamento da equipe (até 2 h)', 'unico', 390],
+  ['Placas de QR code para mesa', 'Impressas em PVC/acrílico com a marca do restaurante (por unidade)', 'unico', 25],
+  ['WhatsApp automático (configuração)', 'Ligação com a API oficial do WhatsApp (Meta) para avisar o cliente a cada etapa do pedido. Custo das mensagens da Meta pago pelo cliente.', 'unico', 190],
+  ['Site / vitrine profissional', 'Uma página com a marca do negócio: serviços, fotos, horário, mapa, botão de WhatsApp, link na bio. Até 2 rodadas de ajuste.', 'unico', 890],
+  ['Site com várias páginas', 'Até 5 páginas (início, sobre, serviços, galeria, contato), textos revisados e SEO básico', 'unico', 1690],
+  ['Catálogo / agendamento online', 'Catálogo com fotos e preços ou agenda de horários, com pedido/agendamento pelo WhatsApp', 'unico', 1290],
+  ['Hospedagem e manutenção do site', 'Site no ar, SSL, cópia de segurança e até 1 h/mês de pequenas alterações (textos, fotos, preços)', 'mensal', 59],
+  ['Domínio próprio (.com.br)', 'Registro no Registro.br em nome do cliente, renovação anual', 'anual', 40],
+  ['Otimização do Google (Perfil da Empresa)', 'Revisão do perfil, categorias, horário, fotos, link de pedido/agendamento e pedido de avaliações', 'unico', 290],
+  ['Hora técnica', 'Alterações fora do escopo, treinamentos extras ou integrações (por hora)', 'unico', 90],
+  ['Visita presencial extra', 'Em Barueri e região, além das visitas da implantação', 'unico', 120],
+];
+
+const TIPOS = { unico: 'Único', mensal: 'Mensal', anual: 'Anual' };
+const $ = id => document.getElementById(id);
+const brl = v => (Number(v) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const linhas = s => String(s || '').split('\n').map(l => l.trim()).filter(Boolean);
+const hoje = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); }; // data local, não UTC
+const fmtData = iso => iso ? iso.split('-').reverse().join('/') : '';
+const STORE = 'movitech-orcamento-v1';
+const CAMPOS = ['numero', 'data', 'validade', 'titulo', 'cliente', 'responsavel', 'doc', 'whats', 'cidade', 'email', 'achados', 'objetivos', 'desconto', 'prazo', 'pagamento', 'fidelidade', 'vencimento', 'forma', 'obs'];
+
+function proximoNumero(ultimo) {
+  const ano = new Date().getFullYear();
+  const m = /^MVT-(\d{4})-(\d+)$/.exec(ultimo || '');
+  const n = m && Number(m[1]) === ano ? Number(m[2]) + 1 : 1;
+  return `MVT-${ano}-${String(n).padStart(3, '0')}`;
+}
+
+function padrao(ultimo) {
+  return {
+    numero: proximoNumero(ultimo), data: hoje(), validade: 15, titulo: 'Proposta sob medida',
+    cliente: '', responsavel: '', doc: '', whats: '', cidade: '', email: '',
+    achados: '', objetivos: '', desconto: 0, prazo: 7,
+    pagamento: '50% no aceite e 50% na entrega', fidelidade: '0', vencimento: 'dia 10', forma: 'Pix',
+    obs: 'Valores sem impostos adicionais.\nCustos de terceiros (mensagens do WhatsApp/Meta, domínio, impressão) são pagos pelo cliente, quando houver.',
+    itens: [],
+  };
+}
+
+let estado;
+try { estado = JSON.parse(localStorage.getItem(STORE)); } catch { estado = null; }
+if (!estado || !Array.isArray(estado.itens)) estado = padrao();
+
+function salvar() { try { localStorage.setItem(STORE, JSON.stringify(estado)); } catch {} }
+
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 1800); }
+
+// ---- Formulário ----
+$('catalogo').innerHTML = CATALOGO.map((c, i) => `<option value="${i}">${esc(c[0])} · ${brl(c[3])} ${c[2] === 'unico' ? '' : '/' + (c[2] === 'mensal' ? 'mês' : 'ano')}</option>`).join('');
+
+function preencher() {
+  CAMPOS.forEach(k => { $(k).value = estado[k] ?? ''; });
+  desenharItens();
+}
+
+function desenharItens() {
+  $('itens').innerHTML = estado.itens.map((it, i) => `
+    <div class="item" data-i="${i}">
+      <div class="item-head"><span>Item ${i + 1}</span><button class="btn small danger" type="button" data-del="${i}">Remover</button></div>
+      <label>Descrição<input data-k="nome" value="${esc(it.nome)}"></label>
+      <label>Detalhe<textarea data-k="detalhe" rows="2">${esc(it.detalhe)}</textarea></label>
+      <div class="row3">
+        <label>Tipo<select data-k="tipo">${Object.entries(TIPOS).map(([v, t]) => `<option value="${v}" ${it.tipo === v ? 'selected' : ''}>${t}</option>`).join('')}</select></label>
+        <label>Qtd<input data-k="qtd" type="number" min="1" value="${esc(it.qtd)}"></label>
+        <label>Valor unit. (R$)<input data-k="valor" type="number" min="0" step="0.01" value="${esc(it.valor)}"></label>
+      </div>
+    </div>`).join('');
+}
+
+$('itens').addEventListener('input', e => {
+  const box = e.target.closest('.item'); const k = e.target.dataset.k;
+  if (!box || !k) return;
+  const it = estado.itens[box.dataset.i];
+  it[k] = ['qtd', 'valor'].includes(k) ? Number(e.target.value) : e.target.value;
+  atualizar();
+});
+$('itens').addEventListener('click', e => {
+  const i = e.target.dataset.del; if (i === undefined) return;
+  estado.itens.splice(Number(i), 1); desenharItens(); atualizar();
+});
+$('addCat').onclick = () => {
+  const [nome, detalhe, tipo, valor] = CATALOGO[$('catalogo').value];
+  estado.itens.push({ nome, detalhe, tipo, qtd: 1, valor }); desenharItens(); atualizar();
+};
+$('addItem').onclick = () => { estado.itens.push({ nome: '', detalhe: '', tipo: 'unico', qtd: 1, valor: 0 }); desenharItens(); atualizar(); };
+CAMPOS.forEach(k => $(k).addEventListener('input', () => { estado[k] = $(k).value; atualizar(); }));
+
+// ---- Cálculo ----
+function totais() {
+  const soma = tipo => estado.itens.filter(i => i.tipo === tipo).reduce((s, i) => s + (Number(i.qtd) || 0) * (Number(i.valor) || 0), 0);
+  const unicoBruto = soma('unico');
+  const desc = Math.min(100, Math.max(0, Number(estado.desconto) || 0));
+  const descValor = Math.round(unicoBruto * desc) / 100;
+  const unico = unicoBruto - descValor;
+  const mensal = soma('mensal'), anual = soma('anual');
+  return { unicoBruto, desc, descValor, unico, mensal, anual, primeiro: unico + mensal + anual };
+}
+
+function validoAte() {
+  if (!estado.data) return '';
+  const d = new Date(estado.data + 'T12:00:00'); d.setDate(d.getDate() + (Number(estado.validade) || 0));
+  return d.toLocaleDateString('pt-BR');
+}
+
+// ---- Folha ----
+function atualizar() {
+  salvar();
+  const t = totais();
+  const achados = linhas(estado.achados), objetivos = linhas(estado.objetivos), obs = linhas(estado.obs);
+  const fid = Number(estado.fidelidade);
+  const cliente = estado.cliente || 'Nome do negócio';
+  const dadosCliente = [estado.responsavel, estado.doc, estado.whats, estado.email, estado.cidade].filter(Boolean).map(esc).join('<br>');
+
+  const linhasItens = estado.itens.length ? estado.itens.map(it => {
+    const sub = (Number(it.qtd) || 0) * (Number(it.valor) || 0);
+    const suf = it.tipo === 'mensal' ? '/mês' : it.tipo === 'anual' ? '/ano' : '';
+    return `<tr><td>${esc(it.nome) || '<span class="empty">Sem descrição</span>'}${it.detalhe ? `<small>${esc(it.detalhe)}</small>` : ''}</td>
+      <td><span class="tag">${TIPOS[it.tipo] || ''}</span></td>
+      <td class="n">${esc(it.qtd)}</td>
+      <td class="n">${sub === 0 ? '<span class="free">Cortesia</span>' : brl(sub) + suf}</td></tr>`;
+  }).join('') : '<tr><td colspan="4" class="empty">Adicione itens no painel ao lado.</td></tr>';
+
+  const cond = [
+    t.unico > 0 && `Valores únicos (implantação/projeto): ${esc(estado.pagamento)}.`,
+    t.mensal > 0 && `Mensalidade de ${brl(t.mensal)} com vencimento no ${esc(estado.vencimento)}, via ${esc(estado.forma)}. A primeira mensalidade começa a contar no aceite da implantação.`,
+    t.mensal > 0 && (fid ? `Fidelidade de ${fid} meses. Cancelamento antes disso: multa de 30% das mensalidades restantes.` : 'Sem fidelidade: cancele quando quiser, avisando com 30 dias.'),
+    t.mensal > 0 && 'Reajuste anual pelo IPCA, a partir de 12 meses de contrato.',
+    estado.prazo && `Entrega em até ${esc(estado.prazo)} dias úteis após o aceite e o envio do material (cardápio, fotos, logo, acessos).`,
+    ...obs.map(esc),
+  ].filter(Boolean);
+
+  $('sheet').innerHTML = `
+    <div class="s-top">
+      <div class="s-brand"><div class="logo">M</div><div><b>Movitech</b><small>Sistemas · ${esc(MOVITECH.cidade)}</small></div></div>
+      <div class="s-meta"><strong>Orçamento ${esc(estado.numero)}</strong><br>Emitido em ${fmtData(estado.data)}<br>Válido até ${validoAte()}</div>
+    </div>
+    <h1 class="s-title">${esc(estado.titulo) || 'Proposta'} <em>para ${esc(cliente)}</em></h1>
+    <p class="s-sub">Só com o que faz diferença para o seu negócio, sem pacote fechado.</p>
+    <div class="s-grid">
+      <div class="s-box"><h4>Cliente</h4><strong>${esc(cliente)}</strong>${dadosCliente ? '<br>' + dadosCliente : ''}</div>
+      <div class="s-box"><h4>Movitech</h4><strong>${esc(MOVITECH.nome)}</strong><br>${esc(MOVITECH.doc)}<br>${esc(MOVITECH.vendedor)} · WhatsApp ${esc(MOVITECH.whats)}<br>${esc(MOVITECH.site)}</div>
+    </div>
+    ${achados.length ? `<p class="s-h">O que encontramos no diagnóstico</p><ul class="s-list">${achados.map(a => `<li>${esc(a)}</li>`).join('')}</ul>` : ''}
+    ${objetivos.length ? `<p class="s-h">O que vamos resolver</p><ul class="s-list">${objetivos.map(a => `<li>${esc(a)}</li>`).join('')}</ul>` : ''}
+    <p class="s-h">Investimento</p>
+    <table><thead><tr><th>Item</th><th>Tipo</th><th class="n">Qtd</th><th class="n">Valor</th></tr></thead><tbody>${linhasItens}</tbody></table>
+    <div class="totals">
+      <div class="total"><span>Implantação / projeto</span><b>${brl(t.unico)}</b>${t.desc ? `<br><small>${brl(t.unicoBruto)} com ${t.desc}% de desconto</small>` : ''}</div>
+      <div class="total"><span>Mensalidade</span><b>${brl(t.mensal)}</b>${t.anual ? `<br><small>+ ${brl(t.anual)}/ano</small>` : ''}</div>
+      <div class="total main"><span>Para começar</span><b>${brl(t.primeiro)}</b></div>
+    </div>
+    <p class="s-h">Condições</p>
+    <ul class="s-cond">${cond.map(c => `<li>${c}</li>`).join('')}</ul>
+    <p class="s-h">Próximos passos</p>
+    <ul class="s-cond"><li>Responda "de acordo" no WhatsApp ou assine abaixo.</li><li>Enviamos o contrato para assinatura eletrônica e combinamos a data da implantação.</li><li>Você vê tudo funcionando antes de divulgar para os seus clientes.</li></ul>
+    <div class="sign"><div>${esc(cliente)}${estado.responsavel ? ' · ' + esc(estado.responsavel) : ''}<br>De acordo em ___/___/______</div><div>${esc(MOVITECH.nome)} · ${esc(MOVITECH.vendedor)}</div></div>
+    <div class="s-foot"><span>Este orçamento não é contrato. As condições finais ficam no contrato assinado.</span><span>${esc(MOVITECH.whats)} · ${esc(MOVITECH.email)}</span></div>`;
+}
+
+// ---- Ações ----
+$('print').onclick = () => { const antes = document.title; document.title = `Orçamento ${estado.numero} - ${estado.cliente || 'cliente'}`; window.print(); document.title = antes; };
+$('novo').onclick = () => {
+  if (!confirm('Começar um orçamento novo? O atual será apagado deste navegador (salve o PDF antes).')) return;
+  estado = padrao(estado.numero); preencher(); atualizar();
+};
+$('copy').onclick = async () => {
+  const t = totais();
+  const itens = estado.itens.map(i => {
+    const v = (Number(i.qtd) || 0) * (Number(i.valor) || 0);
+    return `• ${i.nome}${Number(i.qtd) > 1 ? ` (${i.qtd}x)` : ''}: ${v ? brl(v) + (i.tipo === 'mensal' ? '/mês' : i.tipo === 'anual' ? '/ano' : '') : 'cortesia'}`;
+  }).join('\n');
+  const txt = `Olá${estado.responsavel ? ', ' + estado.responsavel.split(' ')[0] : ''}! Segue o orçamento ${estado.numero} da Movitech para ${estado.cliente || 'vocês'}:\n\n${itens}\n\n` +
+    (t.unico ? `Implantação/projeto: *${brl(t.unico)}* (${estado.pagamento})\n` : '') +
+    (t.mensal ? `Mensalidade: *${brl(t.mensal)}*\n` : '') +
+    `\nVálido até ${validoAte()}. Te mando o PDF completo aqui também. Ficou alguma dúvida?`;
+  try { await navigator.clipboard.writeText(txt); toast('Resumo copiado'); }
+  catch { prompt('Copie o texto:', txt); }
+};
+
+preencher(); atualizar();
+</script>
+</body>
+</html>
