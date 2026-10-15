@@ -308,7 +308,7 @@ function Popup({ icone, titulo, texto, delay = 0, x, y, rot = 0, w = 640, flipAt
 }
 
 function Logo({ size = 140, draw = 1 }) {
-  const d = 'M14.5 32.5v-17l9.5 11 9.5-11v17'
+  const d = 'M18 15.5v17h12'
   const ev = evolvePath(Math.max(0.0001, draw), d)
   return (
     <svg viewBox="0 0 48 48" width={size} height={size} style={{ filter: `drop-shadow(0 0 ${size * 0.15}px ${C.gold})` }}>
