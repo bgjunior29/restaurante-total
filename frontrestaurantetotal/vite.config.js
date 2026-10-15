@@ -6,6 +6,8 @@ const API_PORT = process.env.API_PORT || 8000
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  // cardapio.html é a mesma aplicação, com as tags de prévia neutras para os links /r/... (ver vercel.json)
+  build: { rollupOptions: { input: { main: 'index.html', cardapio: 'cardapio.html' } } },
   server: {
     host: true, // permite abrir pelo celular na mesma rede (QR code)
     port: 5190, // 5180 é do Bar Total; 5173 do sistema de delivery

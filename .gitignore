@@ -11,3 +11,8 @@ tests/test.db*
 
 # Documentação interna (local, fora do git)
 docs/
+
+# Melhorias dos contratos: cita falhas de segurança ainda abertas (local, fora do git, como docs/)
+contratos/melhorias-e-sugestoes.md
+contratos/html/melhorias-e-sugestoes.html
+contratos/pdf/melhorias-e-sugestoes.pdf

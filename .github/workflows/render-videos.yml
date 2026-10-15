@@ -1,4 +1,6 @@
-# Renderiza os vídeos da Movi (Remotion) num servidor Linux e salva os MP4 de volta nesta branch (videos/renders/).
+# Renderiza os anúncios em HTML puro (videos/html/<video>) num servidor Linux e salva os MP4 nesta branch (videos/renders/).
+# Usa a narração que já vem no commit (public/voz) e gera só a trilha. Mesmo pipeline do PC: render_html.mjs + montar_mp4.py,
+# trocando o Opera GX pelo Chromium do Playwright.
 # Roda a cada push na branch videos-render ou manualmente (Actions > Render vídeos > Run workflow).
 name: Render vídeos
 
@@ -14,7 +16,7 @@ permissions:
 jobs:
   render:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     defaults:
       run:
         working-directory: videos
@@ -27,63 +29,31 @@ jobs:
           cache: npm
           cache-dependency-path: videos/package-lock.json
 
-      - name: Dependências do Chrome headless
-        run: |
-          sudo apt-get update -q
-          sudo apt-get install -y -q libnss3 libdbus-1-3 libatk1.0-0 libatk-bridge2.0-0 libgbm1 libasound2t64 \
-            libxrandr2 libxkbcommon0 libxfixes3 libxcomposite1 libxdamage1 libpango-1.0-0 libcairo2 libcups2 fonts-noto-color-emoji
-
       - run: npm ci
+
+      - name: Chromium do Playwright
+        run: npx playwright-core install --with-deps chromium
 
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: ffmpeg do sistema (para checar o áudio)
-        run: sudo apt-get install -y -q ffmpeg
+      - run: pip install -q av numpy pillow
 
-      # Thalita (voz feminina, edge-tts). Se o serviço recusar, usa o Piper (voz masculina, local).
-      - name: Narração
-        run: |
-          pip install -q edge-tts
-          # Narração da Thalita já commitada (gerada no PC)? Usa ela e não gera de novo.
-          if python -c "import json,glob,sys; fs=glob.glob('src/voz/nicho-*.json'); sys.exit(0 if fs and all('voz' not in json.load(open(f,encoding='utf-8')) and not json.load(open(f,encoding='utf-8')).get('provisorio') for f in fs) else 1)"; then
-            echo "VOZ=thalita" >> "$GITHUB_ENV"
-            echo "usando a narração da Thalita que veio no commit"
-          elif python scripts/gerar_voz.py nicho-; then
-            echo "VOZ=thalita" >> "$GITHUB_ENV"
-          else
-            echo "edge-tts recusou; usando Piper"
-            pip install -q piper-tts
-            mkdir -p models
-            base=https://huggingface.co/rhasspy/piper-voices/resolve/main/pt/pt_BR/faber/medium
-            curl -sL -o models/pt_BR-faber-medium.onnx "$base/pt_BR-faber-medium.onnx"
-            curl -sL -o models/pt_BR-faber-medium.onnx.json "$base/pt_BR-faber-medium.onnx.json"
-            python scripts/gerar_voz_piper.py nicho-
-            echo "VOZ=piper" >> "$GITHUB_ENV"
-          fi
-
-      - name: Conferir que a narração tem som
-        run: python scripts/checar_audio.py public/voz/nicho-*.mp3
-
-      # O cardápio real (cardapio.json) não vai para o git; os vídeos de nicho não usam, mas o Root importa.
-      - name: Cardápio vazio para o bundle
-        run: test -f src/cardapio.json || echo '{"dishes":[],"colors":{}}' > src/cardapio.json
-
-      - run: npx remotion browser ensure
+      - name: Trilha de fundo
+        run: python scripts/gerar_trilha.py
 
       - name: Renderizar
         run: |
+          node scripts/render_html.mjs movitech- nicho-
           mkdir -p renders
-          for n in clinicas saloes imobiliarias autoescolas oficinas contabilidade petshops; do
-            npx remotion render src/index.jsx "MGNicho-$n" "renders/movi-mg-nicho-$n.mp4" --log=error
-          done
+          for f in out/*.mp4; do cp "$f" "renders/lexmovi-$(basename "$f" | sed 's/^movitech-//')"; done
           ls -la renders
 
       - name: Salvar os MP4 nesta branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898733+github-actions[bot]@users.noreply.github.com"
-          git add -f renders/*.mp4 public/voz src/voz
-          git commit -m "Vídeos de nicho renderizados pelo GitHub Actions (voz: $VOZ) [skip ci]"
+          git add -f renders/*.mp4
+          git commit -m "Vídeos Lexmovi renderizados pelo GitHub Actions [skip ci]"
           git push

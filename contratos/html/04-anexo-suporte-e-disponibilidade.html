@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anexo III · Suporte e disponibilidade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#0f0e0c; --panel:#1f1d19; --line:#2e2b26; --ink:#1b1915; --muted:#6b665c; --gold:#d4b483; --gold-d:#8a7350; --paper:#fffdf9; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #ece8df; color: var(--ink); font: 13.5px/1.6 Inter, system-ui, sans-serif; }
+.barra { position: sticky; top: 0; z-index: 5; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 10px 16px; background: var(--bg); color: #f2efe8; }
+.barra b { font: 22px/1 "Instrument Serif", Georgia, serif; font-weight: 400; margin-right: auto; }
+.barra span { color: #9a958b; font-size: 12px; }
+.barra a, .barra button { font: inherit; font-size: 13px; color: #f2efe8; background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer; text-decoration: none; }
+.barra .principal { background: var(--gold); border-color: var(--gold); color: #141310; font-weight: 600; }
+.folha { max-width: 210mm; margin: 24px auto; background: var(--paper); padding: 18mm 18mm 20mm; box-shadow: 0 10px 40px rgba(0,0,0,.12); outline: none; }
+.topo { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd5c6; padding-bottom: 8px; margin-bottom: 6px; font-size: 11px; color: var(--muted); }
+.topo .marca { display: flex; gap: 8px; align-items: center; color: var(--ink); font: 20px/1 "Instrument Serif", Georgia, serif; }
+.topo .logo { width: 26px; height: 26px; border-radius: 50%; background: #141310; color: var(--gold); display: grid; place-items: center; font-size: 16px; }
+h1 { font: 32px/1.1 "Instrument Serif", Georgia, serif; font-weight: 400; margin: 18px 0 10px; }
+h2 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-d); margin: 22px 0 6px; break-after: avoid; }
+h3 { font-size: 13.5px; margin: 16px 0 4px; break-after: avoid; }
+p { margin: 6px 0; text-align: justify; }
+ul, ol { margin: 6px 0; padding-left: 22px; }
+ul.check { list-style: none; padding-left: 4px; }
+li { margin: 2px 0; }
+table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 12.5px; break-inside: avoid; }
+th { text-align: left; font-size: 11px; color: var(--muted); border-bottom: 1px solid #cfc7b7; padding: 5px 6px; }
+td { border-bottom: 1px solid #e7e0d2; padding: 5px 6px; vertical-align: top; }
+table.assinatura td { border: 0; padding: 26px 10px 4px 0; width: 50%; }
+hr { border: 0; border-top: 1px solid #ddd5c6; margin: 16px 0; }
+blockquote { margin: 10px 0; padding: 8px 12px; background: #f3eee4; border-left: 3px solid var(--gold); font-size: 12.5px; }
+code { font-size: 12px; background: #f1ece2; padding: 0 4px; border-radius: 3px; }
+pre { background: #f1ece2; padding: 10px; border-radius: 6px; font-size: 11px; overflow-x: auto; }
+a { color: inherit; }
+.campo { background: #fbecc4; border-radius: 3px; padding: 0 2px; }
+.rodape { margin-top: 26px; font-size: 10.5px; color: var(--muted); border-top: 1px solid #ddd5c6; padding-top: 6px; }
+.aviso { max-width: 210mm; margin: 0 auto; padding: 0 16px; font-size: 12px; color: var(--muted); }
+@media (max-width: 820px) { .folha { margin: 0; padding: 20px 16px; box-shadow: none; } p { text-align: left; } table { display: block; overflow-x: auto; } }
+@media print {
+  @page { size: A4; margin: 16mm 16mm 18mm; }
+  html, body { background: #fff; }
+  .barra, .aviso { display: none !important; }
+  .folha { margin: 0; padding: 0; box-shadow: none; max-width: none; background: #fff; }
+  .pdf .campo, .imprimir-limpo .campo { background: none; }
+  a { text-decoration: none; }
+}</style></head>
+<body class="html">
+<div class="barra"><b>Lexmovi</b>
+  <span id="estado">Clique no texto para preencher os campos amarelos.</span>
+  <a href="../index.html">Todos os documentos</a>
+  <a href="../pdf/04-anexo-suporte-e-disponibilidade.pdf" download>PDF em branco</a>
+  <button type="button" id="limpar">Desfazer edições</button>
+  <button type="button" class="principal" id="baixar">Baixar PDF preenchido</button>
+</div>
+<p class="aviso">No "Baixar PDF preenchido", escolha <strong>Salvar como PDF</strong> como destino. As edições ficam salvas só neste navegador.</p>
+<article class="folha" id="folha" contenteditable="true" spellcheck="false">
+<div class="topo"><span class="marca"><span class="logo">L</span>Lexmovi</span><span>Lexmovi Sistemas · Barueri/SP · (11) 96445-2878</span></div>
+<h1>Anexo III · Suporte e disponibilidade</h1>
+<p>Parte do contrato nº <span class="campo">[MVT-AAAA-NNN]</span>.</p>
+<h2>1. Como pedir suporte</h2>
+<table><thead><tr><th>Canal</th><th>Quando</th></tr></thead><tbody><tr><td>WhatsApp (11) 96445-2878</td><td>qualquer pedido; mande print e o que estava fazendo</td></tr><tr><td>E-mail <span class="campo">[suporte@...]</span></td><td>pedidos que precisam de registro (mudança de escopo, cancelamento, dados pessoais)</td></tr></tbody></table>
+<p>Horário de atendimento: <strong><span class="campo">[segunda a sábado, das 10h às 22h]</span></strong>, horário de Brasília, exceto feriados nacionais. Fora desse horário, só chamados <strong>críticos</strong> são atendidos, no melhor esforço.</p>
+<h2>2. Prioridades e prazos de resposta</h2>
+<table><thead><tr><th>Prioridade</th><th>Exemplo</th><th>Primeira resposta</th><th>Meta de solução</th></tr></thead><tbody><tr><td><strong>Crítica</strong></td><td>sistema fora do ar; ninguém consegue fazer pedido; cozinha não recebe pedidos</td><td><strong>1 hora</strong> no horário de atendimento</td><td>4 horas</td></tr><tr><td><strong>Alta</strong></td><td>uma função importante não funciona (Pix, conta da mesa, impressão, login de um usuário) e não há forma alternativa</td><td>4 horas</td><td>1 dia útil</td></tr><tr><td><strong>Normal</strong></td><td>erro com forma alternativa; dúvida de uso; ajuste de cadastro</td><td>1 dia útil</td><td>3 dias úteis</td></tr><tr><td><strong>Melhoria</strong></td><td>sugestão de nova função ou mudança</td><td>3 dias úteis</td><td>entra na lista de melhorias, sem prazo</td></tr></tbody></table>
+<p>"Primeira resposta" é quando alguém da LEXMOVI confirma que está cuidando. "Meta de solução" é o prazo esperado para resolver ou dar uma forma de contornar.</p>
+<h2>3. O que está incluso</h2>
+<ul><li>Correção de falhas do sistema.</li><li>Dúvidas de uso do CLIENTE e da equipe.</li><li>Ajustes simples de cadastro que o CLIENTE não consiga fazer sozinho: até <span class="campo">[2]</span> por mês.</li><li>Atualizações e melhorias liberadas para todos os clientes do plano.</li><li>Cópia de segurança diária e restauração em caso de falha do sistema.</li></ul>
+<h2>4. O que não está incluso (cobrado por hora técnica)</h2>
+<ul><li>Recadastrar o cardápio inteiro ou mudanças grandes que o próprio CLIENTE pode fazer pelo painel.</li><li>Treinamento de funcionários novos depois da implantação (além de <span class="campo">[1]</span> treinamento por semestre).</li><li>Problemas de equipamento, impressora, rede Wi-Fi ou internet do CLIENTE.</li><li>Restaurar dados apagados pelo próprio CLIENTE (é possível a partir da cópia de segurança, com cobrança).</li><li>Integrações e funções novas feitas só para o CLIENTE.</li><li>Visita presencial que não seja de falha do sistema.</li></ul>
+<h2>5. Disponibilidade</h2>
+<p>5.1. <strong>Meta de disponibilidade: <span class="campo">[99%]</span> por mês</strong> no horário de funcionamento informado pelo CLIENTE (<span class="campo">[11h às 23h59]</span>), medida pela LEXMOVI. Não contam: manutenções avisadas com 48 h; falhas de internet do CLIENTE; falhas gerais de provedores (hospedagem, WhatsApp/Meta, bancos); ataques que fujam ao controle razoável da LEXMOVI.</p>
+<p>5.2. <strong>Crédito por indisponibilidade:</strong> se a disponibilidade do mês ficar abaixo da meta por culpa da LEXMOVI, o CLIENTE tem desconto na mensalidade seguinte, pedindo em até 30 dias:</p>
+<table><thead><tr><th>Disponibilidade no mês</th><th>Desconto</th></tr></thead><tbody><tr><td>entre 97% e a meta</td><td>10%</td></tr><tr><td>entre 95% e 97%</td><td>25%</td></tr><tr><td>abaixo de 95%</td><td>50%</td></tr></tbody></table>
+<p>O crédito é a única compensação por indisponibilidade e não passa de 50% de uma mensalidade.</p>
+<p>5.3. <strong>Plano B:</strong> em caso de queda, o CLIENTE pode continuar atendendo pelo link de WhatsApp e comanda de papel. A LEXMOVI avisa pelo WhatsApp quando o sistema voltar.</p>
+<h2>6. Cópias de segurança</h2>
+<p>Cópia diária do banco de dados, criptografada, guardada por <span class="campo">[30]</span> dias. Em caso de perda por falha do sistema, a LEXMOVI restaura a cópia mais recente sem custo. A perda máxima esperada é de 24 horas de dados.</p>
+</article>
+<script>
+const CHAVE = 'movitech-doc-04-anexo-suporte-e-disponibilidade', folha = document.getElementById('folha'), original = folha.innerHTML
+try { const s = localStorage.getItem(CHAVE); if (s) { folha.innerHTML = s; document.getElementById('estado').textContent = 'Edições anteriores recuperadas.' } } catch {}
+folha.addEventListener('input', () => { try { localStorage.setItem(CHAVE, folha.innerHTML) } catch {} document.getElementById('estado').textContent = 'Salvo neste navegador.' })
+document.getElementById('limpar').onclick = () => { if (!confirm('Voltar ao modelo em branco? As edições serão perdidas.')) return; folha.innerHTML = original; try { localStorage.removeItem(CHAVE) } catch {} }
+document.getElementById('baixar').onclick = () => { document.body.classList.add('imprimir-limpo'); window.print(); document.body.classList.remove('imprimir-limpo') }
+</script>
+</body></html>
