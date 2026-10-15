@@ -120,7 +120,7 @@ const VIDEOS = {
   'movitech-negocios': {
     voz: 'anuncio-negocios', rotulo: 'para empresas',
     cenas: [
-      { cena: 'abertura', tipo: 'falas', logo: true, destaque: 'Movi' },
+      { cena: 'abertura', tipo: 'falas', logo: true, destaque: 'Lexmovi' },
       { cena: 'problema', tipo: 'pergunta', icone: 'lupa', destaque: 'perde cliente' },
       { cena: 'exemplos', tipo: 'lista', titulo: 'Acontece muito', itens: ['WhatsApp que não abre', 'Site que demora', 'Aviso de “não seguro”'] },
       { cena: 'solucao', tipo: 'diagnostico' },
@@ -131,7 +131,7 @@ const VIDEOS = {
   'movitech-apresentacao': {
     voz: 'apresentacao', rotulo: 'de Barueri/SP',
     cenas: [
-      { cena: 'abertura', tipo: 'falas', logo: true, destaque: 'Movi Lexmovi vender mais trabalhar menos' },
+      { cena: 'abertura', tipo: 'falas', logo: true, destaque: 'Lexmovi vender mais trabalhar menos' },
       { cena: 'problema', tipo: 'lista', intro: 'Negócio bom | perdendo | *cliente.*', itens: ['Site que demora', 'WhatsApp que não abre', 'Cardápio em PDF', 'Comissão em cada pedido'] },
       { cena: 'sistemas', tipo: 'celular', titulo: 'Sistemas por <em>assinatura</em>', tamTitulo: 88, tela: CARDAPIO,
         recursos: [{ txt: 'QR code na mesa', palavra: 'QR' }, { txt: 'Delivery próprio', palavra: 'delivery' }, { txt: 'Tela da cozinha', palavra: 'tela' }] },
