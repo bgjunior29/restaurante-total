@@ -21,6 +21,7 @@
       ]
     },
     { "handle": "filesystem" },
+    { "src": "/v/([a-z]+)/?", "dest": "/v/$1/index.html" },
     { "src": "/r/(.*)", "dest": "/cardapio.html" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
