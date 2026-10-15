@@ -70,7 +70,7 @@ function LogoMark({ size = 120 }) {
   return (
     <svg viewBox="0 0 48 48" width={size} height={size}>
       <circle cx="24" cy="24" r="23" fill={C.dark} stroke={`${C.gold}73`} strokeWidth="1" />
-      <path d="M14.5 32.5v-17l9.5 11 9.5-11v17" fill="none" stroke={C.gold} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M18 15.5v17h12" fill="none" stroke={C.gold} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }

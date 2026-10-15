@@ -679,7 +679,7 @@ function LinhaDoTempo() {
 
 function AberturaApresentacao() {
   const frame = useCurrentFrame()
-  const d = 'M14.5 32.5v-17l9.5 11 9.5-11v17'
+  const d = 'M18 15.5v17h12'
   const ev = evolvePath(Math.max(0.001, interpolate(frame, [0, 28], [0, 1], { ...clamp, easing: EASE })), d)
   return (
     <Area vertical={false} alinhar="flex-start">

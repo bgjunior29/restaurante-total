@@ -78,7 +78,7 @@
     moto: '<circle cx="5.5" cy="17" r="3"/><circle cx="18.5" cy="17" r="3"/><path d="M8.5 17h6.5l2.5-6H13l-2 3.5H5.5"/><path d="M15.5 11 14 6.5h-2.5"/><path d="M3 8.5h6v4H3z"/>',
     lupa: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5.5 5.5"/><path d="M7.5 10.5h6"/>',
   }
-  const LOGO = '<svg viewBox="0 0 48 48"><circle class="lc" cx="24" cy="24" r="23" fill="#141310" stroke="#d4b483" stroke-opacity=".5"/><path class="lm" d="M14.5 32.5v-17l9.5 11 9.5-11v17" fill="none" stroke="#d4b483" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  const LOGO = '<svg viewBox="0 0 48 48"><circle class="lc" cx="24" cy="24" r="23" fill="#141310" stroke="#d4b483" stroke-opacity=".5"/><path class="lm" d="M18 15.5v17h12" fill="none" stroke="#d4b483" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   const CHECK = (s = 44, cor = '#d4b483') => `<svg viewBox="0 0 24 24" width="${s}" height="${s}"><circle cx="12" cy="12" r="11" fill="${cor}"/><path d="m7 12.5 3.2 3.2L17.5 8.5" fill="none" stroke="#141310" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`
   const ZAP = (s = 70) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}"><path d="M12 2.2a9.8 9.8 0 0 0-8.4 14.8L2.3 21.8l4.9-1.3A9.8 9.8 0 1 0 12 2.2z" fill="#fff"/><path d="M9.1 7.3c-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.3 3.6 5.6 4.9 2.8 1.1 3.3.9 3.9.8.6-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.1-.3-.2-.6-.4l-2-1c-.3-.1-.5-.1-.7.1l-.9 1.2c-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6l.5-.5.3-.5c.1-.2 0-.4 0-.5z" fill="#25d366"/></svg>`
   // Desenha um SVG de traço (ícone/logo) de 0 a 1.
