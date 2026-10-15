@@ -185,4 +185,4 @@ Fala "pedido", "comanda", "mesa", "garçom", "cozinha". Frases curtas.
 - **Números de comissão:** falar em "em muitos planos" ou usar a calculadora; o percentual varia por contrato.
 - **Personagens da seção 4 não são clientes.** Não dar nome de restaurante real, não usar como prova.
 - **Fotos de restaurante, cliente ou equipe:** só com autorização.
-- **WhatsApp e site:** conferir se estão certos antes de publicar ([(11) 96445-2878] · [frontrestaurantetotal.vercel.app]).
+- **WhatsApp e site:** conferir se estão certos antes de publicar ([(11) 96445-2878] · [movitechsistemas.com.br]).

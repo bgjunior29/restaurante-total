@@ -25,9 +25,9 @@ services:
       - key: ORIGIN_SECRET
         sync: false
       - key: CORS_ORIGINS
-        value: https://frontrestaurantetotal.vercel.app
+        value: https://movitechsistemas.com.br,https://www.movitechsistemas.com.br,https://frontrestaurantetotal.vercel.app # o endereço antigo continua valendo (QR codes já impressos)
       - key: PUBLIC_URL
-        value: https://frontrestaurantetotal.vercel.app # base dos QR codes e dos links do WhatsApp
+        value: https://movitechsistemas.com.br # base dos QR codes e dos links do WhatsApp
       # Guarda os binários do Prisma dentro do projeto, para o start achar o que o build baixou.
       - key: PRISMA_BINARY_CACHE_DIR
         value: /opt/render/project/src/backendrestaurantetotal/.prisma-cache

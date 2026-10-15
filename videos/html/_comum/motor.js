@@ -446,7 +446,7 @@
     const ps = frase(tit, cfg.titulo || 'Peça seu | *orçamento*')
     const zap = el(`<div class="flex" style="left:110px;top:1010px;width:860px;height:160px;border-radius:80px;background:#25d366;display:flex;align-items:center;justify-content:center;gap:26px;color:#fff;font:800 64px/1 var(--sans);box-shadow:0 30px 70px rgba(37,211,102,.25)">
       <span style="display:inline-flex">${ZAP()}</span><span>(11) 96445-2878</span></div>`, box)
-    const site = el('<div style="left:0;top:1222px;width:1080px;text-align:center;font:500 38px/1 var(--sans);color:#9a958b">frontrestaurantetotal.vercel.app</div>', box)
+    const site = el('<div style="left:0;top:1222px;width:1080px;text-align:center;font:500 38px/1 var(--sans);color:#9a958b">movitechsistemas.com.br</div>', box)
     som('ding', inicio(nome) + 0.9, 0.22)
     return (t) => {
       const s5 = inicio(nome)

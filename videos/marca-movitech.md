@@ -4,7 +4,7 @@ Fonte: site (`frontrestaurantetotal/src/index.css`, páginas Landing e Restauran
 
 ## Identidade
 - Nome: **Movitech** (Movitech Sistemas, de Barueri/SP)
-- Site: frontrestaurantetotal.vercel.app (domínio movitechsistemas.com.br ainda não contratado)
+- Site: movitechsistemas.com.br (o endereço antigo frontrestaurantetotal.vercel.app continua funcionando)
 - WhatsApp de vendas: (11) 96445-2878
 - Logo: "M" em traço champanhe dentro de um círculo escuro (`frontrestaurantetotal/public/favicon.svg`)
 - Apresentadora: Movi (avatar ilustrado, `src/movi/`), voz pt-BR Thalita
