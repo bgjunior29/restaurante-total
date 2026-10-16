@@ -190,10 +190,18 @@ export function useLandingFx({ rootRef, canvasRef, cursorRef, dotRef, progressRe
       const S = { rotY: 0, rotX: 0, x: 0, y: 0, z: 0, scale: 1, appear: reduce ? 1 : 0.25, burst: 0, draw: reduce ? 1 : 0, vel: 0 };
       // O logo balança de leve com a velocidade do scroll.
       lenis?.on("scroll", ({ velocity }) => (S.vel = velocity));
-      import("./scene3d.js")
-        .then(({ createScene }) => {
+      // Só começa depois que a página abriu e os títulos entraram: assim a abertura não engasga.
+      // Os shaders ficam prontos em segundo plano (`ready`) antes do primeiro quadro do logo.
+      const idle = (fn) => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 1500 }) : setTimeout(fn, 600));
+      const loaded = new Promise((res) => (document.readyState === "complete" ? res() : addEventListener("load", res, { once: true })));
+      loaded
+        .then(() => new Promise((res) => setTimeout(() => idle(res), reduce ? 0 : 700)))
+        .then(() => (alive ? import("./scene3d.js") : null))
+        .then(async (mod) => {
+          if (!alive || !mod) return;
+          scene3d = mod.createScene(canvasRef.current, S, { mobile: !desk });
+          await scene3d.ready;
           if (!alive) return;
-          scene3d = createScene(canvasRef.current, S, { mobile: !desk });
           const t0 = performance.now();
           let current = null;
           let settle = 1;

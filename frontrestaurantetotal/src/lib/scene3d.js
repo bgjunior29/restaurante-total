@@ -17,24 +17,29 @@ const CAM_Z = 10;
  * Retorna `render(t)` para o ticker, `place()` para converter uma área da página em posição 3D e `destroy()`.
  */
 export function createScene(canvas, state, { mobile }) {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, mobile ? 1.5 : 2));
+  // Sem antialias no canvas (o composer desenha em outro alvo) e no máximo 1,5x de pixels: é o que mais pesa na GPU.
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "high-performance" });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, mobile ? 1 : 1.5));
   renderer.setSize(innerWidth, innerHeight, false);
+  // Conferir erro de shader obriga o navegador a compilar na hora (trava a página); em produção não precisa.
+  renderer.debug.checkShaderErrors = import.meta.env.DEV;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x0f0e0c, 0.045);
   const pmrem = new THREE.PMREMGenerator(renderer);
-  const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04, 0.1, 100, { size: 128 }).texture;
   scene.environment = envTex;
 
   const camera = new THREE.PerspectiveCamera(mobile ? 50 : 38, innerWidth / innerHeight, 0.1, 100);
   camera.position.set(0, 0, CAM_Z);
 
-  const gold = new THREE.MeshPhysicalMaterial({ color: 0xd4b483, metalness: 1, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.15, envMapIntensity: 1.4 });
-  const glass = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.08, transmission: 1, thickness: 0.6, ior: 1.45, envMapIntensity: 1.2, transparent: true });
-  const dark = new THREE.MeshPhysicalMaterial({ color: 0x1a1814, metalness: 0.6, roughness: 0.35, clearcoat: 1 });
+  // MeshStandard em vez de MeshPhysical: quase o mesmo brilho e o shader fica pronto bem mais rápido.
+  // O "vidro" do QR é só transparente (transmissão de verdade desenharia a cena duas vezes por quadro).
+  const gold = new THREE.MeshStandardMaterial({ color: 0xd4b483, metalness: 1, roughness: 0.2, envMapIntensity: 1.5 });
+  const glass = new THREE.MeshStandardMaterial({ color: 0x9c9384, metalness: 0.2, roughness: 0.15, envMapIntensity: 0.8, transparent: true, opacity: 0.25 });
+  const dark = new THREE.MeshStandardMaterial({ color: 0x1a1814, metalness: 0.6, roughness: 0.3 });
 
   const hero = new THREE.Group();
   scene.add(hero);
@@ -59,7 +64,7 @@ export function createScene(canvas, state, { mobile }) {
       totalEmissiveRadiance += vec3(1.0, 0.8, 0.5) * (band * 2.4 + uGlow);`,
     );
   };
-  const tube = new THREE.Mesh(new THREE.TubeGeometry(path, 400, R, 32, false), mGold);
+  const tube = new THREE.Mesh(new THREE.TubeGeometry(path, 240, R, 20, false), mGold);
   const tubeCount = tube.geometry.index.count;
   mGroup.add(tube);
   // Onde cada junta fica ao longo do traço (0 a 1), para acender quando o desenho chega nela.
@@ -68,7 +73,7 @@ export function createScene(canvas, state, { mobile }) {
   let acc = 0;
   const joints = pts.map((p, i) => {
     if (i > 0) acc += segLen[i - 1];
-    const s = new THREE.Mesh(new THREE.SphereGeometry(R, 32, 32), mGold);
+    const s = new THREE.Mesh(new THREE.SphereGeometry(R, 20, 20), mGold);
     s.position.copy(p);
     mGroup.add(s);
     return { mesh: s, at: acc / total };
@@ -76,14 +81,14 @@ export function createScene(canvas, state, { mobile }) {
   hero.add(mGroup);
 
   // Disco escuro e anel, como o círculo do logo.
-  const disc = new THREE.Mesh(new THREE.CylinderGeometry(3.05, 3.05, 0.22, 96), dark);
+  const disc = new THREE.Mesh(new THREE.CylinderGeometry(3.05, 3.05, 0.22, 64), dark);
   disc.rotation.x = Math.PI / 2;
   disc.position.z = -0.35;
   hero.add(disc);
   const ringMat = gold.clone();
   ringMat.emissive = new THREE.Color(0xd4b483);
   ringMat.emissiveIntensity = 0;
-  const ring = new THREE.Mesh(new THREE.TorusGeometry(3.12, 0.045, 24, 200), ringMat);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(3.12, 0.045, 12, 160), ringMat);
   ring.position.z = -0.3;
   hero.add(ring);
 
@@ -102,7 +107,7 @@ export function createScene(canvas, state, { mobile }) {
   hero.add(orbits);
   const lineMat = new THREE.MeshBasicMaterial({ color: 0xd4b483, transparent: true, opacity: 0.35 });
   [[3.7, 1.2, 0.3], [4.1, -0.5, 1.1], [4.5, 0.7, -0.6]].forEach(([r, a, b]) => {
-    const t = new THREE.Mesh(new THREE.TorusGeometry(r, 0.008, 8, 300), lineMat);
+    const t = new THREE.Mesh(new THREE.TorusGeometry(r, 0.008, 4, 200), lineMat);
     t.rotation.set(a, b, 0);
     orbits.add(t);
   });
@@ -115,22 +120,23 @@ export function createScene(canvas, state, { mobile }) {
   phone.add(screen);
   const qr = new THREE.Group();
   qr.add(new THREE.Mesh(new RoundedBoxGeometry(1.1, 1.1, 0.08, 4, 0.08), glass));
-  const qrCell = new THREE.BoxGeometry(0.11, 0.11, 0.04);
+  // Os quadradinhos do QR numa malha instanciada só (uma chamada de desenho em vez de ~35).
+  const cells = [];
   for (let i = 0; i < 7; i++)
     for (let j = 0; j < 7; j++)
-      if ((i * 7 + j * 3 + i * j) % 3 !== 0 || (i < 2 && j < 2) || (i > 4 && j < 2) || (i < 2 && j > 4)) {
-        const c = new THREE.Mesh(qrCell, gold);
-        c.position.set((i - 3) * 0.13, (j - 3) * 0.13, 0.05);
-        qr.add(c);
-      }
-  const ticket = new THREE.Mesh(new RoundedBoxGeometry(0.9, 1.3, 0.05, 4, 0.05), new THREE.MeshPhysicalMaterial({ color: 0x8f877a, roughness: 0.7 }));
+      if ((i * 7 + j * 3 + i * j) % 3 !== 0 || (i < 2 && j < 2) || (i > 4 && j < 2) || (i < 2 && j > 4)) cells.push([i, j]);
+  const qrCells = new THREE.InstancedMesh(new THREE.BoxGeometry(0.11, 0.11, 0.04), gold, cells.length);
+  const m4 = new THREE.Matrix4();
+  cells.forEach(([i, j], k) => qrCells.setMatrixAt(k, m4.makeTranslation((i - 3) * 0.13, (j - 3) * 0.13, 0.05)));
+  qr.add(qrCells);
+  const ticket = new THREE.Mesh(new RoundedBoxGeometry(0.9, 1.3, 0.05, 4, 0.05), new THREE.MeshStandardMaterial({ color: 0x8f877a, roughness: 0.7 }));
   const sats = [[phone, 3.9, 0, 0.3], [qr, 4.3, 2.1, -0.3], [ticket, 3.6, 4.2, 0.4]].map(([obj, r, phase, tilt]) => {
     hero.add(obj);
     return { obj, r, phase, tilt };
   });
 
   // Poeira dourada: partículas com shader próprio (brilho piscando e dispersão controlada pelo scroll).
-  const N = mobile ? 1400 : 3200;
+  const N = mobile ? 900 : 2200;
   const pos = new Float32Array(N * 3);
   const seed = new Float32Array(N);
   for (let i = 0; i < N; i++) {
@@ -176,10 +182,35 @@ export function createScene(canvas, state, { mobile }) {
   rim.position.set(-6, -2, -4);
   scene.add(rim);
 
-  const composer = new EffectComposer(renderer);
+  // O antialias fica no alvo do composer (4 amostras no computador). O brilho (bloom) roda em meia resolução.
+  const rt = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: mobile ? 0 : 4 });
+  const composer = new EffectComposer(renderer, rt);
   composer.addPass(new RenderPass(scene, camera));
-  composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.38, 0.55, 0.86));
+  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / 2, innerHeight / 2), 0.38, 0.55, 0.86);
+  const bloomSize = bloom.setSize.bind(bloom);
+  bloom.setSize = (w, h) => bloomSize(Math.round(w / 2), Math.round(h / 2));
+  composer.addPass(bloom);
   composer.addPass(new OutputPass());
+  composer.setSize(innerWidth, innerHeight);
+
+  // Qualidade automática: se a máquina não segura ~30 fps, baixa os pixels e desliga o brilho.
+  let frames = 0;
+  let slow = 0;
+  let prevT = 0;
+  let lowered = false;
+  function adapt(t) {
+    const dt = t - prevT;
+    prevT = t;
+    if (lowered || frames++ < 30 || dt > 0.5) return; // ignora a largada e abas que voltaram do segundo plano
+    slow = dt > 0.04 ? slow + 1 : Math.max(0, slow - 1);
+    if (slow > 45) {
+      lowered = true;
+      renderer.setPixelRatio(1);
+      bloom.enabled = false;
+      composer.setPixelRatio(1);
+      onResize();
+    }
+  }
 
   const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
   const onMove = (e) => {
@@ -233,6 +264,7 @@ export function createScene(canvas, state, { mobile }) {
   const S = state;
   function render(t) {
     last = t;
+    adapt(t);
     mouse.x += (mouse.tx - mouse.x) * 0.05;
     mouse.y += (mouse.ty - mouse.y) * 0.05;
 
@@ -309,12 +341,17 @@ export function createScene(canvas, state, { mobile }) {
       if (o.material) [].concat(o.material).forEach((m) => m.dispose());
     });
     envTex.dispose();
+    rt.dispose();
     pmrem.dispose();
     composer.dispose();
     renderer.dispose();
   }
 
+  // Prepara os shaders em segundo plano (sem travar a página) antes do primeiro quadro.
+  const ready = renderer.compileAsync(scene, camera).catch(() => {});
+
   return {
+    ready,
     render,
     place,
     destroy,
