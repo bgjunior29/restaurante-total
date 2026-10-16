@@ -1,4 +1,4 @@
-# Páginas da Lexmovi e cardápios dos restaurantes podem aparecer na busca;
+# Páginas da Movitech e cardápios dos restaurantes podem aparecer na busca;
 # áreas da equipe, plataforma, pedidos e contas (links secretos) não.
 User-agent: *
 Allow: /

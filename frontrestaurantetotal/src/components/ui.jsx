@@ -10,19 +10,19 @@ const initials = (name) =>
     .map((w) => w[0].toUpperCase())
     .join('') || name.slice(0, 2).toUpperCase()
 
-/** Marca da Lexmovi: "L" em traço contínuo dentro do círculo, nas cores do tema (a mesma do favicon). */
+/** Marca da Movitech: "M" em traço contínuo dentro do círculo, nas cores do tema (a mesma do favicon). */
 export function LogoMark({ className = 'size-10' }) {
   return (
     <svg viewBox="0 0 48 48" aria-hidden className={`shrink-0 ${className}`}>
       <circle cx="24" cy="24" r="23" fill="var(--color-dark)" stroke="color-mix(in srgb, var(--color-lime) 45%, transparent)" strokeWidth="1" />
-      <path d="M18 15.5v17h12" fill="none" stroke="var(--color-lime)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M14.5 32.5v-17l9.5 11 9.5-11v17" fill="none" stroke="var(--color-lime)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
 
 /** `compact`: no celular mostra só o selo (quando o topo precisa de espaço para botões). */
 export function Brand({ brand, to = '/', compact = false }) {
-  const name = brand?.name ?? 'Lexmovi'
+  const name = brand?.name ?? 'Movitech'
   const tagline = brand?.tagline ?? 'SaaS · Links · Apps'
   const [logoFailed, setLogoFailed] = useState(false)
   const mark = initials(name)
@@ -69,7 +69,7 @@ export function Topbar({ brand, to, compact = false, children }) {
 }
 
 /** Rodapé. No cardápio de um restaurante, `legalBase` aponta para os termos e a privacidade dele (/r/<slug>). */
-export function Footer({ name = 'Lexmovi', legalBase = '' }) {
+export function Footer({ name = 'Movitech', legalBase = '' }) {
   return (
     <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-line/60 bg-green px-[clamp(16px,5.7vw,96px)] py-8 text-[11px] text-muted">
       <span className="font-serif text-[15px] text-ink/80">{name}</span>

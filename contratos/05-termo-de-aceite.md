@@ -32,9 +32,9 @@ O CLIENTE declara que recebeu e testou o que foi contratado, conforme o checklis
 
 | Pendência | Responsável | Prazo |
 |---|---|---|
-| `[  ]` | `[LEXMOVI/CLIENTE]` | `[  ]` |
+| `[  ]` | `[MOVITECH/CLIENTE]` | `[  ]` |
 
-Pendências pequenas listadas acima não impedem o aceite; a LEXMOVI as resolve no prazo indicado.
+Pendências pequenas listadas acima não impedem o aceite; a MOVITECH as resolve no prazo indicado.
 
 ## Efeitos
 
@@ -48,6 +48,6 @@ Com este aceite, em `[data]`:
 | | |
 |---|---|
 | ____________________________________ | ____________________________________ |
-| **CLIENTE** · `[nome]` · `[data]` | **LEXMOVI** · `[nome]` · `[data]` |
+| **CLIENTE** · `[nome]` · `[data]` | **MOVITECH** · `[nome]` · `[data]` |
 
 > Pelo WhatsApp também vale: envie este checklist preenchido e peça para o cliente responder "**Aceito a implantação do contrato [número]**". Guarde o print.

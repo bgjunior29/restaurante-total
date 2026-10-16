@@ -9,7 +9,7 @@ As partes encerram o contrato acima nas condições abaixo.
 | | |
 |---|---|
 | Pedido de cancelamento recebido em | `[data]` · por `[WhatsApp/e-mail]` |
-| Quem pediu | `[ ] CLIENTE  [ ] LEXMOVI` |
+| Quem pediu | `[ ] CLIENTE  [ ] MOVITECH` |
 | Motivo (opcional, ajuda a melhorar) | `[  ]` |
 | Último dia de uso do sistema / site no ar | `[data, 30 dias depois do pedido]` |
 
@@ -30,13 +30,13 @@ Pago esse valor, as partes dão **quitação total** das obrigações financeira
 - [ ] CLIENTE quer receber a exportação (cardápio, pedidos e clientes em planilha CSV). Enviar para: `[e-mail]` até `[data]`.
 - [ ] CLIENTE dispensa a exportação.
 
-Os dados do CLIENTE serão apagados do sistema em `[data, até 90 dias após o fim]`, conforme o Anexo II. A LEXMOVI confirma a exclusão por e-mail.
+Os dados do CLIENTE serão apagados do sistema em `[data, até 90 dias após o fim]`, conforme o Anexo II. A MOVITECH confirma a exclusão por e-mail.
 
 ## 4. Site e domínio (se houver)
 
 - [ ] Arquivos do site entregues em `[data]` por `[link]`.
 - [ ] Domínio `[  ]` já está em nome do CLIENTE / transferido em `[data]`.
-- [ ] Apontamento do domínio retirado da hospedagem da LEXMOVI em `[data]`.
+- [ ] Apontamento do domínio retirado da hospedagem da MOVITECH em `[data]`.
 
 ## 5. O que continua valendo
 
@@ -47,4 +47,4 @@ Barueri/SP, `[data]`.
 | | |
 |---|---|
 | ____________________________________ | ____________________________________ |
-| **CLIENTE** | **LEXMOVI** |
+| **CLIENTE** | **MOVITECH** |

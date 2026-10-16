@@ -8,7 +8,7 @@ import { PanelPreview, SiteFooter, whatsapp } from "./Landing";
 const DEMO = "/r/point-arena";
 
 const ZAP_DEMO = whatsapp(
-  "Oi! Vi a página da Lexmovi e quero ver o sistema funcionando no meu restaurante.",
+  "Oi! Vi a página da Movitech e quero ver o sistema funcionando no meu restaurante.",
 );
 
 const PAINS = [
@@ -179,7 +179,7 @@ export default function Restaurantes() {
           className={`${wrap} grid items-center gap-16 pt-16 pb-20 lg:grid-cols-[1.1fr_.9fr] lg:pt-24`}
         >
           <div>
-            <Eyebrow>Lexmovi Restaurantes</Eyebrow>
+            <Eyebrow>Movitech Restaurantes</Eyebrow>
             <h1 className="mt-7 max-w-4xl font-serif text-[clamp(44px,6.4vw,96px)] leading-[.95]">
               Salão, cozinha e delivery num sistema só.{" "}
               <em className="text-lime">Sem comissão por pedido.</em>
@@ -310,7 +310,7 @@ export default function Restaurantes() {
                     <th className="px-3 py-4 sm:px-5 font-medium" />
                     <th className="px-3 py-4 sm:px-5 font-medium">Aplicativo</th>
                     <th className="px-3 py-4 sm:px-5 font-medium text-lime">
-                      Lexmovi
+                      Movitech
                     </th>
                   </tr>
                 </thead>
@@ -377,7 +377,7 @@ export default function Restaurantes() {
           </h2>
           <p className="mx-auto mt-6 max-w-[520px] text-[16px] leading-[1.7] text-ink/65">
             Chama no WhatsApp, manda o seu cardápio e a gente te mostra como ele
-            fica na Lexmovi, sem compromisso.
+            fica na Movitech, sem compromisso.
           </p>
           <ZapButton className="mt-9">Falar no WhatsApp</ZapButton>
         </section>

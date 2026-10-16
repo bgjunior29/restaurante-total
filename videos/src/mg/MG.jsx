@@ -559,7 +559,7 @@ export function MGAnuncioNegocios() {
       audio="voz/anuncio-negocios.mp3"
       vertical
       cenas={{
-        abertura: { fundo: P.teal, formas: [P.gold, P.white, P.ink], Comp: () => <Area top={320}><Revela texto="Oi! Eu sou a Movi" destaque={['Movi']} size={140} fundoDestaque={P.ink} corDestaque={P.gold} /><div style={{ height: 24 }} /><Revela texto="da Lexmovi" size={72} delay={14} cor={P.white} /></Area> },
+        abertura: { fundo: P.teal, formas: [P.gold, P.white, P.ink], Comp: () => <Area top={320}><Revela texto="Oi! Eu sou a Movi" destaque={['Movi']} size={140} fundoDestaque={P.ink} corDestaque={P.gold} /><div style={{ height: 24 }} /><Revela texto="da Movitech" size={72} delay={14} cor={P.white} /></Area> },
         problema: { fundo: P.coral, formas: [P.gold, P.white], Comp: () => <Area top={240}><Revela texto="Sua empresa está perdendo clientes?" destaque={['perdendo']} size={108} cor={P.white} fundoDestaque={P.ink} corDestaque={P.gold} /><ClientesSaindo /></Area> },
         exemplos: { fundo: P.ink, formas: [P.coral, P.gold, P.teal], apontar: 'right', Comp: () => <Area top={300}><Problemas vertical corLabel={P.white} /></Area> },
         solucao: { fundo: P.teal, formas: [P.gold, P.white], apontar: 'right', Comp: () => <Area top={190}><Revela texto="A gente corrige!" destaque={['corrige!']} size={100} fundoDestaque={P.ink} corDestaque={P.mint} cor={P.white} /><div style={{ height: 40 }} /><Problemas vertical virar /></Area> },
@@ -679,7 +679,7 @@ function LinhaDoTempo() {
 
 function AberturaApresentacao() {
   const frame = useCurrentFrame()
-  const d = 'M18 15.5v17h12'
+  const d = 'M14.5 32.5v-17l9.5 11 9.5-11v17'
   const ev = evolvePath(Math.max(0.001, interpolate(frame, [0, 28], [0, 1], { ...clamp, easing: EASE })), d)
   return (
     <Area vertical={false} alinhar="flex-start">
@@ -689,7 +689,7 @@ function AberturaApresentacao() {
             <circle cx="24" cy="24" r="22" fill={P.gold} stroke={P.white} strokeWidth="2.5" />
             <path d={d} fill="none" stroke={P.ink} strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" strokeDasharray={ev.strokeDasharray} strokeDashoffset={ev.strokeDashoffset} />
           </svg>
-          <Revela texto="LEXMOVI SISTEMAS" size={50} delay={16} cor={P.gold} align="left" />
+          <Revela texto="MOVITECH SISTEMAS" size={50} delay={16} cor={P.gold} align="left" />
         </div>
         <Revela texto="Sistemas, sites e apps que fazem seu negócio vender mais." destaque={['vender', 'mais.']} size={90} delay={36} cor={P.white} fundoDestaque={P.coral} align="left" maxWidth={1180} />
         <Revela texto="Barueri · SP" size={42} delay={76} cor={P.mint} align="left" />

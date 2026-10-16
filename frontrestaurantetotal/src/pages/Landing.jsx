@@ -9,9 +9,9 @@ import { useLandingFx } from "../lib/landingFx";
 export const WHATSAPP_VENDAS = "5511964452878";
 export const whatsapp = (text) =>
   `https://wa.me/${WHATSAPP_VENDAS}?text=${encodeURIComponent(text)}`;
-const ZAP = whatsapp("Oi! Vi o site da Lexmovi e quero conversar sobre um sistema para o meu negócio.");
+const ZAP = whatsapp("Oi! Vi o site da Movitech e quero conversar sobre um sistema para o meu negócio.");
 const ZAP_DIAGNOSTICO = whatsapp(
-  "Oi! Vi o site da Lexmovi e quero o diagnóstico gratuito do meu negócio. O nome é: ",
+  "Oi! Vi o site da Movitech e quero o diagnóstico gratuito do meu negócio. O nome é: ",
 );
 const DEMO = "/r/point-arena"; // cardápio de um restaurante que já usa o sistema
 
@@ -39,7 +39,7 @@ const SEGMENTOS = [
   "Prestadores de serviço",
 ];
 
-// As três frentes da Lexmovi (as mesmas do vídeo de apresentação).
+// As três frentes da Movitech (as mesmas do vídeo de apresentação).
 const SOLUCOES = [
   {
     icon: "layers",
@@ -99,7 +99,7 @@ const SEGURANCA = [
 ];
 
 const FAQ = [
-  ["A Lexmovi atende só restaurantes?", "Não. O sistema completo de hoje é para restaurantes, pizzarias, bares e lanchonetes, mas também fazemos sites, links e apps para outros negócios locais: comércio, prestadores de serviço e quem atende com agendamento."],
+  ["A Movitech atende só restaurantes?", "Não. O sistema completo de hoje é para restaurantes, pizzarias, bares e lanchonetes, mas também fazemos sites, links e apps para outros negócios locais: comércio, prestadores de serviço e quem atende com agendamento."],
   ["Quanto custa?", "Depende do que o seu negócio precisa. Primeiro fazemos o diagnóstico gratuito e depois enviamos um orçamento sob medida, sem compromisso."],
   ["Meu cliente precisa baixar algum aplicativo?", "Não. Tudo abre pelo navegador do celular, pelo link ou pelo QR code."],
   ["Preciso comprar equipamento?", "Não. Funciona em qualquer celular, tablet ou computador que você já tem. A tela da cozinha pode ser um tablet ou uma TV com navegador."],
@@ -138,7 +138,7 @@ export function SiteHeader() {
         <Link to="/" className="flex items-center gap-3" onClick={close}>
           <LogoMark />
           <span className="leading-none">
-            <span className="block font-serif text-[23px]">Lexmovi</span>
+            <span className="block font-serif text-[23px]">Movitech</span>
             <span className="mt-1.5 block text-[9px] font-medium tracking-[0.22em] text-muted uppercase">Sistemas · Barueri</span>
           </span>
         </Link>
@@ -200,7 +200,7 @@ export function SiteFooter() {
         <div className="max-w-xs">
           <div className="flex items-center gap-3">
             <LogoMark />
-            <span className="font-serif text-2xl">Lexmovi</span>
+            <span className="font-serif text-2xl">Movitech</span>
           </div>
           <p className="mt-5 text-sm leading-relaxed text-ink/55">
             Sistemas, sites e apps para negócios locais. Tecnologia feita aqui do lado, em Barueri.
@@ -215,7 +215,7 @@ export function SiteFooter() {
         </div>
         <div className={col}>
           <p className="eyebrow text-muted">Empresa</p>
-          <a href="/#sobre" className={link}>Sobre a Lexmovi</a>
+          <a href="/#sobre" className={link}>Sobre a Movitech</a>
           <a href="/#como-trabalhamos" className={link}>Como trabalhamos</a>
           <a href="/#perguntas" className={link}>Perguntas frequentes</a>
           <Link to="/plataforma" className={link}>Área do cliente</Link>
@@ -231,7 +231,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className={`${wrap} flex flex-wrap items-center justify-between gap-3 border-t border-line/50 py-6 text-[11px] text-muted`}>
-        <span>© {new Date().getFullYear()} Lexmovi Sistemas</span>
+        <span>© {new Date().getFullYear()} Movitech Sistemas</span>
         <span className="flex gap-5">
           <Link to="/termos" className="hover:text-ink">Termos de uso</Link>
           <Link to="/privacidade" className="hover:text-ink">Privacidade</Link>
@@ -379,7 +379,7 @@ function KitchenPreview() {
   );
 }
 
-/** Página inicial da Lexmovi: quem somos, as três frentes, o sistema para restaurantes, como trabalhamos e contato. */
+/** Página inicial da Movitech: quem somos, as três frentes, o sistema para restaurantes, como trabalhamos e contato. */
 /** "Já é cliente?": fica num componente próprio para que digitar não renderize a página toda de novo. */
 function SlugForm() {
   const navigate = useNavigate();
@@ -423,7 +423,7 @@ export default function Landing() {
   const has3D = useLandingFx({ rootRef, canvasRef, cursorRef, dotRef, progressRef });
 
   useEffect(() => {
-    document.title = "Lexmovi Sistemas · Sistemas, sites e apps para o seu negócio";
+    document.title = "Movitech Sistemas · Sistemas, sites e apps para o seu negócio";
   }, []);
 
   return (
@@ -451,7 +451,7 @@ export default function Landing() {
             <div>
               {/* No celular o logo 3D aparece em cima do título */}
               {has3D && <div aria-hidden data-anchor className="pointer-events-none mx-auto mb-8 h-[32svh] max-w-[280px] lg:hidden" />}
-              <Eyebrow data-hero-in>Lexmovi Sistemas · Barueri</Eyebrow>
+              <Eyebrow data-hero-in>Movitech Sistemas · Barueri</Eyebrow>
               <h1 data-split="hero" className="mt-7 font-serif text-balance text-[clamp(48px,7vw,108px)] leading-[.93]">
                 Tecnologia que move o seu negócio.{" "}
                 <em className="text-lime">Feita aqui do lado.</em>
@@ -549,7 +549,7 @@ export default function Landing() {
         <section data-scene="restaurantes" className="border-y border-line/60 bg-dark/30">
           <div className={`${wrap} grid gap-16 py-24 lg:grid-cols-[.9fr_1.1fr] lg:items-center`}>
             <div>
-              <Eyebrow>Lexmovi Restaurantes</Eyebrow>
+              <Eyebrow>Movitech Restaurantes</Eyebrow>
               <h2 data-split className={h2}>
                 Do QR da mesa <em className="text-lime">à conta fechada.</em>
               </h2>
@@ -678,13 +678,13 @@ export default function Landing() {
         <section id="sobre" className="scroll-mt-24 border-y border-line/60 bg-cream text-dark">
           <div className={`${wrap} grid gap-14 py-24 lg:grid-cols-[1.1fr_.9fr] lg:items-center`}>
             <div>
-              <Eyebrow className="text-olive">Sobre a Lexmovi</Eyebrow>
+              <Eyebrow className="text-olive">Sobre a Movitech</Eyebrow>
               <h2 data-split className={h2}>
                 De perto, <em className="text-olive">para quem está perto.</em>
               </h2>
               <div className="mt-7 max-w-[580px] space-y-4 text-[16px] leading-[1.75] text-[#5b554b]">
                 <p>
-                  A Lexmovi nasceu em Barueri, olhando para os negócios do bairro: restaurantes lotados em que, mesmo assim, o
+                  A Movitech nasceu em Barueri, olhando para os negócios do bairro: restaurantes lotados em que, mesmo assim, o
                   dono via o lucro ir embora em comissão de aplicativo, comanda perdida e cliente esperando.
                 </p>
                 <p>
@@ -702,7 +702,7 @@ export default function Landing() {
                 <span className="flex size-12 items-center justify-center rounded-full bg-dark font-serif text-xl text-lime">J</span>
                 <span>
                   <span className="block font-medium">John</span>
-                  <span className="text-sm text-[#7a7266]">Fundador · Lexmovi Sistemas</span>
+                  <span className="text-sm text-[#7a7266]">Fundador · Movitech Sistemas</span>
                 </span>
               </figcaption>
             </figure>

@@ -4,7 +4,7 @@
 
 ## Partes
 
-**CONTRATADA:** `[Lexmovi Sistemas / razão social]`, inscrita no `[CNPJ/CPF]` sob o nº `[00.000.000/0001-00]`, com sede em `[endereço]`, Barueri/SP, representada por `[John Sobrenome]`, `[CPF]`, e-mail `[e-mail]`, WhatsApp (11) 96445-2878, doravante **LEXMOVI**.
+**CONTRATADA:** `[Movitech Sistemas / razão social]`, inscrita no `[CNPJ/CPF]` sob o nº `[00.000.000/0001-00]`, com sede em `[endereço]`, Barueri/SP, representada por `[John Sobrenome]`, `[CPF]`, e-mail `[e-mail]`, WhatsApp (11) 96445-2878, doravante **MOVITECH**.
 
 **CONTRATANTE:** `[razão social do cliente]`, inscrita no CNPJ sob o nº `[00.000.000/0001-00]`, com sede em `[endereço]`, `[cidade/UF]`, representada por `[nome]`, `[CPF]`, e-mail `[e-mail]`, WhatsApp `[número]`, doravante **CLIENTE**.
 
@@ -20,11 +20,11 @@ Se houver conflito, vale primeiro este contrato, depois o Anexo II, o Anexo III 
 
 ## 1. Objeto
 
-1.1. A LEXMOVI concede ao CLIENTE, enquanto este contrato estiver em vigor, **licença de uso não exclusiva e intransferível** do sistema `[Sistema para restaurantes]` (o **SISTEMA**), acessado pela internet, e presta os serviços de **implantação** e **suporte** descritos no Anexo I e no Anexo III.
+1.1. A MOVITECH concede ao CLIENTE, enquanto este contrato estiver em vigor, **licença de uso não exclusiva e intransferível** do sistema `[Sistema para restaurantes]` (o **SISTEMA**), acessado pela internet, e presta os serviços de **implantação** e **suporte** descritos no Anexo I e no Anexo III.
 
 1.2. O SISTEMA inclui os módulos contratados no Anexo I. Para o sistema de restaurantes, por padrão: cardápio digital, pedido pelo QR code da mesa, link próprio de delivery e retirada, tela da cozinha, conta da mesa, Pix com a chave do CLIENTE, cupons, painel de gestão, relatórios e avisos ao cliente final.
 
-1.3. **O SISTEMA não processa pagamentos.** Os valores pagos pelos clientes finais (Pix, cartão, dinheiro) vão direto para o CLIENTE, pela chave e meios que ele cadastrar. A LEXMOVI não recebe, guarda ou repassa esses valores e não cobra comissão por pedido.
+1.3. **O SISTEMA não processa pagamentos.** Os valores pagos pelos clientes finais (Pix, cartão, dinheiro) vão direto para o CLIENTE, pela chave e meios que ele cadastrar. A MOVITECH não recebe, guarda ou repassa esses valores e não cobra comissão por pedido.
 
 1.4. Não fazem parte deste contrato, salvo se estiverem no Anexo I: equipamentos (celulares, tablets, TVs, impressoras), internet do estabelecimento, fotos profissionais, material gráfico impresso, integração com sistemas fiscais (emissão de NFC-e/NF-e), maquininhas e aplicativos de delivery de terceiros.
 
@@ -50,17 +50,17 @@ Se houver conflito, vale primeiro este contrato, depois o Anexo II, o Anexo III 
 
 3.2. A primeira mensalidade é proporcional aos dias entre o aceite e o primeiro vencimento.
 
-3.3. Pagamento por `[Pix para a chave CNPJ da LEXMOVI / boleto / cartão recorrente]`. A LEXMOVI envia lembrete e recibo ou nota fiscal de cada pagamento.
+3.3. Pagamento por `[Pix para a chave CNPJ da MOVITECH / boleto / cartão recorrente]`. A MOVITECH envia lembrete e recibo ou nota fiscal de cada pagamento.
 
 3.4. **Atraso:** multa de 2% e juros de 1% ao mês, proporcionais aos dias de atraso, sobre o valor em aberto.
 
-3.5. **Suspensão:** com mais de **10 dias** de atraso, depois de aviso por WhatsApp ou e-mail, a LEXMOVI pode suspender o acesso ao painel e o recebimento de novos pedidos. **Nenhum dado é apagado na suspensão**; o acesso volta em até 1 dia útil depois da compensação do pagamento. Com mais de **60 dias** de atraso, a LEXMOVI pode rescindir o contrato (cláusula 7).
+3.5. **Suspensão:** com mais de **10 dias** de atraso, depois de aviso por WhatsApp ou e-mail, a MOVITECH pode suspender o acesso ao painel e o recebimento de novos pedidos. **Nenhum dado é apagado na suspensão**; o acesso volta em até 1 dia útil depois da compensação do pagamento. Com mais de **60 dias** de atraso, a MOVITECH pode rescindir o contrato (cláusula 7).
 
 3.6. **Reajuste:** os valores são reajustados a cada 12 meses pela variação do IPCA/IBGE (ou do índice que o substituir) dos 12 meses anteriores. Fora disso, só com aviso de 30 dias e direito do CLIENTE de cancelar sem multa.
 
-3.7. Custos de terceiros contratados pelo CLIENTE ou a pedido dele (mensagens da API do WhatsApp/Meta, domínio próprio, impressão de placas) são de responsabilidade do CLIENTE, pagos diretamente ao fornecedor ou reembolsados à LEXMOVI mediante comprovante.
+3.7. Custos de terceiros contratados pelo CLIENTE ou a pedido dele (mensagens da API do WhatsApp/Meta, domínio próprio, impressão de placas) são de responsabilidade do CLIENTE, pagos diretamente ao fornecedor ou reembolsados à MOVITECH mediante comprovante.
 
-## 4. Obrigações da LEXMOVI
+## 4. Obrigações da MOVITECH
 
 4.1. Manter o SISTEMA funcionando conforme o Anexo III, com correção de falhas sem custo adicional.
 
@@ -90,11 +90,11 @@ Se houver conflito, vale primeiro este contrato, depois o Anexo II, o Anexo III 
 
 ## 6. Propriedade intelectual
 
-6.1. O SISTEMA, o código, o layout e as marcas da LEXMOVI são de propriedade exclusiva da LEXMOVI. Este contrato não transfere nenhum direito sobre eles além da licença de uso da cláusula 1.
+6.1. O SISTEMA, o código, o layout e as marcas da MOVITECH são de propriedade exclusiva da MOVITECH. Este contrato não transfere nenhum direito sobre eles além da licença de uso da cláusula 1.
 
-6.2. Os dados, o cardápio, as fotos, a marca e o conteúdo enviados pelo CLIENTE continuam sendo do CLIENTE. O CLIENTE declara ter o direito de usá-los e autoriza a LEXMOVI a publicá-los no SISTEMA durante o contrato.
+6.2. Os dados, o cardápio, as fotos, a marca e o conteúdo enviados pelo CLIENTE continuam sendo do CLIENTE. O CLIENTE declara ter o direito de usá-los e autoriza a MOVITECH a publicá-los no SISTEMA durante o contrato.
 
-6.3. A LEXMOVI pode citar o nome e a marca do CLIENTE como cliente em seu site e materiais de divulgação: `[ ] autorizo  [ ] não autorizo`. Depoimentos, vídeos e números de resultado só com autorização específica por escrito (pode ser por WhatsApp).
+6.3. A MOVITECH pode citar o nome e a marca do CLIENTE como cliente em seu site e materiais de divulgação: `[ ] autorizo  [ ] não autorizo`. Depoimentos, vídeos e números de resultado só com autorização específica por escrito (pode ser por WhatsApp).
 
 ## 7. Prazo, fidelidade e cancelamento
 
@@ -104,9 +104,9 @@ Se houver conflito, vale primeiro este contrato, depois o Anexo II, o Anexo III 
 
 7.3. Qualquer parte pode cancelar avisando por escrito (WhatsApp ou e-mail) com **30 dias** de antecedência. A mensalidade desse período é devida.
 
-7.4. Se o CLIENTE cancelar **durante a fidelidade**, pagará multa de **30% das mensalidades que faltarem** para o fim da fidelidade. Não há multa se o cancelamento for causado por descumprimento da LEXMOVI (cláusula 7.6).
+7.4. Se o CLIENTE cancelar **durante a fidelidade**, pagará multa de **30% das mensalidades que faltarem** para o fim da fidelidade. Não há multa se o cancelamento for causado por descumprimento da MOVITECH (cláusula 7.6).
 
-7.5. O valor da implantação não é devolvido depois do aceite, porque remunera um serviço já prestado. Se o CLIENTE desistir **antes** do aceite, a LEXMOVI devolve o que tiver sido pago, descontadas as horas já trabalhadas (valor da hora técnica do Anexo I), em até 10 dias.
+7.5. O valor da implantação não é devolvido depois do aceite, porque remunera um serviço já prestado. Se o CLIENTE desistir **antes** do aceite, a MOVITECH devolve o que tiver sido pago, descontadas as horas já trabalhadas (valor da hora técnica do Anexo I), em até 10 dias.
 
 7.6. O contrato pode ser rescindido de imediato, sem multa para quem rescinde, se a outra parte descumprir obrigação importante e não corrigir em 10 dias depois de avisada, ou em caso de falência ou recuperação judicial.
 
@@ -114,9 +114,9 @@ Se houver conflito, vale primeiro este contrato, depois o Anexo II, o Anexo III 
 
 ## 8. Responsabilidades e limites
 
-8.1. A LEXMOVI responde por danos diretos que causar por culpa comprovada, **limitados ao total pago pelo CLIENTE nos 12 meses anteriores ao fato**.
+8.1. A MOVITECH responde por danos diretos que causar por culpa comprovada, **limitados ao total pago pelo CLIENTE nos 12 meses anteriores ao fato**.
 
-8.2. A LEXMOVI não responde por: lucros cessantes ou vendas perdidas; falhas de internet, energia ou equipamentos do CLIENTE; indisponibilidade de serviços de terceiros (hospedagem, WhatsApp/Meta, bancos, Pix, consulta de CEP); dados ou preços errados cadastrados pelo CLIENTE; uso indevido de senhas pelo CLIENTE ou pela equipe dele; nem por relações entre o CLIENTE e os clientes finais (qualidade, entrega, troca, devolução, cobrança).
+8.2. A MOVITECH não responde por: lucros cessantes ou vendas perdidas; falhas de internet, energia ou equipamentos do CLIENTE; indisponibilidade de serviços de terceiros (hospedagem, WhatsApp/Meta, bancos, Pix, consulta de CEP); dados ou preços errados cadastrados pelo CLIENTE; uso indevido de senhas pelo CLIENTE ou pela equipe dele; nem por relações entre o CLIENTE e os clientes finais (qualidade, entrega, troca, devolução, cobrança).
 
 8.3. Os limites desta cláusula não valem para casos de dolo, nem para obrigações da LGPD que a lei não permita limitar.
 
@@ -130,7 +130,7 @@ Se houver conflito, vale primeiro este contrato, depois o Anexo II, o Anexo III 
 
 10.2. Tolerância com um atraso ou descumprimento não muda o contrato nem impede a cobrança depois.
 
-10.3. O CLIENTE não pode transferir este contrato sem concordância da LEXMOVI. A LEXMOVI pode transferi-lo em caso de venda, fusão ou reorganização da empresa, mantidas as condições.
+10.3. O CLIENTE não pode transferir este contrato sem concordância da MOVITECH. A MOVITECH pode transferi-lo em caso de venda, fusão ou reorganização da empresa, mantidas as condições.
 
 10.4. As partes declaram que este contrato é **entre empresas**, que o CLIENTE usa o SISTEMA na sua atividade comercial e que leu e negociou as cláusulas.
 
@@ -143,7 +143,7 @@ Barueri/SP, `[data]`.
 | | |
 |---|---|
 | ____________________________________ | ____________________________________ |
-| **LEXMOVI** · `[nome do representante]` | **CLIENTE** · `[nome do representante]` |
+| **MOVITECH** · `[nome do representante]` | **CLIENTE** · `[nome do representante]` |
 
 **Testemunhas** (opcional, ajudam a cobrar na Justiça sem processo de conhecimento):
 

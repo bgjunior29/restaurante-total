@@ -20,7 +20,7 @@ Horário de atendimento: **`[segunda a sábado, das 10h às 22h]`**, horário de
 | **Normal** | erro com forma alternativa; dúvida de uso; ajuste de cadastro | 1 dia útil | 3 dias úteis |
 | **Melhoria** | sugestão de nova função ou mudança | 3 dias úteis | entra na lista de melhorias, sem prazo |
 
-"Primeira resposta" é quando alguém da LEXMOVI confirma que está cuidando. "Meta de solução" é o prazo esperado para resolver ou dar uma forma de contornar.
+"Primeira resposta" é quando alguém da MOVITECH confirma que está cuidando. "Meta de solução" é o prazo esperado para resolver ou dar uma forma de contornar.
 
 ## 3. O que está incluso
 
@@ -41,9 +41,9 @@ Horário de atendimento: **`[segunda a sábado, das 10h às 22h]`**, horário de
 
 ## 5. Disponibilidade
 
-5.1. **Meta de disponibilidade: `[99%]` por mês** no horário de funcionamento informado pelo CLIENTE (`[11h às 23h59]`), medida pela LEXMOVI. Não contam: manutenções avisadas com 48 h; falhas de internet do CLIENTE; falhas gerais de provedores (hospedagem, WhatsApp/Meta, bancos); ataques que fujam ao controle razoável da LEXMOVI.
+5.1. **Meta de disponibilidade: `[99%]` por mês** no horário de funcionamento informado pelo CLIENTE (`[11h às 23h59]`), medida pela MOVITECH. Não contam: manutenções avisadas com 48 h; falhas de internet do CLIENTE; falhas gerais de provedores (hospedagem, WhatsApp/Meta, bancos); ataques que fujam ao controle razoável da MOVITECH.
 
-5.2. **Crédito por indisponibilidade:** se a disponibilidade do mês ficar abaixo da meta por culpa da LEXMOVI, o CLIENTE tem desconto na mensalidade seguinte, pedindo em até 30 dias:
+5.2. **Crédito por indisponibilidade:** se a disponibilidade do mês ficar abaixo da meta por culpa da MOVITECH, o CLIENTE tem desconto na mensalidade seguinte, pedindo em até 30 dias:
 
 | Disponibilidade no mês | Desconto |
 |---|---|
@@ -53,8 +53,8 @@ Horário de atendimento: **`[segunda a sábado, das 10h às 22h]`**, horário de
 
 O crédito é a única compensação por indisponibilidade e não passa de 50% de uma mensalidade.
 
-5.3. **Plano B:** em caso de queda, o CLIENTE pode continuar atendendo pelo link de WhatsApp e comanda de papel. A LEXMOVI avisa pelo WhatsApp quando o sistema voltar.
+5.3. **Plano B:** em caso de queda, o CLIENTE pode continuar atendendo pelo link de WhatsApp e comanda de papel. A MOVITECH avisa pelo WhatsApp quando o sistema voltar.
 
 ## 6. Cópias de segurança
 
-Cópia diária do banco de dados, criptografada, guardada por `[30]` dias. Em caso de perda por falha do sistema, a LEXMOVI restaura a cópia mais recente sem custo. A perda máxima esperada é de 24 horas de dados.
+Cópia diária do banco de dados, criptografada, guardada por `[30]` dias. Em caso de perda por falha do sistema, a MOVITECH restaura a cópia mais recente sem custo. A perda máxima esperada é de 24 horas de dados.

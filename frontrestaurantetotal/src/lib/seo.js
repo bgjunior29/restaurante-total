@@ -1,22 +1,22 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
-// Título, descrição e endereço oficial (canonical) das páginas públicas da Lexmovi, para a busca do Google.
+// Título, descrição e endereço oficial (canonical) das páginas públicas da Movitech, para a busca do Google.
 // As demais rotas (cardápios, equipe, plataforma) cuidam do próprio título e ficam sem canonical.
 const SITE = 'https://movitechsistemas.com.br'
 const PAGES = {
   '/': {
-    title: 'Lexmovi Sistemas · Sistemas, sites e apps para o seu negócio', // o mesmo da Landing
+    title: 'Movitech Sistemas · Sistemas, sites e apps para o seu negócio', // o mesmo da Landing
     description:
-      'Lexmovi Sistemas, de Barueri/SP: sistema para restaurantes com cardápio digital, QR code na mesa, delivery próprio sem comissão e tela da cozinha. Também sites, links e apps para o seu negócio. Orçamento sob medida pelo WhatsApp.',
+      'Movitech Sistemas, de Barueri/SP: sistema para restaurantes com cardápio digital, QR code na mesa, delivery próprio sem comissão e tela da cozinha. Também sites, links e apps para o seu negócio. Orçamento sob medida pelo WhatsApp.',
   },
   '/restaurantes': {
-    title: 'Sistema para restaurantes sem comissão por pedido — Lexmovi',
+    title: 'Sistema para restaurantes sem comissão por pedido — Movitech',
     description:
       'Cardápio digital com QR code na mesa, link próprio de delivery e retirada sem comissão, Pix, tela da cozinha e relatórios. Sem aplicativo para baixar. Barueri e região, orçamento sob medida.',
   },
-  '/termos': { title: 'Termos de uso — Lexmovi', description: 'Termos de uso da plataforma Lexmovi.' },
-  '/privacidade': { title: 'Política de privacidade — Lexmovi', description: 'Como a Lexmovi trata os dados de clientes e restaurantes.' },
+  '/termos': { title: 'Termos de uso — Movitech', description: 'Termos de uso da plataforma Movitech.' },
+  '/privacidade': { title: 'Política de privacidade — Movitech', description: 'Como a Movitech trata os dados de clientes e restaurantes.' },
 }
 
 function meta(selector, attr, create) {

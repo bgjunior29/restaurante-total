@@ -37,7 +37,7 @@ Se Remotion/Hyperframes estiverem instalados, o modelo pode ir direto para eles;
 ## Consistência entre vídeos
 - Depois de aprovar um vídeo, pedir para salvar um arquivo de marca (`.md`) com logo, tipografia, cores e sistema de design. Assim todo vídeo novo do mesmo cliente sai no mesmo padrão (é diferente do CLAUDE.md de regras).
 
-## O que aplicar na Lexmovi
+## O que aplicar na Movitech
 - [ ] Criar `videos/CLAUDE.md` com as regras de render, anti-visual-genérico, som e o loop de nota ≥ 8.
 - [ ] Criar `videos/marca-movitech.md` (logo, cores, fontes, tom) e um por restaurante/nicho quando houver.
 - [ ] Antes de cada anúncio: escolher 1 vídeo de referência + capturar telas reais do sistema (cardápio, pedidos, painel admin).

@@ -2,13 +2,13 @@ import { loadFont as loadInter } from '@remotion/google-fonts/Inter'
 import { loadFont as loadSerif } from '@remotion/google-fonts/InstrumentSerif'
 import { AbsoluteFill, Img, interpolate, Sequence, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion'
 
-// Anúncio da Lexmovi para donos de restaurante (ângulo "comissão"), 9:16, sem música.
+// Anúncio da Movitech para donos de restaurante (ângulo "comissão"), 9:16, sem música.
 // Os pratos do celular vêm do cardápio baixado (cardapio.json): rode `npm run dados` antes.
 
 const { fontFamily: serif } = loadSerif()
 const { fontFamily: sans } = loadInter('normal', { weights: ['400', '500', '600', '700'], subsets: ['latin'] })
 
-// Cores da Lexmovi (as mesmas do site).
+// Cores da Movitech (as mesmas do site).
 const C = {
   bg: '#0f0e0c',
   dark: '#141310',
@@ -70,7 +70,7 @@ function LogoMark({ size = 120 }) {
   return (
     <svg viewBox="0 0 48 48" width={size} height={size}>
       <circle cx="24" cy="24" r="23" fill={C.dark} stroke={`${C.gold}73`} strokeWidth="1" />
-      <path d="M18 15.5v17h12" fill="none" stroke={C.gold} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M14.5 32.5v-17l9.5 11 9.5-11v17" fill="none" stroke={C.gold} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -165,7 +165,7 @@ function Solution({ data }) {
   const chips = ['Pix', 'Cupons', 'WhatsApp', 'Tela da cozinha']
   return (
     <Stage style={{ justifyContent: 'flex-start', paddingTop: SAFE_TOP + 10 }}>
-      <Kicker style={title}>COM A LEXMOVI</Kicker>
+      <Kicker style={title}>COM A MOVITECH</Kicker>
       <h2 style={{ ...title, margin: '20px 0 0', fontFamily: serif, fontWeight: 400, fontSize: 104, lineHeight: 1 }}>
         O pedido é <em style={{ color: C.gold }}>seu.</em>
       </h2>
@@ -242,7 +242,7 @@ function Offer() {
       <div style={{ transform: `scale(${logo})` }}>
         <LogoMark size={150} />
       </div>
-      <Kicker style={{ marginTop: 40 }}>LEXMOVI RESTAURANTES</Kicker>
+      <Kicker style={{ marginTop: 40 }}>MOVITECH RESTAURANTES</Kicker>
       <p style={{ margin: '50px 0 0', fontFamily: serif, fontSize: 210, lineHeight: 0.9, transform: `scale(${price})` }}>
         {PRECO}
         <span style={{ fontFamily: sans, fontSize: 52, color: C.muted }}>/mês</span>

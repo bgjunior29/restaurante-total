@@ -1,4 +1,4 @@
-"""Gera as páginas de vídeo da Lexmovi (/v/<nicho>) e as capas dos e-mails de prospecção.
+"""Gera as páginas de vídeo da Movitech (/v/<nicho>) e as capas dos e-mails de prospecção.
 
 Saídas:
   frontrestaurantetotal/public/v/<nicho>/index.html   página com o vídeo, benefícios e WhatsApp
@@ -28,7 +28,7 @@ NICHOS = {
                   "QR code na mesa: o pedido cai direto na cozinha",
                   "Aviso no WhatsApp a cada etapa do pedido"],
         "site": "/restaurantes",
-        "msg": "Oi! Vi o vídeo da Lexmovi e quero ver como ficaria no meu restaurante.",
+        "msg": "Oi! Vi o vídeo da Movitech e quero ver como ficaria no meu restaurante.",
         "cta": "Quero ver no meu restaurante",
     },
     "autoescolas": {
@@ -40,7 +40,7 @@ NICHOS = {
                   "Botão de WhatsApp que abre a conversa na hora",
                   "Perfil no Google bem configurado, para ser encontrado"],
         "site": "/",
-        "msg": "Oi! Vi o vídeo da Lexmovi para autoescolas e quero um orçamento.",
+        "msg": "Oi! Vi o vídeo da Movitech para autoescolas e quero um orçamento.",
         "cta": "Quero um orçamento",
     },
     "imobiliarias": {
@@ -52,7 +52,7 @@ NICHOS = {
                   "Contato pelo WhatsApp direto do anúncio",
                   "Perfil no Google bem configurado, para ser encontrado"],
         "site": "/",
-        "msg": "Oi! Vi o vídeo da Lexmovi para imobiliárias e quero um orçamento.",
+        "msg": "Oi! Vi o vídeo da Movitech para imobiliárias e quero um orçamento.",
         "cta": "Quero um orçamento",
     },
     "contabilidade": {
@@ -65,7 +65,7 @@ NICHOS = {
                   "Contato pelo WhatsApp em um toque",
                   "Perfil no Google bem configurado, para aparecer na busca"],
         "site": "/",
-        "msg": "Oi! Vi o vídeo da Lexmovi para contabilidade e quero um orçamento.",
+        "msg": "Oi! Vi o vídeo da Movitech para contabilidade e quero um orçamento.",
         "cta": "Quero um orçamento",
     },
     "saloes": {
@@ -77,7 +77,7 @@ NICHOS = {
                   "Contato pelo WhatsApp em um toque",
                   "Perfil no Google bem configurado, para ser encontrado"],
         "site": "/",
-        "msg": "Oi! Vi o vídeo da Lexmovi para salões e barbearias e quero um orçamento.",
+        "msg": "Oi! Vi o vídeo da Movitech para salões e barbearias e quero um orçamento.",
         "cta": "Quero um orçamento",
     },
     "petshops": {
@@ -89,13 +89,13 @@ NICHOS = {
                   "Pedido pelo WhatsApp em um toque",
                   "Perfil no Google bem configurado, para ser encontrado"],
         "site": "/",
-        "msg": "Oi! Vi o vídeo da Lexmovi para pet shops e quero um orçamento.",
+        "msg": "Oi! Vi o vídeo da Movitech para pet shops e quero um orçamento.",
         "cta": "Quero um orçamento",
     },
 }
 
 LOGO = ('<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="#141310" stroke="rgba(212,180,131,.5)"/>'
-        '<path d="M18 15.5v17h12" fill="none" stroke="#d4b483" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+        '<path d="M14.5 32.5v-17l9.5 11 9.5-11v17" fill="none" stroke="#d4b483" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>')
 ZAP = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a9.8 9.8 0 0 0-8.4 14.8L2.3 21.8l4.9-1.3A9.8 9.8 0 1 0 12 2.2zm5.6 13.9c-.2.7-1.4 1.4-2 1.5-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3s.8-2.2 1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.3.1.1.1.7-.1 1.4z"/></svg>')
 
 PAGINA = """<!doctype html>
@@ -103,10 +103,10 @@ PAGINA = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lexmovi para {rotulo}</title>
+<title>Movitech para {rotulo}</title>
 <meta name="description" content="{intro}">
 <meta name="robots" content="noindex">
-<meta property="og:title" content="Lexmovi para {rotulo}">
+<meta property="og:title" content="Movitech para {rotulo}">
 <meta property="og:description" content="{intro}">
 <meta property="og:image" content="{site}/midia/capa-{nome}.jpg">
 <meta property="og:type" content="video.other">
@@ -157,15 +157,15 @@ footer {{ border-top: 1px solid var(--line); padding: 22px 16px 28px; text-align
 </head>
 <body>
 <header class="topo">
-  <a class="marca" href="{site}/">{logo}<span>Lexmovi</span></a>
+  <a class="marca" href="{site}/">{logo}<span>Movitech</span></a>
   <a class="zap-mini" href="{wa}">(11) 96445-2878</a>
 </header>
 <main>
   <div class="video">
-    <video src="/midia/lexmovi-{nome}.mp4" poster="/midia/quadro-{nome}.jpg" controls playsinline preload="metadata"></video>
+    <video src="/midia/movitech-{nome}.mp4" poster="/midia/quadro-{nome}.jpg" controls playsinline preload="metadata"></video>
   </div>
   <div class="cab">
-    <p class="olho">Lexmovi para {rotulo}</p>
+    <p class="olho">Movitech para {rotulo}</p>
     <h1>{titulo}</h1>
   </div>
   <section class="corpo">
@@ -173,12 +173,12 @@ footer {{ border-top: 1px solid var(--line); padding: 22px 16px 28px; text-align
     <ul>{itens}</ul>
     <div class="acoes">
       <a class="botao" href="{wa}">{zap}{cta}</a>
-      <a class="link" href="{site}{pagina_site}">Conhecer a Lexmovi →</a>
+      <a class="link" href="{site}{pagina_site}">Conhecer a Movitech →</a>
     </div>
     <p class="nota">Orçamento sob medida, só com o que vocês precisam. Sem compromisso.</p>
   </section>
 </main>
-<footer>Lexmovi Sistemas · Barueri/SP · <span style="white-space:nowrap">WhatsApp (11) 96445-2878</span></footer>
+<footer>Movitech Sistemas · Barueri/SP · <span style="white-space:nowrap">WhatsApp (11) 96445-2878</span></footer>
 </body>
 </html>
 """
@@ -212,7 +212,7 @@ h1 em {{ color: #d4b483; }}
 <body>
   <div class="quadro"><img src="../quadros/{nome}.jpg" alt=""><div class="play"></div></div>
   <div>
-    <div class="marca">{logo}<span>Lexmovi</span></div>
+    <div class="marca">{logo}<span>Movitech</span></div>
     <p class="olho">Para {rotulo}</p>
     <h1>{titulo}</h1>
     <span class="ver"><i></i>Assistir o vídeo · {seg} s</span>

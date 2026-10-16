@@ -1,4 +1,4 @@
-// Cena 3D da home: o "L" do logo em metal champanhe, órbitas, satélites (celular, QR da mesa, comanda) e poeira dourada.
+// Cena 3D da home: o "M" do logo em metal champanhe, órbitas, satélites (celular, QR da mesa, comanda) e poeira dourada.
 // Carregada sob demanda (import dinâmico) para não pesar nas outras páginas.
 import * as THREE from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
@@ -39,14 +39,14 @@ export function createScene(canvas, state, { mobile }) {
   const hero = new THREE.Group();
   scene.add(hero);
 
-  // O "L" com o mesmo traço do favicon (viewBox 48×48), em tubo com pontas arredondadas.
-  const pts = [[18, 15.5], [18, 32.5], [30, 32.5]].map(([x, y]) => new THREE.Vector3((x - 24) / 6, -(y - 24) / 6, 0));
+  // O "M" com o mesmo traço do favicon (viewBox 48×48), em tubo com pontas arredondadas.
+  const pts = [[14.5, 32.5], [14.5, 15.5], [24, 26.5], [33.5, 15.5], [33.5, 32.5]].map(([x, y]) => new THREE.Vector3((x - 24) / 6, -(y - 24) / 6, 0));
   const path = new THREE.CurvePath();
   for (let i = 0; i < pts.length - 1; i++) path.add(new THREE.LineCurve3(pts[i], pts[i + 1]));
   const R = 0.2;
   const mGroup = new THREE.Group();
 
-  // Vida do traço: um pulso de luz que percorre o L (uv.x vai de 0 a 1 ao longo do tubo) e um brilho que "respira".
+  // Vida do traço: um pulso de luz que percorre o M (uv.x vai de 0 a 1 ao longo do tubo) e um brilho que "respira".
   const pulse = { uPulse: { value: -1 }, uGlow: { value: 0 } };
   const mGold = gold.clone();
   mGold.defines = { USE_UV: "" };
@@ -195,7 +195,7 @@ export function createScene(canvas, state, { mobile }) {
   addEventListener("pointermove", onMove);
   addEventListener("resize", onResize);
 
-  // Mouse sobre o logo: o raio acerta o disco ou o L. Não conta se o mouse está sobre conteúdo da página.
+  // Mouse sobre o logo: o raio acerta o disco ou o M. Não conta se o mouse está sobre conteúdo da página.
   const BLOCK = "a, button, input, label, summary, h1, h2, h3, p, li, header, [data-tilt], [data-glow], [data-reveal]";
   const ray = new THREE.Raycaster();
   const ndc = new THREE.Vector2();
@@ -236,7 +236,7 @@ export function createScene(canvas, state, { mobile }) {
     mouse.x += (mouse.tx - mouse.x) * 0.05;
     mouse.y += (mouse.ty - mouse.y) * 0.05;
 
-    // Entrada: o L se desenha (S.draw de 0 a 1) e cada junta acende quando o traço chega nela.
+    // Entrada: o M se desenha (S.draw de 0 a 1) e cada junta acende quando o traço chega nela.
     const draw = S.draw ?? 1;
     tube.geometry.setDrawRange(0, Math.floor((tubeCount * draw) / 6) * 6);
     joints.forEach((j) => (j.mesh.visible = draw >= j.at - 0.001));

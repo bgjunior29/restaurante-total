@@ -19,11 +19,11 @@ SEG = {"restaurantes": 20, "autoescolas": 22, "imobiliarias": 20, "contabilidade
 ROTULO = {"restaurantes": "restaurantes", "autoescolas": "autoescolas", "imobiliarias": "imobiliárias",
           "contabilidade": "contadores", "saloes": "salões e barbearias", "petshops": "pet shops"}
 FRASE = {
-    "autoescolas": "o que a Lexmovi faz por autoescolas: site rápido, pré-matrícula pelo celular e contato pelo WhatsApp em um toque.",
-    "imobiliarias": "o que a Lexmovi faz por imobiliárias: site rápido com os imóveis e contato pelo WhatsApp direto do anúncio.",
-    "contabilidade": "o que a Lexmovi faz por escritórios de contabilidade: site rápido e seguro e contato pelo WhatsApp em um toque, para quem procura contador encontrar vocês.",
-    "saloes": "o que a Lexmovi faz por barbearias e salões: agendamento de horário pelo celular e contato pelo WhatsApp em um toque.",
-    "petshops": "o que a Lexmovi faz por pet shops: catálogo online com os produtos e pedido pelo WhatsApp em um toque.",
+    "autoescolas": "o que a Movitech faz por autoescolas: site rápido, pré-matrícula pelo celular e contato pelo WhatsApp em um toque.",
+    "imobiliarias": "o que a Movitech faz por imobiliárias: site rápido com os imóveis e contato pelo WhatsApp direto do anúncio.",
+    "contabilidade": "o que a Movitech faz por escritórios de contabilidade: site rápido e seguro e contato pelo WhatsApp em um toque, para quem procura contador encontrar vocês.",
+    "saloes": "o que a Movitech faz por barbearias e salões: agendamento de horário pelo celular e contato pelo WhatsApp em um toque.",
+    "petshops": "o que a Movitech faz por pet shops: catálogo online com os produtos e pedido pelo WhatsApp em um toque.",
 }
 BARUERI, PERTO, REGIAO = "aqui de Barueri", "aqui de Barueri, pertinho de vocês", "aqui da região"
 
@@ -67,26 +67,26 @@ def corpo(nome, nicho, onde, pedido):
     url = f"{SITE}/v/{nicho}"
     seg = SEG[nicho]
     if nicho == "restaurantes":
-        abre = f"Sou o John, da Lexmovi, {onde}. Gravei um vídeo curto mostrando na prática como funciona o pedido {pedido}, sem comissão:"
+        abre = f"Sou o John, da Movitech, {onde}. Gravei um vídeo curto mostrando na prática como funciona o pedido {pedido}, sem comissão:"
         fecha = ("Se quiserem ver com o cardápio de vocês, é só responder este e-mail com o cardápio (PDF ou foto serve). "
                  "Eu monto a versão de vocês para testarem no celular, sem custo e sem compromisso.")
     else:
-        abre = f"Sou o John, da Lexmovi, {onde}. Gravei um vídeo curto mostrando {FRASE[nicho]}"
+        abre = f"Sou o John, da Movitech, {onde}. Gravei um vídeo curto mostrando {FRASE[nicho]}"
         fecha = "Se fizer sentido, preparo um orçamento só com o que vocês precisam, sem compromisso. É só responder este e-mail."
     return f"""<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#1f1d19;max-width:560px">
 <p>Olá, equipe {e(nome)}!</p>
 <p>{e(abre)}</p>
-<p><a href="{url}"><img src="{SITE}/midia/capa-{nicho}.jpg" width="560" alt="Assistir o vídeo da Lexmovi para {e(ROTULO[nicho])} ({seg} s)" style="display:block;width:100%;max-width:560px;height:auto;border:0;border-radius:10px"></a></p>
+<p><a href="{url}"><img src="{SITE}/midia/capa-{nicho}.jpg" width="560" alt="Assistir o vídeo da Movitech para {e(ROTULO[nicho])} ({seg} s)" style="display:block;width:100%;max-width:560px;height:auto;border:0;border-radius:10px"></a></p>
 <p><a href="{url}" style="color:#7a5c2e;font-weight:bold">▶ Assistir o vídeo ({seg} s)</a></p>
 <p>{e(fecha)}</p>
-<p>Abraço,<br><b>John</b><br>Lexmovi Sistemas · Barueri/SP<br>WhatsApp <a href="https://wa.me/5511964452878" {A}>(11) 96445-2878</a> · <a href="{SITE}" {A}>movitechsistemas.com.br</a></p>
+<p>Abraço,<br><b>John</b><br>Movitech Sistemas · Barueri/SP<br>WhatsApp <a href="https://wa.me/5511964452878" {A}>(11) 96445-2878</a> · <a href="{SITE}" {A}>movitechsistemas.com.br</a></p>
 <p style="font-size:12px;color:#8a857b">Se não fizer sentido para vocês, é só responder "não" que eu não envio mais nada.</p>
 </div>"""
 
 
 PAGINA = """<!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Envio 17/10 · Lexmovi</title>
+<title>Envio 17/10 · Movitech</title>
 <style>
 :root {{ --bg: #f4f1ea; --card: #fff; --ink: #1f1d19; --muted: #77716a; --line: #e4ded3; --gold: #b08a4f; --ok: #1f8a4c; }}
 * {{ box-sizing: border-box; }}
@@ -126,7 +126,7 @@ details summary {{ padding: 10px 18px; cursor: pointer; color: var(--muted); fon
 Dica: mande uns 10, faça uma pausa de alguns minutos e siga. Envios em rajada parecem spam.</div>
 <main>{cartoes}</main>
 <script>
-const CHAVE = 'lexmovi-envio-17-10'
+const CHAVE = 'movitech-envio-17-10'
 let feitos = {{}}
 try {{ feitos = JSON.parse(localStorage.getItem(CHAVE) || '{{}}') }} catch (e) {{}}
 function atualizar() {{

@@ -1,4 +1,4 @@
-# Lexmovi · Histórias de marca
+# Movitech · Histórias de marca
 
 > Tudo que está entre `[colchetes]` é fato que só você sabe: confirme ou troque antes de publicar.
 > As histórias de **personagem** (seção 4) são ilustrativas: servem para anúncio e roteiro de vídeo,
@@ -8,7 +8,7 @@
 
 | | |
 |---|---|
-| **Quem somos** | Lexmovi Sistemas, de Barueri. Tecnologia feita perto de quem usa. |
+| **Quem somos** | Movitech Sistemas, de Barueri. Tecnologia feita perto de quem usa. |
 | **Em que acreditamos** | O dono de restaurante trabalha demais para dar o lucro dele para aplicativo e perder pedido em comanda de papel. |
 | **O que fazemos** | Um sistema só para salão, cozinha e delivery: QR na mesa, tela da cozinha, delivery próprio sem comissão, relatórios. |
 | **Como fazemos** | Olhamos o restaurante antes de oferecer qualquer coisa. Orçamento conforme o que está dando errado, não pacote fechado. |
@@ -40,19 +40,19 @@ Fala "pedido", "comanda", "mesa", "garçom", "cozinha". Frases curtas.
 >
 > O primeiro a usar foi o [Point Arena]. [Uma frase real do que mudou lá, com autorização.]
 >
-> A Lexmovi nasceu assim: de perto, para quem está perto. Se você tem um restaurante aqui na região, eu vou até aí, olho como funciona hoje e te digo com sinceridade o que dá para melhorar.
+> A Movitech nasceu assim: de perto, para quem está perto. Se você tem um restaurante aqui na região, eu vou até aí, olho como funciona hoje e te digo com sinceridade o que dá para melhorar.
 >
-> **John · Lexmovi Sistemas**
+> **John · Movitech Sistemas**
 
 ### Versão curta (bio do Instagram, rodapé do site, assinatura)
 
-> Lexmovi Sistemas · Barueri/SP
+> Movitech Sistemas · Barueri/SP
 > Sistema para restaurantes: QR na mesa, cozinha e delivery sem comissão.
 > Fale com o John 👉 [link do WhatsApp]
 
 ### Versão de 30 segundos (apresentação falada, vídeo, visita)
 
-> "Eu sou o John, da Lexmovi, aqui de Barueri. Eu faço sistema para restaurante. Comecei porque via dono de restaurante trabalhando muito e vendo o lucro ir embora em comissão de aplicativo e pedido perdido. O meu sistema junta salão, cozinha e delivery num lugar só, e o delivery é seu, sem comissão. Eu não vendo pacote: primeiro olho como o seu restaurante funciona e depois te passo um orçamento do que realmente faz diferença."
+> "Eu sou o John, da Movitech, aqui de Barueri. Eu faço sistema para restaurante. Comecei porque via dono de restaurante trabalhando muito e vendo o lucro ir embora em comissão de aplicativo e pedido perdido. O meu sistema junta salão, cozinha e delivery num lugar só, e o delivery é seu, sem comissão. Eu não vendo pacote: primeiro olho como o seu restaurante funciona e depois te passo um orçamento do que realmente faz diferença."
 
 ---
 
@@ -71,7 +71,7 @@ Fala "pedido", "comanda", "mesa", "garçom", "cozinha". Frases curtas.
 > O cliente pede pela mesa. A cozinha vê na hora. A conta fecha sozinha.
 > E o delivery volta a ser seu.
 >
-> **Lexmovi. Tecnologia de restaurante, feita aqui do lado.**
+> **Movitech. Tecnologia de restaurante, feita aqui do lado.**
 
 ---
 
@@ -126,7 +126,7 @@ Fala "pedido", "comanda", "mesa", "garçom", "cozinha". Frases curtas.
 
 1. **Quem é:** [tipo de casa, bairro, quanto tempo de casa, nome e função de quem fala]
 2. **O problema antes:** [nas palavras do cliente. Ex.: "A gente anotava tudo no papel e …"]
-3. **Por que escolheu a Lexmovi:** [ex.: "porque o John veio até aqui", "porque é daqui"]
+3. **Por que escolheu a Movitech:** [ex.: "porque o John veio até aqui", "porque é daqui"]
 4. **Como foi a implantação:** [quanto tempo levou, quem treinou a equipe]
 5. **O que mudou:** [1 a 3 resultados concretos: pedidos pelo QR por noite, menos erro de comanda, tempo de espera…]
 6. **Frase de destaque:** "[citação real, curta]"
@@ -156,7 +156,7 @@ Fala "pedido", "comanda", "mesa", "garçom", "cozinha". Frases curtas.
 
 ### Legenda de post de apresentação
 
-> Eu sou o John, da Lexmovi Sistemas, aqui de Barueri. 👋
+> Eu sou o John, da Movitech Sistemas, aqui de Barueri. 👋
 >
 > Eu faço sistema para restaurante, pizzaria e lanchonete: o cliente pede pelo QR da mesa, o pedido cai na tela da cozinha, a conta fecha no celular, e o seu delivery passa a ser seu, sem comissão por pedido.
 >
@@ -173,7 +173,7 @@ Fala "pedido", "comanda", "mesa", "garçom", "cozinha". Frases curtas.
 | 0–3 s | "Dono de restaurante, para de dar o seu lucro para aplicativo." | John olhando para a câmera, na frente de um restaurante |
 | 3–10 s | "O cliente que já te conhece pode pedir direto com você, sem comissão." | Celular abrindo o cardápio digital |
 | 10–20 s | "E no salão ele pede pelo QR da mesa, e o pedido cai direto na cozinha." | QR na mesa, tela da cozinha |
-| 20–27 s | "Eu sou o John, da Lexmovi, aqui de Barueri. Vou até o seu restaurante e te mostro." | John de novo |
+| 20–27 s | "Eu sou o John, da Movitech, aqui de Barueri. Vou até o seu restaurante e te mostro." | John de novo |
 | 27–30 s | "Chama no WhatsApp." | Tela final com o número e o site |
 
 ---

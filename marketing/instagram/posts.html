@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Lexmovi · Posts do Instagram</title>
+<title>Movitech · Posts do Instagram</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=block" rel="stylesheet" />
 <style>
-  /* Identidade Lexmovi: a mesma do site (preto quente + champanhe, Instrument Serif + Inter). */
+  /* Identidade Movitech: a mesma do site (preto quente + champanhe, Instrument Serif + Inter). */
   :root {
     --bg: #0f0e0c; --bg2: #171613; --panel: #1f1d19; --line: #2e2b26;
     --ink: #f2efe8; --muted: #9a958b; --gold: #d4b483; --olive: #8a7350;
@@ -108,21 +108,21 @@
 <body>
 <div id="root"></div>
 <script>
-const M = '<svg viewBox="0 0 48 48" width="56" height="56"><circle cx="24" cy="24" r="23" fill="#141310" stroke="rgba(212,180,131,.5)"/><path d="M18 15.5v17h12" fill="none" stroke="#d4b483" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+const M = '<svg viewBox="0 0 48 48" width="56" height="56"><circle cx="24" cy="24" r="23" fill="#141310" stroke="rgba(212,180,131,.5)"/><path d="M14.5 32.5v-17l9.5 11 9.5-11v17" fill="none" stroke="#d4b483" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 const ICON = {
   chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>',
   link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>',
   pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0ZM12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg>',
   arrow: '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>',
 }
-const WATERMARK = '<svg class="watermark" viewBox="0 0 48 48"><circle cx="24" cy="24" r="23" fill="none" stroke="#d4b483" stroke-width=".4"/><path d="M18 15.5v17h12" fill="none" stroke="#d4b483" stroke-width=".9" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+const WATERMARK = '<svg class="watermark" viewBox="0 0 48 48"><circle cx="24" cy="24" r="23" fill="none" stroke="#d4b483" stroke-width=".4"/><path d="M14.5 32.5v-17l9.5 11 9.5-11v17" fill="none" stroke="#d4b483" stroke-width=".9" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 const WHATS = '(11) 96445-2878'
 const SITE = 'movitechsistemas.com.br'
 
 const ILUSTRATIVA = '<span class="tag">Situação ilustrativa</span><div class="push"></div>'
 const phase = (label, after = false) => `<div class="phase${after ? ' after' : ''}"><b>${label}</b></div>`
 const cta = (title, line) => `
-  <p class="eyebrow">Lexmovi Sistemas</p>
+  <p class="eyebrow">Movitech Sistemas</p>
   <h2 class="serif h2">${title}</h2>
   ${line ? `<p class="body">${line}</p>` : ''}
   <div class="push"></div>
@@ -137,7 +137,7 @@ const POSTS = [
   {
     id: '01-apresentacao', name: 'Apresentação do John', slides: [
       { glow: 1, html: `<p class="eyebrow">Prazer</p>
-        <h1 class="serif h1">Eu sou o John.<br><em>Da Lexmovi, aqui de Barueri.</em></h1>
+        <h1 class="serif h1">Eu sou o John.<br><em>Da Movitech, aqui de Barueri.</em></h1>
         <p class="body">E eu faço uma coisa só: tecnologia para restaurante funcionar melhor.</p>` },
       { html: `<p class="eyebrow">O que eu faço</p>
         <h2 class="serif h2">Um sistema só para <em>salão, cozinha e delivery.</em></h2>
@@ -279,7 +279,7 @@ const POSTS = [
 
 const footer = (post, i) => `
   <div class="footer">
-    <div class="brand">${M}<div><b>Lexmovi</b><small>Sistemas · Barueri</small></div></div>
+    <div class="brand">${M}<div><b>Movitech</b><small>Sistemas · Barueri</small></div></div>
     ${post.story ? '' : i < post.slides.length - 1
       ? `<div class="swipe"><span class="count">${String(i + 1).padStart(2, '0')} / ${String(post.slides.length).padStart(2, '0')}</span>${ICON.arrow}</div>`
       : `<div class="swipe count">${String(i + 1).padStart(2, '0')} / ${String(post.slides.length).padStart(2, '0')}</div>`}

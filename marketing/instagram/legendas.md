@@ -1,4 +1,4 @@
-# Instagram · Posts da Lexmovi
+# Instagram · Posts da Movitech
 
 As imagens prontas estão em `png/`, uma pasta por post e lâminas na ordem (`01.png`, `02.png`…).
 **Feed:** 1080×1350 (formato 4:5). **Stories:** 1080×1920.
@@ -28,7 +28,7 @@ Para mudar um texto: edite `posts.html` (abra no navegador para ver todos os pos
 ```
 Prazer, eu sou o John. 👋
 
-Sou da Lexmovi Sistemas, aqui de Barueri, e faço sistema para restaurante, pizzaria e lanchonete.
+Sou da Movitech Sistemas, aqui de Barueri, e faço sistema para restaurante, pizzaria e lanchonete.
 
 O cliente pede pelo QR da mesa, o pedido cai na tela da cozinha, a conta fecha no celular, e o seu delivery passa a ser seu, sem comissão por pedido.
 
@@ -48,7 +48,7 @@ Quem toca um restaurante não tem tempo para sistema complicado, nem margem para
 
 A gente acredita que o restaurante do bairro pode ter a mesma tecnologia das grandes redes. Sem contrato de gente grande, sem central de atendimento, sem letra miúda.
 
-Lexmovi. Tecnologia de restaurante, feita aqui do lado.
+Movitech. Tecnologia de restaurante, feita aqui do lado.
 
 #barueri #restaurante #gastronomia #empreendedorismo #donoderestaurante #foodservice
 ```
