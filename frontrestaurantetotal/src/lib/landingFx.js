@@ -58,7 +58,7 @@ export function useLandingFx({ rootRef, canvasRef, cursorRef, dotRef, progressRe
     };
 
     // Scroll suave, sincronizado com o ScrollTrigger e com âncoras (#solucoes etc.).
-    const lenis = reduce ? null : new Lenis({ lerp: 0.09, anchors: { offset: -80 } });
+    const lenis = reduce ? null : new Lenis({ lerp: 0.15, anchors: { offset: -80 } });
     const raf = (t) => lenis?.raf(t * 1000);
     if (lenis) {
       lenis.on("scroll", ScrollTrigger.update);
@@ -78,20 +78,20 @@ export function useLandingFx({ rootRef, canvasRef, cursorRef, dotRef, progressRe
           yPercent: 60,
           rotate: 3,
           opacity: 0,
-          duration: hero ? 1.3 : 1.1,
-          delay: hero ? 0.15 : 0,
+          duration: hero ? 0.9 : 0.8,
+          delay: hero ? 0.05 : 0,
           ease: "expo.out",
-          stagger: hero ? 0.05 : 0.04,
-          scrollTrigger: hero ? undefined : { trigger: el, start: "top 88%" },
+          stagger: hero ? 0.035 : 0.03,
+          scrollTrigger: hero ? undefined : { trigger: el, start: "top 92%" },
         });
       });
       if (reduce) return;
 
-      gsap.from("[data-hero-in]", { y: 36, opacity: 0, duration: 1, ease: "power3.out", stagger: 0.1, delay: 0.5 });
+      gsap.from("[data-hero-in]", { y: 24, opacity: 0, duration: 0.8, ease: "power3.out", stagger: 0.08, delay: 0.25 });
 
       // Blocos que sobem ao aparecer; grupos [data-stagger] entram em sequência, com leve giro 3D.
       gsap.utils.toArray("[data-reveal]").forEach((el) =>
-        gsap.from(el, { y: 50, opacity: 0, duration: 1.1, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 88%" } }),
+        gsap.from(el, { y: 36, opacity: 0, duration: 0.8, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 92%" } }),
       );
       gsap.utils.toArray("[data-stagger]").forEach((group) =>
         gsap.from(group.children, {
@@ -99,10 +99,10 @@ export function useLandingFx({ rootRef, canvasRef, cursorRef, dotRef, progressRe
           rotateX: -25,
           opacity: 0,
           transformOrigin: "50% 100%",
-          duration: 1.2,
+          duration: 0.9,
           ease: "expo.out",
-          stagger: 0.1,
-          scrollTrigger: { trigger: group, start: "top 85%" },
+          stagger: 0.07,
+          scrollTrigger: { trigger: group, start: "top 90%" },
         }),
       );
 
@@ -170,8 +170,8 @@ export function useLandingFx({ rootRef, canvasRef, cursorRef, dotRef, progressRe
       const dot = dotRef.current;
       if (cur && dot) {
         gsap.set([cur, dot], { opacity: 1 });
-        const cx = gsap.quickTo(cur, "x", { duration: 0.45, ease: "power3" });
-        const cy = gsap.quickTo(cur, "y", { duration: 0.45, ease: "power3" });
+        const cx = gsap.quickTo(cur, "x", { duration: 0.18, ease: "power3" });
+        const cy = gsap.quickTo(cur, "y", { duration: 0.18, ease: "power3" });
         on(window, "pointermove", (e) => {
           cx(e.clientX);
           cy(e.clientY);
@@ -202,6 +202,9 @@ export function useLandingFx({ rootRef, canvasRef, cursorRef, dotRef, progressRe
           scene3d = mod.createScene(canvasRef.current, S, { mobile: !desk });
           await scene3d.ready;
           if (!alive) return;
+          // Cor de destaque que troca sozinha (lib/accentCycle.js): o logo 3D acompanha.
+          if (root.dataset.accent) scene3d.setAccent(root.dataset.accent);
+          on(root, "accentchange", (e) => scene3d?.setAccent(e.detail));
           const t0 = performance.now();
           let current = null;
           let settle = 1;

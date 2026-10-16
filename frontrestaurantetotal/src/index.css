@@ -8,7 +8,7 @@
 
   /* Paleta padrão "Noir" (preto quente + champanhe). Os temas em lib/themes.js redefinem estas variáveis. */
   --color-ink: #f2efe8;
-  --color-muted: #9a958b;
+  --color-muted: #aba69c;
   --color-green: #0f0e0c;
   --color-green2: #171613;
   --color-panel: #1f1d19;
@@ -20,6 +20,23 @@
   --color-card: #fffdf9;
   --color-sage: #ebe5da;
   --color-dark: #141310;
+}
+
+/* Cor de destaque registrada como cor de verdade: assim a troca automática da home (lib/accentCycle.js) é suave. */
+@property --color-lime {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #d4b483;
+}
+@property --color-olive {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #8a7350;
+}
+.accent-cycle {
+  transition:
+    --color-lime 2.4s ease,
+    --color-olive 2.4s ease;
 }
 
 html {
@@ -76,7 +93,7 @@ button:disabled {
 
 @layer components {
   .eyebrow {
-    @apply text-[10.5px] font-medium tracking-[0.24em] uppercase;
+    @apply text-[12px] font-medium tracking-[0.18em] uppercase;
   }
   .btn-lime {
     @apply rounded-lg bg-lime px-5 py-3 text-sm font-semibold tracking-[-0.005em] text-dark shadow-[0_1px_0_rgba(255,255,255,.25)_inset,0_8px_24px_-12px_color-mix(in_srgb,var(--color-lime)_60%,transparent)] transition hover:brightness-[1.06] active:scale-[.99];
@@ -184,15 +201,8 @@ html.lenis body {
   inset: -50%;
   z-index: 40;
   pointer-events: none;
-  opacity: 0.05;
+  opacity: 0.025; /* granulado bem leve e parado: não atrapalha a leitura nem pesa na tela */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation: grain 1.2s steps(6) infinite;
-}
-@keyframes grain {
-  0%, 100% { transform: translate(0, 0); }
-  25% { transform: translate(-4%, 3%); }
-  50% { transform: translate(3%, -5%); }
-  75% { transform: translate(-2%, 6%); }
 }
 
 /* Cursor próprio: aparece só com mouse (o JS liga a opacidade). */
@@ -246,8 +256,3 @@ html.lenis body {
   opacity: 1;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .landing-grain {
-    animation: none;
-  }
-}

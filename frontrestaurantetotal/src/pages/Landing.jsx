@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
 import { LogoMark } from "../components/ui";
+import { useAccentCycle } from "../lib/accentCycle";
 import { slugify } from "../lib/format";
 import { useLandingFx } from "../lib/landingFx";
 
@@ -187,7 +188,7 @@ export function SiteHeader() {
 /** Rodapé completo do site, com colunas. */
 export function SiteFooter() {
   const col = "flex flex-col gap-3 text-sm";
-  const link = "text-ink/60 transition hover:text-ink";
+  const link = "text-ink/75 transition hover:text-ink";
   return (
     <footer className="border-t border-line/60 bg-green">
       <div className={`${wrap} grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]`}>
@@ -196,7 +197,7 @@ export function SiteFooter() {
             <LogoMark />
             <span className="font-serif text-2xl">Movitech</span>
           </div>
-          <p className="mt-5 text-sm leading-relaxed text-ink/55">
+          <p className="mt-5 text-[15px] leading-relaxed text-ink/70">
             Sistemas, sites e apps para negócios locais. Tecnologia feita aqui do lado, em Barueri.
           </p>
         </div>
@@ -218,12 +219,12 @@ export function SiteFooter() {
           <a href={ZAP} target="_blank" rel="noreferrer" className={`${link} flex items-center gap-2`}>
             <Icon name="chat" className="size-4 text-lime" /> (11) 96445-2878
           </a>
-          <span className="flex items-center gap-2 text-ink/60">
+          <span className="flex items-center gap-2 text-ink/75">
             <Icon name="pin" className="size-4 text-lime" /> Barueri e região · Brasil online
           </span>
         </div>
       </div>
-      <div className={`${wrap} flex flex-wrap items-center justify-between gap-3 border-t border-line/50 py-6 text-[11px] text-muted`}>
+      <div className={`${wrap} flex flex-wrap items-center justify-between gap-3 border-t border-line/50 py-6 text-xs text-muted`}>
         <span>© {new Date().getFullYear()} Movitech Sistemas</span>
         <span className="flex gap-5">
           <Link to="/termos" className="hover:text-ink">Termos de uso</Link>
@@ -414,6 +415,7 @@ export default function Landing() {
   const dotRef = useRef(null);
   const progressRef = useRef(null);
   const has3D = useLandingFx({ rootRef, canvasRef, cursorRef, dotRef, progressRef });
+  useAccentCycle(rootRef);
 
   useEffect(() => {
     document.title = "Movitech Sistemas · Sistemas, sites e apps para o seu negócio";
@@ -449,7 +451,7 @@ export default function Landing() {
                 Tecnologia que move o seu negócio.{" "}
                 <em className="text-lime">Feita aqui do lado.</em>
               </h1>
-              <p data-hero-in className="mt-8 max-w-[560px] text-[17px] leading-[1.7] text-ink/65">
+              <p data-hero-in className="mt-8 max-w-[560px] text-[17px] leading-[1.7] text-ink/85">
                 Sistemas, sites e apps para negócios locais venderem mais e trabalharem menos. Começamos pelo que mais pesa:
                 restaurantes, com salão, cozinha e delivery numa operação só, sem comissão por pedido.
               </p>
@@ -516,7 +518,7 @@ export default function Landing() {
                 </div>
                 <p className="eyebrow mt-8 text-muted">{s.tag}</p>
                 <h3 className="mt-3 font-serif text-[30px] leading-[1.05]">{s.title}</h3>
-                <p className="mt-4 text-sm leading-relaxed text-ink/60">{s.text}</p>
+                <p className="mt-4 text-[15px] leading-relaxed text-ink/85">{s.text}</p>
                 <ul className="mt-6 space-y-2.5 border-t border-line/70 pt-6 text-sm">
                   {s.items.map((t) => (
                     <li key={t} className="flex items-center gap-2.5 text-ink/80">
@@ -546,7 +548,7 @@ export default function Landing() {
               <h2 data-split className={h2}>
                 Do QR da mesa <em className="text-lime">à conta fechada.</em>
               </h2>
-              <p className="mt-6 max-w-[520px] text-[16px] leading-[1.7] text-ink/65">
+              <p className="mt-6 max-w-[520px] text-[16px] leading-[1.7] text-ink/85">
                 O cliente pede pelo celular, a cozinha recebe na hora, o garçom fecha a conta com taxa de serviço e divisão. E o
                 delivery passa a ser seu, sem comissão por pedido.
               </p>
@@ -572,7 +574,7 @@ export default function Landing() {
                 <li key={title} data-glow className="fx-glow relative bg-green/90 p-8 backdrop-blur transition-colors hover:bg-dark/90">
                   <Icon name={icon} className="size-5 text-lime" />
                   <p className="mt-5 font-serif text-2xl">{title}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-ink/60">{text}</p>
+                  <p className="mt-2 text-[15px] leading-relaxed text-ink/85">{text}</p>
                 </li>
               ))}
             </ul>
@@ -586,7 +588,7 @@ export default function Landing() {
             <h2 data-split className={h2}>
               A gente mostra onde o seu negócio <em className="text-lime">perde cliente.</em>
             </h2>
-            <p className="mt-6 max-w-[520px] text-[16px] leading-[1.7] text-ink/65">
+            <p className="mt-6 max-w-[520px] text-[16px] leading-[1.7] text-ink/85">
               Antes de oferecer qualquer coisa, olhamos a sua presença online como o seu cliente vê: no Google, no Instagram, no
               site e na hora de pedir. Você recebe o resultado, sem compromisso.
             </p>
@@ -634,7 +636,7 @@ export default function Landing() {
                   <li key={title} data-tilt className="fx-glare relative rounded-3xl border border-line bg-green/70 p-8 backdrop-blur-md">
                     <span className="font-serif text-6xl text-lime italic">{String(i + 1).padStart(2, "0")}</span>
                     <p className="mt-6 font-serif text-2xl">{title}</p>
-                    <p className="mt-3 text-sm leading-relaxed text-ink/60">{text}</p>
+                    <p className="mt-3 text-[15px] leading-relaxed text-ink/85">{text}</p>
                   </li>
                 ))}
               </ol>
@@ -650,7 +652,7 @@ export default function Landing() {
               <h2 data-split className={h2}>
                 Seus dados <em className="text-lime">são seus.</em>
               </h2>
-              <p className="mt-6 max-w-md text-[16px] leading-[1.7] text-ink/65">
+              <p className="mt-6 max-w-md text-[16px] leading-[1.7] text-ink/85">
                 Os seus clientes, pedidos e números ficam com você, protegidos e com cópia de segurança todos os dias.
               </p>
               {has3D && <div aria-hidden data-anchor className="pointer-events-none mt-12 hidden aspect-square w-[44%] lg:block" />}
@@ -660,7 +662,7 @@ export default function Landing() {
                 <li key={title} data-glow className="fx-glow relative rounded-2xl border border-line bg-dark/60 p-6 backdrop-blur-md">
                   <Icon name={icon} className="size-5 text-lime" />
                   <p className="mt-4 font-medium">{title}</p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-ink/60">{text}</p>
+                  <p className="mt-1.5 text-[15px] leading-relaxed text-ink/85">{text}</p>
                 </li>
               ))}
             </ul>
@@ -709,7 +711,7 @@ export default function Landing() {
             <h2 data-split className={h2}>
               Antes de <em className="text-lime">conversar.</em>
             </h2>
-            <p className="mt-6 max-w-sm text-sm leading-relaxed text-ink/60">Não achou o que procurava? Pergunte direto no WhatsApp.</p>
+            <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-ink/85">Não achou o que procurava? Pergunte direto no WhatsApp.</p>
             {has3D && <div aria-hidden data-anchor className="pointer-events-none mt-14 hidden aspect-square w-[44%] lg:block" />}
           </div>
           <div className="divide-y divide-line border-y border-line">
@@ -719,7 +721,7 @@ export default function Landing() {
                   {q}
                   <Icon name="plus" className="size-4 shrink-0 text-lime transition group-open:rotate-45" />
                 </summary>
-                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink/65">{a}</p>
+                <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-ink/85">{a}</p>
               </details>
             ))}
           </div>
@@ -734,7 +736,7 @@ export default function Landing() {
                 <h2 data-split className="max-w-2xl font-serif text-[clamp(38px,5vw,72px)] leading-[1]">
                   Vamos colocar o seu negócio <em className="text-lime">para mover?</em>
                 </h2>
-                <p className="mt-6 max-w-lg text-[16px] leading-[1.7] text-ink/65">
+                <p className="mt-6 max-w-lg text-[16px] leading-[1.7] text-ink/85">
                   Conte o que você precisa. A gente responde pelo WhatsApp, faz o diagnóstico e te manda um orçamento sob medida.
                 </p>
                 <a data-magnetic href={ZAP} target="_blank" rel="noreferrer" className="btn-lime mt-9 inline-flex items-center gap-2 px-6 py-3.5">

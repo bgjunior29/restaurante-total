@@ -153,7 +153,7 @@ export function createScene(canvas, state, { mobile }) {
     transparent: true,
     depthWrite: false,
     blending: THREE.AdditiveBlending,
-    uniforms: { uTime: { value: 0 }, uBurst: { value: 0 }, uPR: { value: renderer.getPixelRatio() } },
+    uniforms: { uTime: { value: 0 }, uBurst: { value: 0 }, uPR: { value: renderer.getPixelRatio() }, uColor: { value: new THREE.Color(0xd4b483) } },
     vertexShader: `
       attribute float seed; uniform float uTime, uBurst, uPR; varying float vA;
       void main(){
@@ -167,9 +167,9 @@ export function createScene(canvas, state, { mobile }) {
         vA = .45 + .25*sin(uTime*1.5 + seed*30.);
       }`,
     fragmentShader: `
-      varying float vA;
+      uniform vec3 uColor; varying float vA;
       void main(){ float d = length(gl_PointCoord-.5); if(d>.5) discard;
-        gl_FragColor = vec4(vec3(.83,.71,.51), (1.-d*2.)*vA); }`,
+        gl_FragColor = vec4(uColor, (1.-d*2.)*vA); }`,
   });
   const dust = new THREE.Points(pGeo, pMat);
   scene.add(dust);
@@ -261,8 +261,35 @@ export function createScene(canvas, state, { mobile }) {
   addEventListener("pointermove", onHover);
   addEventListener("pointerdown", onDown);
 
+  // Cor de destaque: o metal, o anel, as órbitas, o cometa e a poeira seguem a cor da página, com transição suave.
+  const accent = new THREE.Color(0xd4b483);
+  const accentTo = accent.clone();
+  const white = new THREE.Color(0xffffff);
+  const cometColor = new THREE.Color();
+  function setAccent(css) {
+    try {
+      accentTo.setStyle(String(css).trim());
+    } catch {
+      /* cor inválida: mantém a atual */
+    }
+  }
+  function tintAccent() {
+    if (accent.equals(accentTo)) return;
+    accent.lerp(accentTo, 0.04);
+    if (Math.abs(accent.r - accentTo.r) + Math.abs(accent.g - accentTo.g) + Math.abs(accent.b - accentTo.b) < 0.003) accent.copy(accentTo);
+    gold.color.copy(accent);
+    mGold.color.copy(accent);
+    ringMat.color.copy(accent);
+    ringMat.emissive.copy(accent);
+    lineMat.color.copy(accent);
+    pMat.uniforms.uColor.value.copy(accent);
+    cometColor.copy(accent).lerp(white, 0.55);
+    comet.forEach((m) => m.material.color.copy(cometColor));
+  }
+
   const S = state;
   function render(t) {
+    tintAccent();
     last = t;
     adapt(t);
     mouse.x += (mouse.tx - mouse.x) * 0.05;
@@ -352,6 +379,7 @@ export function createScene(canvas, state, { mobile }) {
 
   return {
     ready,
+    setAccent,
     render,
     place,
     destroy,
