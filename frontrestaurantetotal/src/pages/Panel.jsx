@@ -83,7 +83,12 @@ export function whatsText(order, restaurant) {
   const step = {
     RECEBIDO: 'recebemos seu pedido e ele já está na fila',
     EM_PREPARO: 'seu pedido está sendo preparado',
-    PRONTO: order.type === 'RETIRADA' ? 'seu pedido está pronto para retirada' : 'seu pedido está pronto',
+    PRONTO:
+      order.type === 'RETIRADA'
+        ? 'seu pedido está pronto para retirada'
+        : order.type === 'MESA'
+          ? 'seu pedido está pronto e já vai para a sua mesa'
+          : 'seu pedido está pronto',
     SAIU_ENTREGA: 'seu pedido saiu para entrega',
     ENTREGUE: 'obrigado pelo pedido! Bom apetite',
     CANCELADO: 'seu pedido foi cancelado',
