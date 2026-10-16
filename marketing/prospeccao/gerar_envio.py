@@ -61,6 +61,10 @@ LEADS = [
 
 A = 'style="color:#1f1d19"'
 
+# Os 28 leads receberam em 15/10 o aviso "agora somos Lexmovi"; em 16/10 a marca voltou a ser Movitech.
+CORRECAO = ("Uma correção rápida: no último e-mail eu avisei de uma mudança de nome, mas seguimos como Movitech, "
+            "com o mesmo site e o mesmo WhatsApp de sempre.")
+
 
 def corpo(nome, nicho, onde, pedido):
     e = html.escape
@@ -75,6 +79,7 @@ def corpo(nome, nicho, onde, pedido):
         fecha = "Se fizer sentido, preparo um orçamento só com o que vocês precisam, sem compromisso. É só responder este e-mail."
     return f"""<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#1f1d19;max-width:560px">
 <p>Olá, equipe {e(nome)}!</p>
+<p>{e(CORRECAO)}</p>
 <p>{e(abre)}</p>
 <p><a href="{url}"><img src="{SITE}/midia/capa-{nicho}.jpg" width="560" alt="Assistir o vídeo da Movitech para {e(ROTULO[nicho])} ({seg} s)" style="display:block;width:100%;max-width:560px;height:auto;border:0;border-radius:10px"></a></p>
 <p><a href="{url}" style="color:#7a5c2e;font-weight:bold">▶ Assistir o vídeo ({seg} s)</a></p>
