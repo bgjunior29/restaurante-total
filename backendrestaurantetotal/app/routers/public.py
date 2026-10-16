@@ -192,6 +192,12 @@ async def create_order(body: OrderIn, request: Request, tenant=Depends(active_te
     if body.type == "MESA":
         table = await table_from_qr(tenant.id, body.tableNumber, body.tableKey)
         await ensure_not_seated_elsewhere(tenant.id, table, body.sessionToken)
+        # WhatsApp na mesa é opcional (só para avisar quando ficar pronto); se veio preenchido, tem que ser válido.
+        if body.customerPhone.strip():
+            digits = delivery.phone_digits(body.customerPhone)
+            if not delivery.valid_phone(digits):
+                raise HTTPException(400, "Confira o WhatsApp com DDD, ex.: (11) 98888-7777, ou deixe o campo em branco.")
+            phone = delivery.format_phone(digits)
     else:
         if body.type == "RETIRADA" and not tenant.pickupEnabled:
             raise HTTPException(409, "No momento não estamos fazendo pedidos para retirada.")

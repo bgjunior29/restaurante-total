@@ -3,7 +3,8 @@
 Funciona em dois níveis:
 1. Sempre: a equipe tem um botão que abre o WhatsApp com a mensagem pronta (link wa.me, feito no frontend).
 2. Automático: se o servidor tiver WHATSAPP_ACCESS_TOKEN e WHATSAPP_PHONE_NUMBER_ID e o restaurante ligar
-   "Avisar clientes pelo WhatsApp", cada mudança de status de retirada/delivery vira mensagem.
+   "Avisar clientes pelo WhatsApp", cada mudança de status de retirada/delivery vira mensagem. Na mesa,
+   quem deixou o WhatsApp (opcional) recebe só o aviso de pedido pronto.
 
 O envio roda em segundo plano e nunca derruba o pedido: falhou, só registra no log.
 """
@@ -22,7 +23,11 @@ API_VERSION = os.getenv("WHATSAPP_API_VERSION", "v21.0")
 STATUS_TEXT = {
     "RECEBIDO": "recebemos seu pedido e ele já está na fila da cozinha",
     "EM_PREPARO": "seu pedido está sendo preparado",
-    "PRONTO": {"RETIRADA": "seu pedido está pronto para retirada", "DELIVERY": "seu pedido está pronto e aguarda o entregador"},
+    "PRONTO": {
+        "RETIRADA": "seu pedido está pronto para retirada",
+        "DELIVERY": "seu pedido está pronto e aguarda o entregador",
+        "MESA": "seu pedido está pronto e já vai para a sua mesa",
+    },
     "SAIU_ENTREGA": "seu pedido saiu para entrega",
     "ENTREGUE": {"RETIRADA": "pedido retirado. Bom apetite!", "DELIVERY": "pedido entregue. Bom apetite!"},
     "CANCELADO": "seu pedido foi cancelado. Fale com a gente se tiver dúvidas",
@@ -72,7 +77,8 @@ def _send_sync(to: str, body: str) -> None:
 
 async def notify_status(tenant, order, track_url: str = "") -> None:
     """Dispara o aviso sem bloquear a resposta da API."""
-    if order.type == "MESA" or not tenant.notifyWhatsapp or not configured():
+    # Na mesa o cliente está no salão: só avisa quando fica pronto (e só se deixou o WhatsApp, que é opcional).
+    if (order.type == "MESA" and order.status != "PRONTO") or not tenant.notifyWhatsapp or not configured():
         return
     to = normalize_phone(order.customerPhone)
     if not to:

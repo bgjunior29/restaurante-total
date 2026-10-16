@@ -90,7 +90,9 @@ export default function CheckoutDrawer({
   const addressOk = street.trim().length > 2 && number.trim() && district.trim()
   const missing =
     type === 'MESA'
-      ? !table && 'Escaneie o QR code da sua mesa para pedir nela.'
+      ? !table
+        ? 'Escaneie o QR code da sua mesa para pedir nela.'
+        : phone.trim() && !phoneOk && 'Confira o WhatsApp com DDD, ex.: (11) 98888-7777, ou deixe em branco.'
       : name.trim().length < 2
         ? 'Informe seu nome.'
         : !phoneOk
@@ -151,7 +153,7 @@ export default function CheckoutDrawer({
           tableKey: type === 'MESA' ? table.key : '',
           sessionToken: type === 'MESA' ? sessionToken : null,
           customerName: name,
-          customerPhone: type === 'MESA' ? '' : phone,
+          customerPhone: type === 'MESA' ? phone.trim() : phone,
           address: type === 'DELIVERY' ? address : '',
           addressRef: type === 'DELIVERY' ? addressRef : '',
           notes,
@@ -234,20 +236,19 @@ export default function CheckoutDrawer({
               <input className="input-light mt-2" placeholder="Ex.: Ana" maxLength={60} autoComplete="given-name" value={name} onChange={(e) => setName(e.target.value)} />
             </Field>
 
-            {type !== 'MESA' && (
-              <Field label="Telefone / WhatsApp (avisamos sobre o pedido)" className="mt-4">
-                <input
-                  className="input-light mt-2"
-                  type="tel"
-                  inputMode="tel"
-                  autoComplete="tel"
-                  placeholder="(11) 98888-7777"
-                  maxLength={20}
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </Field>
-            )}
+            {/* Na mesa o WhatsApp é opcional: só para avisar quando o pedido ficar pronto. */}
+            <Field label={type === 'MESA' ? 'WhatsApp (opcional · avisamos quando ficar pronto)' : 'Telefone / WhatsApp (avisamos sobre o pedido)'} className="mt-4">
+              <input
+                className="input-light mt-2"
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                placeholder="(11) 98888-7777"
+                maxLength={20}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </Field>
 
             {type === 'DELIVERY' && (
               <div className="mt-4 grid grid-cols-3 gap-3">

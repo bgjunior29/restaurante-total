@@ -1,5 +1,5 @@
 """Pedidos: o preço vem sempre do banco, nunca do celular do cliente."""
-from .conftest import new_phone
+from .conftest import login, new_phone
 
 SLUG = "cantina-da-nonna"
 
@@ -57,3 +57,40 @@ def test_limite_de_pedidos_por_aparelho(client):
     statuses = [pickup_order(client, product, pay, headers).status_code for _ in range(delivery.TAKEOUT_PER_IP + 1)]
     assert statuses[:-1] == [201] * delivery.TAKEOUT_PER_IP
     assert statuses[-1] == 429
+
+
+def test_whatsapp_na_mesa_e_opcional_mas_validado(client):
+    headers = login(client, SLUG)
+    table = client.get(f"/api/t/{SLUG}/admin/tables", headers=headers).json()[2]
+    menu = client.get(f"/api/t/{SLUG}/menu").json()
+
+    def mesa(phone, token=None):
+        return client.post(
+            f"/api/t/{SLUG}/orders",
+            json={
+                "type": "MESA",
+                "tableNumber": table["number"],
+                "tableKey": table["qrKey"],
+                "sessionToken": token,
+                "customerPhone": phone,
+                "items": [{"productId": first_product(menu)["id"], "quantity": 1}],
+            },
+        )
+
+    sem = mesa("")
+    assert sem.status_code == 201, sem.text  # sem WhatsApp: o pedido entra normalmente
+    token = sem.json()["sessionToken"]
+    assert mesa("123", token).status_code == 400  # preenchido errado: pede para conferir
+    com = mesa("+55 (11) 98888-7766", token)
+    assert com.status_code == 201, com.text
+    pedidos = client.get(f"/api/t/{SLUG}/orders", headers=headers).json()
+    assert next(o for o in pedidos if o["id"] == com.json()["id"])["customerPhone"] == "(11) 98888-7766"
+
+
+def test_aviso_de_pronto_na_mesa():
+    from types import SimpleNamespace
+
+    from app.whatsapp import status_message
+
+    order = SimpleNamespace(status="PRONTO", type="MESA", code="RT-7", customerName="Ana")
+    assert "já vai para a sua mesa" in status_message("Cantina", order)
