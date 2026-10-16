@@ -13,7 +13,7 @@ export const ACCENTS = [
 ];
 
 /**
- * Troca a cor de destaque dentro de `rootRef` a cada `everyMs` (padrão 2 min; `?cores=rapido` troca a cada 8 s
+ * Troca a cor de destaque dentro de `rootRef` a cada `everyMs` (padrão 60 s; `?cores=rapido` troca a cada 8 s
  * para testar). Avisa a cena 3D pelo evento `accentchange` (detail = cor em hex).
  */
 export function useAccentCycle(rootRef) {
@@ -21,7 +21,7 @@ export function useAccentCycle(rootRef) {
     const root = rootRef.current;
     if (!root) return;
     const fast = new URLSearchParams(location.search).get("cores") === "rapido";
-    const everyMs = fast ? 8000 : 2 * 60 * 1000;
+    const everyMs = fast ? 8000 : 60 * 1000;
     let i = 0;
     const apply = () => {
       const c = ACCENTS[i];
