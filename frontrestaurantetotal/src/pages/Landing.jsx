@@ -128,7 +128,7 @@ function NavLinkItem({ href, children, onClick, className }) {
   );
 }
 
-/** Topo do site: marca, menu, Entrar e WhatsApp. No celular o menu abre numa gaveta. */
+/** Topo do site: marca, menu e WhatsApp. No celular o menu abre numa gaveta. */
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
@@ -150,9 +150,6 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <Link to="/plataforma" className="hidden px-3 py-2 text-[13px] text-muted transition hover:text-ink sm:inline">
-            Entrar
-          </Link>
           <a href={ZAP} target="_blank" rel="noreferrer" className="btn-lime hidden items-center gap-2 py-2.5 text-[13px] sm:inline-flex">
             <Icon name="chat" className="size-4" /> WhatsApp
           </a>
@@ -176,11 +173,8 @@ export function SiteHeader() {
               {label}
             </NavLinkItem>
           ))}
-          <div className="mt-6 grid grid-cols-2 gap-2">
-            <Link to="/plataforma" onClick={close} className="btn-outline py-3 text-center">
-              Entrar
-            </Link>
-            <a href={ZAP} target="_blank" rel="noreferrer" className="btn-lime inline-flex items-center justify-center gap-2">
+          <div className="mt-6">
+            <a href={ZAP} target="_blank" rel="noreferrer" className="btn-lime flex items-center justify-center gap-2 py-3">
               <Icon name="chat" className="size-4" /> WhatsApp
             </a>
           </div>
@@ -218,7 +212,6 @@ export function SiteFooter() {
           <a href="/#sobre" className={link}>Sobre a Movitech</a>
           <a href="/#como-trabalhamos" className={link}>Como trabalhamos</a>
           <a href="/#perguntas" className={link}>Perguntas frequentes</a>
-          <Link to="/plataforma" className={link}>Área do cliente</Link>
         </div>
         <div className={col}>
           <p className="eyebrow text-muted">Contato</p>
