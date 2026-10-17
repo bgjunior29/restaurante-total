@@ -39,6 +39,15 @@ function visibleAnchor(sec) {
   return null;
 }
 
+// Scroll suave ativo na home (Lenis), para o clique no logo rolar até o topo do mesmo jeito.
+let activeLenis = null;
+
+/** Rola suave até o topo da página (usa o Lenis quando a home está com scroll suave). */
+export function scrollToTop() {
+  if (activeLenis) activeLenis.scrollTo(0, { duration: 1.2 });
+  else window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+}
+
 /**
  * Liga todos os efeitos dentro de `rootRef`. `canvasRef` recebe a cena 3D; `cursorRef`/`dotRef`, o cursor.
  * Retorna se a cena 3D está ativa (sem WebGL, a capa mostra as prévias ilustradas).
@@ -60,6 +69,7 @@ export function useLandingFx({ rootRef, canvasRef, cursorRef, dotRef, progressRe
     // Scroll suave, sincronizado com o ScrollTrigger e com âncoras (#solucoes etc.).
     const lenis = reduce ? null : new Lenis({ lerp: 0.15, anchors: { offset: -80 } });
     const raf = (t) => lenis?.raf(t * 1000);
+    activeLenis = lenis;
     if (lenis) {
       lenis.on("scroll", ScrollTrigger.update);
       gsap.ticker.add(raf);
@@ -264,6 +274,7 @@ export function useLandingFx({ rootRef, canvasRef, cursorRef, dotRef, progressRe
       ctx.revert();
       splits.forEach((s) => s.revert());
       cleanups.forEach((fn) => fn());
+      if (activeLenis === lenis) activeLenis = null;
       if (lenis) {
         gsap.ticker.remove(raf);
         lenis.destroy();

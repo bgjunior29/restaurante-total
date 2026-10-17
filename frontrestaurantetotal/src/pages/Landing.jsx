@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
 import { LogoMark } from "../components/ui";
 import { useAccentCycle } from "../lib/accentCycle";
 import { slugify } from "../lib/format";
-import { useLandingFx } from "../lib/landingFx";
+import { scrollToTop, useLandingFx } from "../lib/landingFx";
 
 // Número de vendas (DDI + DDD + número, só dígitos).
 export const WHATSAPP_VENDAS = "5511964452878";
@@ -129,14 +129,40 @@ function NavLinkItem({ href, children, onClick, className }) {
   );
 }
 
+/** Clique no logo: na home rola suave até o topo (de onde estiver, até do rodapé); em outra página, abre a home no topo. */
+function useLogoToTop() {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  return (e) => {
+    e.preventDefault();
+    if (pathname === "/") {
+      if (location.hash) history.replaceState(null, "", "/");
+      scrollToTop();
+    } else {
+      // "instant": o html tem scroll-behavior smooth, e uma rolagem suave seria cortada pela troca de página.
+      window.scrollTo({ top: 0, behavior: "instant" });
+      navigate("/");
+    }
+  };
+}
+
 /** Topo do site: marca, menu e WhatsApp. No celular o menu abre numa gaveta. */
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
+  const toTop = useLogoToTop();
   return (
     <header className="sticky top-0 z-30 border-b border-line/60 bg-green/80 backdrop-blur-xl">
       <div className={`${wrap} flex h-[68px] items-center justify-between gap-4 sm:h-[76px]`}>
-        <Link to="/" className="flex items-center gap-3" onClick={close}>
+        <Link
+          to="/"
+          aria-label="Movitech Sistemas, voltar ao início"
+          className="flex items-center gap-3"
+          onClick={(e) => {
+            close();
+            toTop(e);
+          }}
+        >
           <LogoMark />
           <span className="leading-none">
             <span className="block font-serif text-[23px]">Movitech</span>
@@ -189,14 +215,15 @@ export function SiteHeader() {
 export function SiteFooter() {
   const col = "flex flex-col gap-3 text-sm";
   const link = "text-ink/75 transition hover:text-ink";
+  const toTop = useLogoToTop();
   return (
     <footer className="border-t border-line/60 bg-green">
       <div className={`${wrap} grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]`}>
         <div className="max-w-xs">
-          <div className="flex items-center gap-3">
+          <Link to="/" onClick={toTop} aria-label="Movitech Sistemas, voltar ao início" className="flex w-fit items-center gap-3">
             <LogoMark />
             <span className="font-serif text-2xl">Movitech</span>
-          </div>
+          </Link>
           <p className="mt-5 text-[15px] leading-relaxed text-ink/70">
             Sistemas, sites e apps para negócios locais. Tecnologia feita aqui do lado, em Barueri.
           </p>
